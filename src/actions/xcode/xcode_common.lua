@@ -827,7 +827,7 @@
 		end
 
 		if cfg.kind == "Bundle" then
-			_p(4, 'PRODUCT_BUNDLE_IDENTIFIER = "genie.%s";', cfg.buildtarget.basename:gsub("%s+", '.')) --replace spaces with .
+			_p(4, 'PRODUCT_BUNDLE_IDENTIFIER = "genie.%s";', cfg.buildtarget.basename:gsub("[^%w]+", '.')) --replace non-alphanum with .
 		end
 
 		_p(4,'PRODUCT_NAME = "%s";', cfg.buildtarget.basename)
