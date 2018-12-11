@@ -816,6 +816,8 @@ _kind_ - project kind identifier. One of:
 * _StaticLib_ - static library
 * _SharedLib_ - shared library or DLL
 * _Bundle_ - Xcode: Cocoa Bundle, everywhere else: alias to _SharedLib_
+* _Framework_ - Xcode: Cocoa Framework with dynamic linkage, everywhere else: alias to _SharedLib_
+* _StaticFramework_ - Xcode: Cocoa Framework with static linkage, everywhere else: alias to _StaticLib_
 
 #### Examples
 ```lua
