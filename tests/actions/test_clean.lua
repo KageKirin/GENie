@@ -159,6 +159,30 @@
 	end
 
 
+	function T.clean.CppFrameworkFiles()
+		prj = project "MyProject"
+		language "C++"
+		kind "Framework"
+		prepare()
+		test.contains(removed, "MyProject.dll")
+		test.contains(removed, "libMyProject.so")
+		test.contains(removed, "MyProject.lib")
+		test.contains(removed, "MyProject.framework")
+	end
+
+
+	function T.clean.CppStaticFrameworkFiles()
+		prj = project "MyProject"
+		language "C++"
+		kind "StaticFramework"
+		prepare()
+		test.contains(removed, "MyProject.dll")
+		test.contains(removed, "libMyProject.so")
+		test.contains(removed, "MyProject.lib")
+		test.contains(removed, "MyProject.framework")
+	end
+
+
 	function T.clean.CppStaticLibFiles()
 		prj = project "MyProject"
 		language "C++"

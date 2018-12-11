@@ -210,6 +210,112 @@
 
 
 --
+-- Framework tests
+--
+
+	function T.targets.Framework_Build_WindowsNames()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		test.isequal([[../bin/MyProject.dll]], result.fullpath)
+	end
+
+	function T.targets.Framework_Link_WindowsNames()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "link", "posix", "windows", "macosx")
+		test.isequal([[../bin/MyProject.lib]], result.fullpath)
+	end
+
+	function T.targets.Framework_Build_PosixNames_OnWindows()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		test.isequal([[../bin/MyProject.dll]], result.fullpath)
+	end
+
+	function T.targets.Framework_Link_PosixNames_OnWindows()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "windows")
+		test.isequal([[../bin/libMyProject.a]], result.fullpath)
+	end
+
+	function T.targets.Framework_Build_PosixNames_OnLinux()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		test.isequal([[../bin/libMyProject.so]], result.fullpath)
+	end
+
+	function T.targets.Framework_Link_PosixNames_OnLinux()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "linux")
+		test.isequal([[../bin/libMyProject.so]], result.fullpath)
+	end
+
+	function T.targets.Framework_Build_PosixNames_OnMacOSX()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		test.isequal([[../bin/MyProject.framework]], result.fullpath)
+	end
+
+	function T.targets.Framework_Link_PosixNames_OnMacOSX()
+		cfg.kind = "Framework"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
+		test.isequal([[../bin/MyProject.framework]], result.fullpath)
+	end
+
+
+--
+-- StaticFramework tests
+--
+
+	function T.targets.StaticFramework_Build_WindowsNames()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		test.isequal([[../bin/MyProject.dll]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Link_WindowsNames()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "link", "posix", "windows", "macosx")
+		test.isequal([[../bin/MyProject.lib]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Build_PosixNames_OnWindows()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		test.isequal([[../bin/MyProject.dll]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Link_PosixNames_OnWindows()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "windows")
+		test.isequal([[../bin/libMyProject.a]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Build_PosixNames_OnLinux()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		test.isequal([[../bin/libMyProject.so]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Link_PosixNames_OnLinux()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "linux")
+		test.isequal([[../bin/libMyProject.so]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Build_PosixNames_OnMacOSX()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		test.isequal([[../bin/MyProject.framework]], result.fullpath)
+	end
+
+	function T.targets.StaticFramework_Link_PosixNames_OnMacOSX()
+		cfg.kind = "StaticFramework"
+		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
+		test.isequal([[../bin/MyProject.framework]], result.fullpath)
+	end
+
+
+--
 -- StaticLib tests
 --
 
