@@ -180,6 +180,10 @@
 
 		if cfg.kind == "Bundle" then
 			table.insert(result, "-bundle")
+		elseif cfg.kind == "Framework" then
+			table.insert(result, "-framework")
+		elseif cfg.kind == "StaticFramework" then
+			table.insert(result, "-staticframework")
 		end
 
 		if cfg.kind == "SharedLib" then

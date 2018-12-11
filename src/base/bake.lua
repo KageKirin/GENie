@@ -774,6 +774,20 @@
 			cfg.kind = "SharedLib"
 		end
 
+		if cfg.kind == "Framework" 
+			and _ACTION ~= "gmake" 
+			and (_ACTION ~= "ninja" and not prj.options.SkipBundling) 
+			and not _ACTION:match("xcode[0-9]") then
+			cfg.kind = "SharedLib"
+		end
+
+		if cfg.kind == "StaticFramework" 
+			and _ACTION ~= "gmake" 
+			and (_ACTION ~= "ninja" and not prj.options.SkipBundling) 
+			and not _ACTION:match("xcode[0-9]") then
+			cfg.kind = "StaticLib"
+		end
+
 		if cfg.kind == "SharedLib" and platform.nosharedlibs then
 			cfg.kind = "StaticLib"
 		end

@@ -12,11 +12,13 @@
 	function xcode8.XCBuildConfiguration_Target(tr, target, cfg)
 		local cfgname = xcode.getconfigname(cfg)
 		local installpaths = {
-			ConsoleApp = "/usr/local/bin",
-			WindowedApp = "$(HOME)/Applications",
-			SharedLib = "/usr/local/lib",
-			StaticLib = "/usr/local/lib",
-			Bundle    = "$(LOCAL_LIBRARY_DIR)/Bundles",
+			ConsoleApp      = "/usr/local/bin",
+			WindowedApp     = "$(HOME)/Applications",
+			SharedLib       = "/usr/local/lib",
+			StaticLib       = "/usr/local/lib",
+			Bundle          = "$(LOCAL_LIBRARY_DIR)/Bundles",
+			Framework       = "$(LOCAL_LIBRARY_DIR)/Frameworks",
+			StaticFramework = "$(LOCAL_LIBRARY_DIR)/Frameworks",
 		}
 
 		-- options table to return
@@ -240,7 +242,7 @@
 			options.GCC_TREAT_WARNINGS_AS_ERRORS = "YES"
 		end
 
-		if cfg.kind == "Bundle" then
+		if cfg.kind == "Bundle" or cfg.kind == "Framework" or cfg.kind == "StaticFramework" then
 			options.MACH_O_TYPE = "mh_bundle"
 		end
 
