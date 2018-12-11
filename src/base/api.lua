@@ -400,6 +400,8 @@
 				"StaticLib",
 				"SharedLib",
 				"Bundle",
+				"Framework",
+				"StaticFramework",
 			}
 		},
 
