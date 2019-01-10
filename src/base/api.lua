@@ -751,6 +751,12 @@
 			scope = "config",
 		},
 
+		xcodescriptphases =
+		{
+			kind  = "table",
+			scope = "config",
+		},
+
 		wholearchive =
 		{
 			kind  = "list",
