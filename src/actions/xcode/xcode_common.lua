@@ -887,6 +887,10 @@ end
 		_p('')
 	end
 
+	-- copyresources leads to this
+	-- xcodeembedframeworks
+	function xcode.PBXCopyFilesBuildPhase(tr)
+	end
 
 	function xcode.PBXVariantGroup(tr)
 		_p('/* Begin PBXVariantGroup section */')
