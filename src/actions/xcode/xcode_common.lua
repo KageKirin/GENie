@@ -770,18 +770,18 @@ end
 		local function doblock(id, name, commands, files)
 			if commands ~= nil then
 				commands = table.flatten(commands)
-			end
-				if #commands > 0 then
-					if not wrapperWritten then
-						_p('/* Begin PBXShellScriptBuildPhase section */')
-						wrapperWritten = true
 					end
-					_p(2,'%s /* %s */ = {', id, name)
-					_p(3,'isa = PBXShellScriptBuildPhase;')
-					_p(3,'buildActionMask = 2147483647;')
-					_p(3,'files = (')
-					_p(3,');')
-					_p(3,'inputPaths = (');
+			if #commands > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXShellScriptBuildPhase section */')
+					wrapperWritten = true
+				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXShellScriptBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'files = (')
+				_p(3,');')
+				_p(3,'inputPaths = (');
 					if files ~= nil then
 						files = table.flatten(files)
 						if #files > 0 then
@@ -790,16 +790,16 @@ end
 							end
 						end
 					end
-					_p(3,');');
-					_p(3,'name = %s;', name);
-					_p(3,'outputPaths = (');
-					_p(3,');');
-					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-					_p(3,'shellPath = /bin/sh;');
-					_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
-					_p(2,'};')
-				end
+				_p(3,');');
+				_p(3,'name = %s;', name);
+				_p(3,'outputPaths = (');
+				_p(3,');');
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(3,'shellPath = /bin/sh;');
+				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+				_p(2,'};')
 			end
+		end
 
 		local function wrapcommands(cmds, cfg)
 			local commands = {}
