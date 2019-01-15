@@ -607,7 +607,19 @@ end
 				end
 			end
 
-
+			local function doscriptphases(which, action)
+				for _, cfg in ipairs(tr.configs) do
+					local cfgcmds = cfg[which]
+					if cfgcmds ~= nil then
+						for i, script in ipairs(cfgcmds) do
+							local cmd = script[1][1]
+							local label = xcode.getcommandlabel(cmd .. ' [' .. i .. ']', cfg)
+							local id = xcode.uuid(label)
+							action(id, label)
+						end
+					end
+				end
+			end
 
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
@@ -626,7 +638,9 @@ end
 				_p(4, id .. ' /* ' .. label .. '*/,')
 			end)
 
-
+			doscriptphases("xcodescriptphases", function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
 
 			_p(3,');')
 			_p(3,'buildRules = (')
