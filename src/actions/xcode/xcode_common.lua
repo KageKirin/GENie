@@ -18,6 +18,11 @@
 	function xcode.getbuildcategory(node)
 		local categories = {
 			[".a"] = "Frameworks",
+			[".h"] = "Sources",
+			[".hh"] = "Sources",
+			[".hpp"] = "Sources",
+			[".hxx"] = "Sources",
+			[".inl"] = "Sources",
 			[".c"] = "Sources",
 			[".cc"] = "Sources",
 			[".cpp"] = "Sources",
