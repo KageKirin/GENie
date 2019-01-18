@@ -632,14 +632,12 @@ end
 			end
 
 			local function docopyresources(which, action)
-				for _, cfg in ipairs(tr.configs) do
-					local cfgcmds = cfg[which]
-					if cfgcmds ~= nil then
-						for target, files in pairs(cfgcmds) do
-							local label = xcode.getcommandlabel("Copy Resources into " ..target, cfg)
-							local id = xcode.uuid(label)
-							action(id, label)
-						end
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					for i, target in ipairs(targets[1]) do
+						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target[1])
+						local id = xcode.uuid(label)
+						action(id, label)
 					end
 				end
 			end
