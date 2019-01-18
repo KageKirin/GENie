@@ -12,7 +12,7 @@
 -- @param node
 --    The node to identify.
 -- @returns
---    An Xcode build category, one of "Sources", "Resources", "Frameworks", or nil.
+--    An Xcode build category, one of "Sources", "Resources", "Frameworks", or "CopyFiles".
 --
 
 	function xcode.getbuildcategory(node)
@@ -45,9 +45,10 @@
 			[".xcdatamodeld"] = "Sources",
 			[".swift"] = "Sources",
 		}
-		return categories[path.getextension(node.name)]
+		local cat = categories[path.getextension(node.name)]
+		cat = iif(cat, cat, categories[string.lower(path.getextension(node.name))])
+		return iif(cat, cat, "CopyFiles")
 	end
-
 
 --
 -- Return the displayed name for a build configuration, taking into account the
