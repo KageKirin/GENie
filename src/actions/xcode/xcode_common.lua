@@ -890,6 +890,85 @@ end
 	-- copyresources leads to this
 	-- xcodeembedframeworks
 	function xcode.PBXCopyFilesBuildPhase(tr)
+		local wrapperWritten = false
+
+		local function doblock(id, name, folderSpec, path, category, files)
+			-- note: folder spec:
+			-- 0: Absolute Path
+			-- 1: Wrapper
+			-- 6: Executables
+			-- 7: Resources
+			-- 10: Frameworks
+			-- 16: Products Directory
+			-- category: 'Frameworks' or 'CopyFiles'
+
+			if files ~= nil then
+				files = table.flatten(files)
+				if #files > 0 then
+					if not wrapperWritten then
+						_p('/* Begin PBXCopyFilesBuildPhase section */')
+						wrapperWritten = true
+					end
+					_p(2,'%s /* %s */ = {', id, name)
+					_p(3,'isa = PBXCopyFilesBuildPhase;')
+					_p(3,'buildActionMask = 2147483647;')
+					_p(3,'dstPath = \"%s\";', path)
+					_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
+					_p(3,'files = (')
+					-- TODO
+					tree.traverse(tr, {
+						onleaf = function(node)
+							print(node, node.name, xcode.getbuildcategory(node))
+							if xcode.getbuildcategory(node) == category then
+								local actualBuildid = node.buildid
+								if category == "Frameworks" then
+									actualBuildid = xcode.uuid(node.buildid .. 'in CopyFiles')
+								end
+								if node.cfg ~= nil and table.icontains(files, node.cfg.name) then
+									_p(4,'%s /* %s in %s */,', actualBuildid, node.name, 'CopyFiles')
+									print('-> found', node.name, xcode.getbuildcategory(node))
+								elseif table.icontains(files, node.name) then
+									_p(4,'%s /* %s in %s */,', actualBuildid, node.name, 'CopyFiles')
+									print('-> found (2)', node.name, xcode.getbuildcategory(node))
+								end
+							end
+						end
+					})
+					print('---')
+					if #files > 0 then
+						for _, file in ipairs(files) do
+							print(file)
+							-- _p(4, '"%s",', file)
+						end
+					end
+					print('---')
+					_p(3,');')
+					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+					_p(2,'};')
+				end
+			end
+		end
+
+		local function docopyresources(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for i, targetAndFiles in ipairs(cfgcmds) do
+						local target = targetAndFiles[1][1]
+						local files = targetAndFiles[1][2]
+						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target, cfg)
+						local id = xcode.uuid(label)
+						doblock(id, label, 7, target, table.translate(files, path.getname))
+					end
+				end
+			end
+		end
+
+		docopyresources("xcodecopyresources")
+
+		if wrapperWritten then
+			_p('/* End PBXCopyFilesBuildPhase section */')
+		end
 	end
 
 	function xcode.PBXVariantGroup(tr)
