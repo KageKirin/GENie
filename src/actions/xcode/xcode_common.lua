@@ -43,7 +43,6 @@
 		return categories[path.getextension(node.name)]
 	end
 
-
 --
 -- Return the displayed name for a build configuration, taking into account the
 -- configuration and platform, i.e. "Debug 32-bit Universal".
@@ -284,7 +283,11 @@
 --
 
 	function xcode.getcommandlabel(cmd, cfg)
-		return "\"" .. cmd .. " (" .. xcode.getconfigname(cfg) .. ")\""
+		if cgf ~= nil then
+			return "\"" .. cmd .. " (" .. xcode.getconfigname(cfg) .. ")\""
+		else
+			return "\"" .. cmd .. "\""
+	end
 	end
 
 --
@@ -374,6 +377,21 @@ end
 
 
 	function xcode.PBXBuildFile(tr)
+		local function gatherCopyFiles(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						table.insertflat(copyfiles, tt[2])
+					end
+				end
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local copyfiles = gatherCopyFiles('xcodecopyresources')
+
 		_p('/* Begin PBXBuildFile section */')
 		tree.traverse(tr, {
 			onnode = function(node)
@@ -381,7 +399,12 @@ end
 					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
 						node.buildid, node.name, xcode.getbuildcategory(node), node.id, node.name)
 				end
-			end
+
+				if table.icontains(copyfiles, node.name) then
+					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
+						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name)
+				end
+				end
 		})
 		_p('/* End PBXBuildFile section */')
 		_p('')
@@ -621,6 +644,23 @@ end
 				end
 			end
 
+			local function docopyresources(which, action)
+				if hasBuildCommands(which) then
+					local targets = tr.project[which]
+					if #targets > 0 then
+						local i = 0
+						for _, t in ipairs(targets) do
+							for __, tt in ipairs(t) do
+								local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..tt[1])
+								local id = xcode.uuid(label)
+								action(id, label)
+								i = i + 1
+							end
+						end
+					end
+				end
+			end
+
 			_p(2,'%s /* %s */ = {', node.targetid, name)
 			_p(3,'isa = PBXNativeTarget;')
 			_p(3,'buildConfigurationList = %s /* Build configuration list for PBXNativeTarget "%s" */;', node.cfgsection, name)
@@ -639,6 +679,10 @@ end
 			end)
 
 			doscriptphases("xcodescriptphases", function(id, label)
+				_p(4, id .. ' /* ' .. label .. '*/,')
+			end)
+
+			docopyresources("xcodecopyresources", function(id, label)
 				_p(4, id .. ' /* ' .. label .. '*/,')
 			end)
 
@@ -755,17 +799,17 @@ end
 		local function doblock(id, name, commands, files)
 			if commands ~= nil then
 				commands = table.flatten(commands)
-				if #commands > 0 then
-					if not wrapperWritten then
-						_p('/* Begin PBXShellScriptBuildPhase section */')
-						wrapperWritten = true
-					end
-					_p(2,'%s /* %s */ = {', id, name)
-					_p(3,'isa = PBXShellScriptBuildPhase;')
-					_p(3,'buildActionMask = 2147483647;')
-					_p(3,'files = (')
-					_p(3,');')
-					_p(3,'inputPaths = (');
+			if #commands > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXShellScriptBuildPhase section */')
+					wrapperWritten = true
+				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXShellScriptBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'files = (')
+				_p(3,');')
+				_p(3,'inputPaths = (');
 					if files ~= nil then
 						files = table.flatten(files)
 						if #files > 0 then
@@ -774,16 +818,16 @@ end
 							end
 						end
 					end
-					_p(3,');');
-					_p(3,'name = %s;', name);
-					_p(3,'outputPaths = (');
-					_p(3,');');
-					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-					_p(3,'shellPath = /bin/sh;');
-					_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
-					_p(2,'};')
-				end
+				_p(3,');');
+				_p(3,'name = %s;', name);
+				_p(3,'outputPaths = (');
+				_p(3,');');
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(3,'shellPath = /bin/sh;');
+				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+				_p(2,'};')
 			end
+		end
 		end
 
 		local function wrapcommands(cmds, cfg)
@@ -864,6 +908,71 @@ end
 		_p('')
 	end
 
+	-- copyresources leads to this
+	-- xcodeembedframeworks
+	function xcode.PBXCopyFilesBuildPhase(tr)
+		local wrapperWritten = false
+
+		local function doblock(id, name, folderSpec, path, files)
+			-- note: folder spec:
+			-- 0: Absolute Path
+			-- 1: Wrapper
+			-- 6: Executables
+			-- 7: Resources
+			-- 10: Frameworks
+			-- 16: Products Directory
+			-- category: 'Frameworks' or 'CopyFiles'
+
+			if #files > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXCopyFilesBuildPhase section */')
+					wrapperWritten = true
+				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXCopyFilesBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'dstPath = \"%s\";', path)
+				_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
+				_p(3,'files = (')
+				tree.traverse(tr, {
+					onleaf = function(node)
+						-- print(node.name)
+						if table.icontains(files, node.name) then
+							print(node.name, 'found in files')
+							_p(4,'%s /* %s in %s */,', 
+								xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles')
+						end
+					end
+				})
+				_p(3,');')
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(2,'};')
+			end
+		end
+
+		local function docopyresources(which)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local i = 0
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..tt[1])
+						local id = xcode.uuid(label)
+						print(id, label)
+						local files = table.translate(table.flatten(tt[2]), path.getname)
+						doblock(id, label, 7, tt[1], files) -- table.translate(target[2], path.getname))
+						i = i + 1
+					end
+				end
+			end
+		end
+
+		docopyresources("xcodecopyresources")
+
+		if wrapperWritten then
+			_p('/* End PBXCopyFilesBuildPhase section */')
+		end
+	end
 
 	function xcode.PBXVariantGroup(tr)
 		_p('/* Begin PBXVariantGroup section */')
