@@ -814,9 +814,25 @@ end
 			doblock(id, name, commands)
 		end
 
+		local function doscriptphases(which)
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for i, script in ipairs(cfgcmds) do
+						local cmd = script[1][1]
+						local files = script[1][2]
+						local label = xcode.getcommandlabel(cmd .. ' [' .. i .. ']', cfg)
+						local id = xcode.uuid(label)
+						doblock(id, label, wrapcommands({cmd}, cfg), files) -- sources
+					end
+				end
+			end
+		end
+
 		dobuildblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
 		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
 		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		doscriptphases("xcodescriptphases")
 
 		if wrapperWritten then
 			_p('/* End PBXShellScriptBuildPhase section */')
