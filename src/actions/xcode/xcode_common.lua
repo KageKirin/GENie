@@ -290,7 +290,11 @@
 --
 
 	function xcode.getcommandlabel(cmd, cfg)
-		return "\"" .. cmd .. " (" .. xcode.getconfigname(cfg) .. ")\""
+		if cgf ~= nil then
+			return "\"" .. cmd .. " (" .. xcode.getconfigname(cfg) .. ")\""
+		else
+			return "\"" .. cmd .. "\""
+		end
 	end
 
 --
