@@ -757,17 +757,18 @@ end
 		local function doblock(id, name, commands, files)
 			if commands ~= nil then
 				commands = table.flatten(commands)
-			if #commands > 0 then
-				if not wrapperWritten then
-					_p('/* Begin PBXShellScriptBuildPhase section */')
-					wrapperWritten = true
-				end
-				_p(2,'%s /* %s */ = {', id, name)
-				_p(3,'isa = PBXShellScriptBuildPhase;')
-				_p(3,'buildActionMask = 2147483647;')
-				_p(3,'files = (')
-				_p(3,');')
-				_p(3,'inputPaths = (');
+			end
+				if #commands > 0 then
+					if not wrapperWritten then
+						_p('/* Begin PBXShellScriptBuildPhase section */')
+						wrapperWritten = true
+					end
+					_p(2,'%s /* %s */ = {', id, name)
+					_p(3,'isa = PBXShellScriptBuildPhase;')
+					_p(3,'buildActionMask = 2147483647;')
+					_p(3,'files = (')
+					_p(3,');')
+					_p(3,'inputPaths = (');
 					if files ~= nil then
 						files = table.flatten(files)
 						if #files > 0 then
@@ -776,17 +777,16 @@ end
 							end
 						end
 					end
-				_p(3,');');
-				_p(3,'name = %s;', name);
-				_p(3,'outputPaths = (');
-				_p(3,');');
-				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-				_p(3,'shellPath = /bin/sh;');
-				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
-				_p(2,'};')
+					_p(3,');');
+					_p(3,'name = %s;', name);
+					_p(3,'outputPaths = (');
+					_p(3,');');
+					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+					_p(3,'shellPath = /bin/sh;');
+					_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+					_p(2,'};')
+				end
 			end
-		end
-		end
 
 		local function wrapcommands(cmds, cfg)
 			local commands = {}
@@ -816,9 +816,29 @@ end
 			doblock(id, name, commands)
 		end
 
+		local function doscriptphases(which)
+			local i = 0
+			for _, cfg in ipairs(tr.configs) do
+				local cfgcmds = cfg[which]
+				if cfgcmds ~= nil then
+					for __, scripts in ipairs(cfgcmds) do
+						for ___, script in ipairs(scripts) do
+							local cmd = script[1]
+							local files = script[2]
+							local label = xcode.getscriptphaselabel(cmd, i, cfg)
+							local id = xcode.uuid(label)
+							doblock(id, label, wrapcommands({cmd}, cfg), files)
+							i = i + 1
+						end
+					end
+				end
+			end
+		end
+
 		dobuildblock("9607AE1010C857E500CD1376", "Prebuild", "prebuildcommands")
 		dobuildblock("9607AE3510C85E7E00CD1376", "Prelink", "prelinkcommands")
 		dobuildblock("9607AE3710C85E8F00CD1376", "Postbuild", "postbuildcommands")
+		doscriptphases("xcodescriptphases")
 
 		if wrapperWritten then
 			_p('/* End PBXShellScriptBuildPhase section */')
