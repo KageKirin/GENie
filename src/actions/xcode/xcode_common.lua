@@ -47,7 +47,7 @@
 		}
 		local cat = categories[path.getextension(node.name)]
 		cat = iif(cat, cat, categories[string.lower(path.getextension(node.name))])
-		return iif(cat, cat, "CopyFiles")
+		return cat --iif(cat, cat, "CopyFiles")
 	end
 
 --
@@ -384,12 +384,34 @@ end
 
 
 	function xcode.PBXBuildFile(tr)
+		local function gatherCopyFiles(which)
+			local copyfiles = {}
+			local targets = tr.project[which]
+			if #targets > 0 then
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						table.insertflat(copyfiles, tt[2])
+					end
+				end
+			end
+			return table.translate(copyfiles, path.getname)
+		end
+
+		local copyfiles = gatherCopyFiles('xcodecopyresources')
+		printtable('copyfiles in PBXBuildFile', copyfiles)
+
 		_p('/* Begin PBXBuildFile section */')
 		tree.traverse(tr, {
 			onnode = function(node)
 				if node.buildid then
 					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
 						node.buildid, node.name, xcode.getbuildcategory(node), node.id, node.name)
+				end
+
+				if table.icontains(copyfiles, node.name) then
+					print('adding copyfiles entry for', node.name)
+					_p(2,'%s /* %s in %s */ = {isa = PBXBuildFile; fileRef = %s /* %s */; };',
+						xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles', node.id, node.name)
 				end
 			end
 		})
@@ -634,10 +656,17 @@ end
 			local function docopyresources(which, action)
 				if hasBuildCommands(which) then
 					local targets = tr.project[which]
-					for i, target in ipairs(targets[1]) do
-						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target[1])
-						local id = xcode.uuid(label)
-						action(id, label)
+					if #targets > 0 then
+						local i = 0
+						for _, t in ipairs(targets) do
+							for __, tt in ipairs(t) do
+								local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..tt[1])
+								local id = xcode.uuid(label)
+								print(id, label)
+								action(id, label)
+								i = i + 1
+							end
+						end
 					end
 				end
 			end
@@ -894,7 +923,7 @@ end
 	function xcode.PBXCopyFilesBuildPhase(tr)
 		local wrapperWritten = false
 
-		local function doblock(id, name, folderSpec, path, category, files)
+		local function doblock(id, name, folderSpec, path, files)
 			-- note: folder spec:
 			-- 0: Absolute Path
 			-- 1: Wrapper
@@ -904,63 +933,45 @@ end
 			-- 16: Products Directory
 			-- category: 'Frameworks' or 'CopyFiles'
 
-			if files ~= nil then
-				files = table.flatten(files)
-				if #files > 0 then
-					if not wrapperWritten then
-						_p('/* Begin PBXCopyFilesBuildPhase section */')
-						wrapperWritten = true
-					end
-					_p(2,'%s /* %s */ = {', id, name)
-					_p(3,'isa = PBXCopyFilesBuildPhase;')
-					_p(3,'buildActionMask = 2147483647;')
-					_p(3,'dstPath = \"%s\";', path)
-					_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
-					_p(3,'files = (')
-					-- TODO
-					tree.traverse(tr, {
-						onleaf = function(node)
-							print(node, node.name, xcode.getbuildcategory(node))
-							if xcode.getbuildcategory(node) == category then
-								local actualBuildid = node.buildid
-								if category == "Frameworks" then
-									actualBuildid = xcode.uuid(node.buildid .. 'in CopyFiles')
-								end
-								if node.cfg ~= nil and table.icontains(files, node.cfg.name) then
-									_p(4,'%s /* %s in %s */,', actualBuildid, node.name, 'CopyFiles')
-									print('-> found', node.name, xcode.getbuildcategory(node))
-								elseif table.icontains(files, node.name) then
-									_p(4,'%s /* %s in %s */,', actualBuildid, node.name, 'CopyFiles')
-									print('-> found (2)', node.name, xcode.getbuildcategory(node))
-								end
-							end
-						end
-					})
-					print('---')
-					if #files > 0 then
-						for _, file in ipairs(files) do
-							print(file)
-							-- _p(4, '"%s",', file)
-						end
-					end
-					print('---')
-					_p(3,');')
-					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-					_p(2,'};')
+			if #files > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXCopyFilesBuildPhase section */')
+					wrapperWritten = true
 				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXCopyFilesBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'dstPath = \"%s\";', path)
+				_p(3,'dstSubfolderSpec = \"%s\";', folderSpec)
+				_p(3,'files = (')
+				tree.traverse(tr, {
+					onleaf = function(node)
+						-- print(node.name)
+						if table.icontains(files, node.name) then
+							print(node.name, 'found in files')
+							_p(4,'%s /* %s in %s */,', 
+								xcode.uuid(node.name .. 'in CopyFiles'), node.name, 'CopyFiles')
+						end
+					end
+				})
+				_p(3,');')
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(2,'};')
 			end
 		end
 
 		local function docopyresources(which)
-			for _, cfg in ipairs(tr.configs) do
-				local cfgcmds = cfg[which]
-				if cfgcmds ~= nil then
-					for i, targetAndFiles in ipairs(cfgcmds) do
-						local target = targetAndFiles[1][1]
-						local files = targetAndFiles[1][2]
-						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..target, cfg)
+			local targets = tr.project[which]
+			if #targets > 0 then
+				local i = 0
+				for _, t in ipairs(targets) do
+					for __, tt in ipairs(t) do
+						local label = xcode.getcommandlabel("Copy Resources [" .. i .. "] into " ..tt[1])
 						local id = xcode.uuid(label)
-						doblock(id, label, 7, target, table.translate(files, path.getname))
+						print(id, label)
+						local files = table.translate(table.flatten(tt[2]), path.getname)
+						doblock(id, label, 7, tt[1], files) -- table.translate(target[2], path.getname))
+						i = i + 1
 					end
 				end
 			end
