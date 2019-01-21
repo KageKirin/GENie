@@ -303,6 +303,29 @@
 		return string.format("\"Script Phase %s [%s] (%s)\"", count, cmd:match("(%w+)(.+)"), iif(cfg, xcode.getconfigname(cfg), "all"))
 	end
 
+
+--
+-- Creates a label for a given copy phase
+--  based on target
+-- such as the result looks like this:
+-- 'Copy <type> <number> [target]', e.g. 'Copy Files 1 [assets]'
+--
+-- This function is used for generating `PBXCopyFilesPhase` from `xcodecopyresources`.
+-- (Thus required in more than 1 place).
+--
+-- @param type
+--    The copy type ('Resources' for now)
+-- @param count
+--    counter to avoid having duplicate label names
+-- @param target
+--    The target subfolder
+--
+
+	function xcode.getcopyphaselabel(type, count, target)
+		return string.format("\"Copy %s %s [%s]\"", type, count, target)
+	end
+
+
 --
 -- Create a product tree node and all projects in a solution; assigning IDs
 -- that are needed for inter-project dependencies.
@@ -771,35 +794,35 @@ end
 			if commands ~= nil then
 				commands = table.flatten(commands)
 			end
-				if #commands > 0 then
-					if not wrapperWritten then
-						_p('/* Begin PBXShellScriptBuildPhase section */')
-						wrapperWritten = true
-					end
-					_p(2,'%s /* %s */ = {', id, name)
-					_p(3,'isa = PBXShellScriptBuildPhase;')
-					_p(3,'buildActionMask = 2147483647;')
-					_p(3,'files = (')
-					_p(3,');')
-					_p(3,'inputPaths = (');
-					if files ~= nil then
-						files = table.flatten(files)
-						if #files > 0 then
-							for _, file in ipairs(files) do
-								_p(4, '"%s",', file)
-							end
+			if #commands > 0 then
+				if not wrapperWritten then
+					_p('/* Begin PBXShellScriptBuildPhase section */')
+					wrapperWritten = true
+				end
+				_p(2,'%s /* %s */ = {', id, name)
+				_p(3,'isa = PBXShellScriptBuildPhase;')
+				_p(3,'buildActionMask = 2147483647;')
+				_p(3,'files = (')
+				_p(3,');')
+				_p(3,'inputPaths = (');
+				if files ~= nil then
+					files = table.flatten(files)
+					if #files > 0 then
+						for _, file in ipairs(files) do
+							_p(4, '"%s",', file)
 						end
 					end
-					_p(3,');');
-					_p(3,'name = %s;', name);
-					_p(3,'outputPaths = (');
-					_p(3,');');
-					_p(3,'runOnlyForDeploymentPostprocessing = 0;');
-					_p(3,'shellPath = /bin/sh;');
-					_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
-					_p(2,'};')
 				end
+				_p(3,');');
+				_p(3,'name = %s;', name);
+				_p(3,'outputPaths = (');
+				_p(3,');');
+				_p(3,'runOnlyForDeploymentPostprocessing = 0;');
+				_p(3,'shellPath = /bin/sh;');
+				_p(3,'shellScript = "%s";', table.concat(commands, "\\n"):gsub('"', '\\"'))
+				_p(2,'};')
 			end
+		end
 
 		local function wrapcommands(cmds, cfg)
 			local commands = {}
