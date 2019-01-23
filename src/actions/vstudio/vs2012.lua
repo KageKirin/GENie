@@ -25,7 +25,8 @@
 			"WindowedApp",
 			"StaticLib",
 			"SharedLib",
-			"Bundle"
+			"Bundle",
+			"Framework",
 		},
 
 		valid_languages = { "C", "C++", "C#"},

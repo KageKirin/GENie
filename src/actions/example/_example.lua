@@ -34,7 +34,8 @@
 			"WindowedApp",
 			"StaticLib",
 			"SharedLib",
-			"Bundle"
+			"Bundle",
+			"Framework",
 		},
 
 		-- Which programming languages this actions supports; remove those you don't.

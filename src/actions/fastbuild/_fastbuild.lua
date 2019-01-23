@@ -13,6 +13,7 @@
 			"StaticLib",
 			"SharedLib",
 			"Bundle",
+			"Framework",
 		},
 
 		valid_languages = {
