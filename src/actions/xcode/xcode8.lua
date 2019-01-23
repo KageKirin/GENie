@@ -314,7 +314,13 @@
 		description     = "Generate Apple Xcode 8 project files",
 		os              = "macosx",
 
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = {
+			"ConsoleApp",
+			"WindowedApp",
+			"StaticLib",
+			"SharedLib",
+			"Bundle"
+		},
 
 		valid_languages = { "C", "C++" },
 

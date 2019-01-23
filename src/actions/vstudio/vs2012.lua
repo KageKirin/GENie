@@ -20,7 +20,13 @@
 		description     = "Generate Microsoft Visual Studio 2012 project files",
 		os              = "windows",
 
-		valid_kinds     = { "ConsoleApp", "WindowedApp", "StaticLib", "SharedLib", "Bundle" },
+		valid_kinds     = {
+			"ConsoleApp",
+			"WindowedApp",
+			"StaticLib",
+			"SharedLib",
+			"Bundle"
+		},
 
 		valid_languages = { "C", "C++", "C#"},
 
