@@ -277,8 +277,18 @@
 			base = base .. prj.name .. "$" .. prj.uuidcounter .. "$"
 		end
 
-		base = base .. "$" .. (node.path or node.name or "")
+		--print('generating uuid for', node.path, node.name)
+
+		local parent = node.parent
+		while parent ~= nil do
+			base = base .. "$" .. (parent.name or "")
+			parent = parent.parent
+		end
+
+		base = base .. "$" .. (node.path or "")
+		base = base .. "$" .. (node.name or "")
 		base = base .. "$" .. (usage or "")
+
 		return xcode.uuid(base)
 	end
 

@@ -116,7 +116,7 @@
 		tree.traverse(tr, {
 			onnode = function(node)
 				-- assign IDs to every node in the tree
-				node.id = xcode.newid(node)
+				node.id = xcode.newid(node, "file")
 
 				-- assign build IDs to buildable files
 				if xcode.getbuildcategory(node) then
