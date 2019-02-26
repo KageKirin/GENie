@@ -258,3 +258,37 @@
 			return ""
 		end
 	end
+
+	--
+	-- filter table given a filter function
+	-- returns new table for every filter
+	-- iterates using ipairs for tables
+	--
+
+	function table.ifilter(arr, fn)
+		local t = {}
+		for _,i in ipairs(arr) do
+			local f = fn(i)
+			if f ~= nil then
+				table.insert(t, f)
+			end
+		end
+		return t
+	end
+
+	--
+	-- filter table given a filter function
+	-- returns new table for every filter
+	-- iterates using pairs for dictionaries
+	--
+
+	function table.filter(arr, fn)
+		local t = {}
+		for p,i in pairs(arr) do
+			local f = fn(i)
+			if f ~= nil then
+				table.insert(t, f)
+			end
+		end
+		return t
+	end
