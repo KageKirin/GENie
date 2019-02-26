@@ -1230,6 +1230,11 @@
 			return premake.CurrentConfiguration
 		end
 
+		-- debug
+		for _,i in ipairs(table.flatten({terms})) do
+		--	print('term',i)
+		end
+
 		local container, err = premake.getobject("container")
 		if (not container) then
 			error(err, 2)
@@ -1247,6 +1252,11 @@
 		cfg.keywords = { }
 		for _, word in ipairs(cfg.terms) do
 			table.insert(cfg.keywords, path.wildcards(word):lower())
+		end
+
+		-- debug
+		for _,i in ipairs(cfg.keywords) do
+		--	print('keyword', i)
 		end
 
 		-- initialize list-type fields to empty tables
