@@ -69,18 +69,26 @@
 --
 
 	function premake.iskeywordmatch(keyword, terms)
+		print('keyword', keyword)
+		printtable('terms', terms)
+
 		-- is it negated?
-		if keyword:startswith("not ") then
-			return not premake.iskeywordmatch(keyword:sub(5), terms)
+		local p_negated = "%s*(not)%s+(%w+)" 
+		if keyword:match(p_negated) then
+			return not premake.iskeywordmatch(keyword:match(p_negated)[2], terms)
 		end
 
-		for _, pattern in ipairs(keyword:explode(" or ")) do
-			for termkey, term in pairs(terms) do
-				if term:match(pattern) == term then
-					return termkey
-				end
-			end
+		for termkey, term in pairs(terms) do
+			return term:match(keyword) == term
 		end
+
+		--for _, pattern in ipairs(keyword:explode(" or ")) do
+		--	for termkey, term in pairs(terms) do
+		--		if term:match(pattern) == term then
+		--			return termkey
+		--		end
+		--	end
+		--end
 	end
 
 
@@ -95,15 +103,72 @@
 
 	function premake.iskeywordsmatch(keywords, terms)
 		local hasrequired = false
-		for _, keyword in ipairs(keywords) do
-			local matched = premake.iskeywordmatch(keyword, terms)
-			if not matched then
-				return false
-			end
-			if matched == "required" then
-				hasrequired = true
+		if not keywords then
+			return true
+		end
+
+		local sln = solution()
+		printtable('sln.configurations', sln.configurations)
+
+		printtable('terms', terms)		
+		local actual_terms = table.flatten({table.flatten(terms), 
+			terms['config'] or '', --and iif(terms['config']:len() == 0, table.translate(sln.configurations, string.lower), nil) or '', 
+			terms['kind'] or '',-- ((terms['_action'] and _ACTION[terms['_action']].valid_kinds) or ''),
+			terms['_action'] or ''}
+		)
+		-- remove empty terms
+		actual_terms = table.ifilter(table.flatten(actual_terms),
+		function(p)
+			return iif(p:len() > 1, p, nil)
+		end)
+		printtable('actual_terms', actual_terms)
+		local terms_string = table.implode(actual_terms, '', '=1\n')
+		print(terms_string)
+
+		printtable('keywords', keywords)
+		local actual_keywords_l = table.flatten(keywords)
+		local actual_keywords = {}
+		for _, k in ipairs(actual_keywords_l) do
+			table.insert(actual_keywords, string.explode(k, "%s+"))
+		end
+		actual_keywords = table.ifilter(table.flatten(actual_keywords), 
+		function(p)
+			return iif(not (p:match('(not)') or p:match('(or)') or p:match('(and)([^%w+])')), p, nil)
+		end)
+		printtable('actual_keywords', actual_keywords)
+
+		for i,k in ipairs(actual_keywords) do
+			for _,t in ipairs(actual_terms) do
+				if t:match(k) then
+					actual_keywords[i] = t
+				end
 			end
 		end
+		printtable('actual_keywords (updated)', actual_keywords)
+
+		local check_string = table.concat(table.translate(keywords, function(k) return '(' .. k .. ')' end), " and ")
+		print('check_string (before substitution)', check_string)
+
+		for _,k in ipairs(actual_keywords) do
+			local m = premake.iskeywordmatch(k, terms)
+			print(m, 'matching', k)
+			check_string = check_string:gsub(k, string.format("%s", m or 0))
+		end
+		print('check_string (after substitution)', check_string)
+		local eval = load('return ' .. check_string)
+
+
+
+
+		--for _, keyword in ipairs(keywords) do
+		--	local matched = premake.iskeywordmatch(keyword, terms)
+		--	if not matched then
+		--		return false
+		--	end
+		--	if matched == "required" then
+		--		hasrequired = true
+		--	end
+		--end
 
 		if terms.required and not hasrequired then
 			return false
