@@ -69,17 +69,18 @@
 --
 
 	function premake.iskeywordmatch(keyword, terms)
+		print('keyword', keyword)
 		-- has parentheses?
 		local subparens = keyword:match("%s*^%(.+%)%s*$")
 		if subparens ~= nil then
-			print(subparens)
+			print('subparens', subparens)
 			return premake.iskeywordmatch(subparens, terms)
 		end
 
 		-- is it negated?
 		local negterm = keyword:match("not%s+(.+)")
 		if negterm ~= nil then
-			print(negterm)
+			print('negterm', negterm)
 			return not premake.iskeywordmatch(keyword:sub(5), terms)
 		end
 

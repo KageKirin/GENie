@@ -324,6 +324,7 @@
 --
 
 	function path.wildcards(pattern)
+		print('wildcard pattern (entry)', pattern)
 		-- Escape characters that have special meanings in Lua patterns
 		pattern = pattern:gsub("([%+%.%-%^%$%(%)%%])", "%%%1")
 
@@ -335,7 +336,7 @@
 		-- Replace the placeholders with their Lua patterns
 		pattern = pattern:gsub("\001", ".*")
 		pattern = pattern:gsub("\002", "[^/]*")
-
+		print('wildcard pattern (converted)', pattern)
 		return pattern
 	end
 
