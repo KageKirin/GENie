@@ -1237,6 +1237,7 @@
 
 		local cfg = { }
 		cfg.terms = table.flatten({terms})
+		printtable('configuration terms', cfg.terms)
 
 		table.insert(container.blocks, cfg)
 		premake.CurrentConfiguration = cfg

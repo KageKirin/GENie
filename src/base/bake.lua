@@ -61,6 +61,7 @@
 			end
 		end
 
+		printtable('active terms', terms)
 		return terms
 	end
 
@@ -81,6 +82,7 @@
 		for _, pattern in ipairs(keyword:explode(" or ")) do
 			for termkey, term in pairs(terms) do
 				if term:match(pattern) == term then
+					print(term, 'matched', keyword, 'resulting in', termkey)
 					return termkey
 				end
 			end
