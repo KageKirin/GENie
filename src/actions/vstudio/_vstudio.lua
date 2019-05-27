@@ -33,7 +33,7 @@
 		any     = "Any CPU",
 		mixed   = "Mixed Platforms",
 		Native  = "Win32",
-		x86     = "x86",
+		x86     = "x32",
 		x32     = "Win32",
 		x64     = "x64",
 		PS3     = "PS3",
@@ -106,7 +106,7 @@
 						table.insert(platforms2010, platform)
 					end
 					if hasdotnet then
-						table.insert(platforms2010, "x86")
+						table.insert(platforms2010, "x32")
 					end
 				else
 					table.insert(platforms2010, platform)

@@ -810,7 +810,7 @@
 				"armv7-a",
 				"armv7-a-hard",
 				"arm64-v8a",
-				"x86",
+				"x32",
 				"x86_64",
 			}
 		},
@@ -1238,6 +1238,7 @@
 
 		local cfg = { }
 		cfg.terms = table.flatten({terms})
+		printtable('configuration terms', cfg.terms)
 
 		table.insert(container.blocks, cfg)
 		premake.CurrentConfiguration = cfg

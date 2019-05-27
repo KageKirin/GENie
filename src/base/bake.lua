@@ -61,6 +61,7 @@
 			end
 		end
 
+		printtable('active terms', terms)
 		return terms
 	end
 
@@ -86,6 +87,7 @@
 				-- alias for backwards compatibility
 				term = term:gsub('windowedapp', 'graphicalapp')
 				if term:match(pattern) == term then
+					print(term, 'matched', keyword, 'resulting in', termkey)
 					return termkey
 				end
 			end

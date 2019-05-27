@@ -73,7 +73,7 @@ function qbs.generate_project(prj)
 				local linkerFlags = cfg.linkoptions
 
 				if cfg.platform == "x32" then
-					arch = '&& qbs.architecture == "x86"'
+					arch = '&& qbs.architecture == "x32"'
 --					table.insert(linkerFlags, "-m32")
 				elseif cfg.platform == "x64" then
 					arch = '&& qbs.architecture == "x86_64"'

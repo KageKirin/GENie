@@ -35,7 +35,7 @@ end
 
 function ninja.list(value)
 	if #value > 0 then
-		return " " .. table.concat(value, " ")
+		return " " .. table.concat(table.translate(value, ninja.esc), " ")
 	else
 		return ""
 	end
