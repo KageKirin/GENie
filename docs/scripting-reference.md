@@ -657,6 +657,8 @@ _flags_ - List of flag names from list below. Names are case-insensitive and ign
 * _NoRTTI_ - Disable C++ runtime type information.
 * _NoWinMD_ - Disables Generation of Windows Metadata.
 * _NoWinRT_ - Disables Windows RunTime Extension for project.
+* _NoObjectResponseFile_ - Disable use of response file (aka @file) for linking objects.
+* _NoLDResponseFile_ - Disable use of response file (aka @file) for linking lib dependencies.
 * _ObjcARC_ - Enable automatic reference counting for Object-C and Objective-C++.
 * _Optimize_ - Perform a balanced set of optimizations.
 * _OptimizeSize_ - Optimize for the smallest file size.
