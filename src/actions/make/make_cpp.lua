@@ -85,7 +85,7 @@
 		end
 
 		-- target build rule
-		_p('$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)')
+		_p('$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) $(OBJRESP) $(LDRESP) | $(TARGETDIR) $(OBJDIRS)')
 
 		if prj.kind == "StaticLib" then
 			if prj.msgarchiving then
@@ -116,6 +116,15 @@
 			end
 			_p('\t$(SILENT) $(LINKCMD)')
 		end
+
+		_p('ifneq (,$(OBJRESP))')
+		_p('\t$(call RM,$(OBJRESP))')
+		_p('endif')
+
+		_p('ifneq (,$(LDRESP))')
+		_p('\t$(call RM,$(LDRESP))')
+		_p('endif')
+
 		_p('\t$(POSTBUILDCMDS)')
 		_p('')
 
@@ -356,6 +365,11 @@
 		table.sort(cfg.files)
 
 		-- add objects for compilation, and remove any that are excluded per config.
+		if cfg.flags.NoObjectResponseFile then
+			_p('  OBJRESP             =')
+		else
+			_p('  OBJRESP             = $(OBJDIR)/%s_objects', prj.name)
+		end
 		_p('  OBJECTS := \\')
 		for _, file in ipairs(cfg.files) do
 			if path.issourcefile(file) then
@@ -482,9 +496,17 @@
 		_p('  ALL_LDFLAGS        += $(LDFLAGS)%s', make.list(table.join(cc.getlibdirflags(cfg), cc.getldflags(cfg), cfg.linkoptions)))
 		_p('  LIBDEPS            +=%s', libdeps)
 		_p('  LDDEPS             +=%s', lddeps)
-		_p('  LIBS               += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
+
+		if cfg.flags.NoLDResponseFile then
+			_p('  LDRESP              =')
+			_p('  LIBS               += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
+		else
+			_p('  LDRESP              = $(OBJDIR)/%s_libs', prj.name)
+			_p('  LIBS               += @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
+		end
+
 		_p('  EXTERNAL_LIBS      +=%s', make.list(cc.getlibfiles(cfg)))
-		_p('  LINKOBJS            = %s', (cfg.objresponsepath and ("@" .. cfg.objresponsepath) or "$(OBJECTS)"))
+		_p('  LINKOBJS            = %s', (cfg.flags.NoObjectResponseFile and "$(OBJECTS)" or "@$(OBJRESP)"))
 
 		if cfg.kind == "StaticLib" then
 			if (not prj.options.ArchiveSplit) then
@@ -495,11 +517,13 @@
 			end
 		else
 			local tool = iif(cfg.language == "C", "CC", "CXX")
+			local startgroup = '-Wl,--start-group'
+			local endgroup = '-Wl,--end-group'
 			if (cfg.flags.NoLibGroups) then
-				_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)', tool)
-			else
-				_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) -Wl,--start-group $(LIBS) -Wl,--end-group', tool)
+				startgroup = ''
+				endgroup = ''
 			end
+			_p('  LINKCMD             = $(%s) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) %s $(LIBS) %s', tool, startgroup, endgroup)
 		end
 	end
 
@@ -583,8 +607,23 @@
 	function cpp.fileRules(prj, cc)
 		local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
 
-		table.sort(prj.allfiles)
+		_p('ifneq (,$(OBJRESP))')
+		_p('$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)')
+		_p('\t$(file >$@,$^)')
+		--_p('\t$(file >$@) $(foreach O,$^,$(file >>$@,$O))') -- write 1 file per line instead
+		_p('\t$(SILENT)echo $(file <$@)')
+		_p('endif')
+		_p('')
 
+		_p('ifneq (,$(LDRESP))')
+		_p('$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)')
+		_p('\t$(file >$@,$^)')
+		--_p('\t$(file >$@) $(foreach O,$^,$(file >>$@,$O))') -- write 1 file per line instead
+		_p('\t$(SILENT)echo $(file <$@)')
+		_p('endif')
+		_p('')
+
+		table.sort(prj.allfiles)
 		for _, file in ipairs(prj.allfiles or {}) do
 			if path.issourcefile(file) then
 				if (path.isobjcfile(file)) then
