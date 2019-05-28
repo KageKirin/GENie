@@ -227,6 +227,8 @@
 					NoRuntimeChecks = 1,
 					NoWinMD = 1,    -- explicitly disables Windows Metadata
 					NoWinRT = 1,    -- explicitly disables Windows Runtime Extension
+					NoObjectResponseFile = 1,
+					NoLDResponseFile = 1,
 					FastCall = 1,
 					StdCall = 1,
 					SingleOutputDir = 1,
