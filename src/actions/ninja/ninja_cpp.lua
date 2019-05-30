@@ -36,40 +36,57 @@ local p     = premake
 
 		local flags = {
 			defines   = ninja.list(tool.getdefines(cfg.defines)),
-			includes  = ninja.list(table.join(tool.getincludedirs(cfg.includedirs), tool.getquoteincludedirs(cfg.userincludedirs), tool.getsystemincludedirs(cfg.systemincludedirs))),
+			includes  = ninja.list(table.join(
+				tool.getincludedirs(table.translate(cfg.includedirs, ninja.esc)),
+				tool.getquoteincludedirs(table.translate(cfg.userincludedirs, ninja.esc)),
+				tool.getsystemincludedirs(table.translate(cfg.systemincludedirs, ninja.esc)))),
 			cppflags  = ninja.list(tool.getcppflags(cfg)),
-			asmflags  = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_asm)),
-			cflags    = ninja.list(table.join(tool.getcflags(cfg), cfg.buildoptions, cfg.buildoptions_c)),
-			cxxflags  = ninja.list(table.join(tool.getcflags(cfg), tool.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_cpp)),
-			objcflags = ninja.list(table.join(tool.getcflags(cfg), tool.getcxxflags(cfg), cfg.buildoptions, cfg.buildoptions_objc)),
+			asmflags  = ninja.list(table.join(
+				tool.getcflags(cfg),
+				table.translate(cfg.buildoptions, ninja.esc),
+				table.translate(cfg.buildoptions_asm, ninja.esc))),
+			cflags    = ninja.list(table.join(
+				tool.getcflags(cfg),
+				table.translate(cfg.buildoptions, ninja.esc),
+				table.translate(cfg.buildoptions_c, ninja.esc))),
+			cxxflags  = ninja.list(table.join(
+				tool.getcflags(cfg),
+				tool.getcxxflags(cfg),
+				table.translate(cfg.buildoptions, ninja.esc),
+				table.translate(cfg.buildoptions_cpp, ninja.esc))),
+			objcflags = ninja.list(table.join(
+				tool.getcflags(cfg),
+				tool.getcxxflags(cfg),
+				table.translate(cfg.buildoptions, ninja.esc),
+				table.translate(cfg.buildoptions_objc, ninja.esc))),
 		}
 
 		_p("")
 
 		_p("# core rules for " .. cfg.name)
 		_p("rule cc")
-		_p("  command = " .. tool.cc .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in")
+		_p("  command = " .. ninja.esc(tool.cc) .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in")
 		_p("  description = cc $out")
 		_p("  depfile = $out.d")
 		_p("  deps = gcc")
 		_p("")
 		_p("rule cxx")
-		_p("  command = " .. tool.cxx .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in")
+		_p("  command = " .. ninja.esc(tool.cxx) .. " $defines $includes $flags -MMD -MF $out.d -c -o $out $in")
 		_p("  description = cxx $out")
 		_p("  depfile = $out.d")
 		_p("  deps = gcc")
 		_p("")
 		_p("rule ar")
-		_p("  command = " .. tool.ar .. " $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
+		_p("  command = " .. ninja.esc(tool.ar) .. " $flags $out $in $libs " .. (os.is("MacOSX") and " 2>&1 > /dev/null | sed -e '/.o) has no symbols$$/d'" or ""))
 		_p("  description = ar $out")
 		_p("")
 
 		local link = iif(cfg.language == "C", tool.cc, tool.cxx)
 		_p("rule link")
 		if (cfg.flags.NoLibGroups) then
-			_p("  command = $pre_link " .. link .. " -o $out @$out.rsp $all_ldflags $libs $post_build")
+			_p("  command = $pre_link " .. ninja.esc(link) .. " -o $out @$out.rsp $all_ldflags $libs $post_build")
 		else
-			_p("  command = $pre_link " .. link .. " -o $out @$out.rsp $all_ldflags -Wl,--start-group $libs -Wl,--end-group $post_build")
+			_p("  command = $pre_link " .. ninja.esc(link) .. " -o $out @$out.rsp $all_ldflags -Wl,--start-group $libs -Wl,--end-group $post_build")
 		end
 		_p("  rspfile = $out.rsp")
   		_p("  rspfile_content = $all_outputfiles")
@@ -83,7 +100,7 @@ local p     = premake
 
 		if #cfg.prebuildcommands > 0 then
 			_p("build __prebuildcommands: exec")
-			_p(1, 'command = echo Running pre-build commands && ' .. table.implode(cfg.prebuildcommands, "", "", " && "))
+			_p(1, 'command = echo Running pre-build commands && ' .. ninja.esc(table.implode(cfg.prebuildcommands, "", "", " && ")))
 			_p(1, "type = pre-build")
 			_p("")
 		end
@@ -318,7 +335,7 @@ local p     = premake
 	end
 
 	function cpp.linker(prj, cfg, objfiles, tool)
-		local all_ldflags = ninja.list(table.join(tool.getlibdirflags(cfg), tool.getldflags(cfg), cfg.linkoptions))
+		local all_ldflags = ninja.list(table.join(table.translate(tool.getlibdirflags(cfg), ninja.esc), tool.getldflags(cfg), table.translate(cfg.linkoptions, ninja.esc)))
 		local lddeps      = ninja.list(premake.getlinks(cfg, "siblings", "fullpath"))
 		local libs        = lddeps .. " " .. ninja.list(tool.getlinkflags(cfg))
 
@@ -329,10 +346,10 @@ local p     = premake
 			_p(1, "libs        = " .. libs)
 			_p(1, "all_outputfiles = " .. table.concat(objfiles, " "))
 			if #cfg.prelinkcommands > 0 then
-				_p(1, 'pre_link = echo Running pre-link commands && ' .. table.implode(cfg.prelinkcommands, "", "", " && ") .. " && ")
+				_p(1, 'pre_link = echo Running pre-link commands && ' .. ninja.esc(table.implode(cfg.prelinkcommands, "", "", " && ") .. " && "))
 			end
 			if #cfg.postbuildcommands > 0 then
-				_p(1, 'post_build = && echo Running post-build commands && ' .. table.implode(cfg.postbuildcommands, "", "", " && "))
+				_p(1, 'post_build = && echo Running post-build commands && ' .. ninja.esc(table.implode(cfg.postbuildcommands, "", "", " && ")))
 			end
 		end
 
