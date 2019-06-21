@@ -58,11 +58,15 @@ ifeq ($(config),release)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
+	$(OBJDIR)/src/host/genie.o \
+	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
@@ -113,8 +117,6 @@ ifeq ($(config),release)
 	$(OBJDIR)/src/host/path_getrelative.o \
 	$(OBJDIR)/src/host/path_helpers.o \
 	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/genie.o \
-	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
 	$(OBJDIR)/src/host/string_hash.o \
@@ -143,11 +145,15 @@ ifeq ($(config),debug)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
+	$(OBJDIR)/src/host/genie.o \
+	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
@@ -198,8 +204,6 @@ ifeq ($(config),debug)
 	$(OBJDIR)/src/host/path_getrelative.o \
 	$(OBJDIR)/src/host/path_helpers.o \
 	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/genie.o \
-	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
 	$(OBJDIR)/src/host/string_hash.o \
@@ -229,11 +233,15 @@ ifeq ($(config),releaseuniv32)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
+	$(OBJDIR)/src/host/genie.o \
+	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
@@ -284,8 +292,6 @@ ifeq ($(config),releaseuniv32)
 	$(OBJDIR)/src/host/path_getrelative.o \
 	$(OBJDIR)/src/host/path_helpers.o \
 	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/genie.o \
-	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
 	$(OBJDIR)/src/host/string_hash.o \
@@ -315,11 +321,15 @@ ifeq ($(config),debuguniv32)
   ALL_LDFLAGS        += $(LDFLAGS) -L"." -arch i386 -arch ppc -mmacosx-version-min=10.6
   LIBDEPS            +=
   LDDEPS             +=
+  LDRESP              =
   LIBS               += $(LDDEPS) -framework CoreServices
   EXTERNAL_LIBS      +=
   LINKOBJS            = $(OBJECTS)
   LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  OBJRESP             =
   OBJECTS := \
+	$(OBJDIR)/src/host/genie.o \
+	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
 	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
@@ -370,8 +380,6 @@ ifeq ($(config),debuguniv32)
 	$(OBJDIR)/src/host/path_getrelative.o \
 	$(OBJDIR)/src/host/path_helpers.o \
 	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/genie.o \
-	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
 	$(OBJDIR)/src/host/string_hash.o \
@@ -396,7 +404,7 @@ RESOURCES := \
 all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) $(OBJRESP) $(LDRESP) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
@@ -434,6 +442,26 @@ $(GCH_OBJC): $(PCH) $(MAKEFILE) | $(OBJDIR)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_OBJCFLAGS) -x objective-c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
 endif
+
+ifneq (,$(OBJRESP))
+$(OBJRESP): $(OBJECTS) | $(TARGETDIR) $(OBJDIRS)
+	$(SILENT) echo $^
+	$(SILENT) echo $^ > $@
+endif
+
+ifneq (,$(LDRESP))
+$(LDRESP): $(LDDEPS) | $(TARGETDIR) $(OBJDIRS)
+	$(SILENT) echo $^
+	$(SILENT) echo $^ > $@
+endif
+
+$(OBJDIR)/src/host/genie.o: ../../src/host/genie.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/genie_main.o: ../../src/host/genie_main.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
 $(OBJDIR)/src/host/lua-5.3.0/src/lapi.o: ../../src/host/lua-5.3.0/src/lapi.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/lua-5.3.0/src
 	@echo $(notdir $<)
@@ -632,14 +660,6 @@ $(OBJDIR)/src/host/path_helpers.o: ../../src/host/path_helpers.c $(GCH) $(MAKEFI
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
 $(OBJDIR)/src/host/path_isabsolute.o: ../../src/host/path_isabsolute.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
-	@echo $(notdir $<)
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
-
-$(OBJDIR)/src/host/genie.o: ../../src/host/genie.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
-	@echo $(notdir $<)
-	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
-
-$(OBJDIR)/src/host/genie_main.o: ../../src/host/genie_main.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
