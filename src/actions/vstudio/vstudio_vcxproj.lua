@@ -12,7 +12,7 @@
 	local function vs2010_config(prj)
 		-- only include this bit if there's a Tegra platform in there
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-			if cfginfo.src_platform == "TegraAndroid" then
+			if cfginfo.src_platform == "Android" then
 				_p(1,'<PropertyGroup Label="NsightTegraProject">')
 					_p(2,'<NsightTegraProjectRevisionNumber>11</NsightTegraProjectRevisionNumber>')
 				_p(1,'</PropertyGroup>')
@@ -146,7 +146,7 @@
 			_p(2,'<CLRSupport>true</CLRSupport>')
 		end
 
-		if cfg.platform == "TegraAndroid" then
+		if cfg.platform == "Android" then
 			if cfg.androidtargetapi then
 				_p(2,'<AndroidTargetAPI>android-%s</AndroidTargetAPI>', cfg.androidtargetapi)
 			end
@@ -350,7 +350,7 @@
 			if cfg.flags.NoExceptions then
 				_p(3, '<CppExceptions>false</CppExceptions>')
 			end
-		elseif cfg.platform == "TegraAndroid" then
+		elseif cfg.platform == "Android" then
 			if cfg.flags.NoExceptions then
 				_p(3, '<GccExceptionHandling>false</GccExceptionHandling>')
 			end
@@ -403,7 +403,7 @@
 			if cfg.flags.FloatFast then
 				_p(3,'<FastMath>true</FastMath>')
 			end
-		elseif cfg.platform == "TegraAndroid" then
+		elseif cfg.platform == "Android" then
 			-- TODO: tegra setting
 		else
 			if cfg.flags.FloatFast then
@@ -481,10 +481,10 @@
 
 		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
 			, table.concat(premake.esc(buildoptions), " ")
-			, iif(cfg.flags.UnsignedChar and cfg.platform ~= "TegraAndroid", unsignedChar, " ")
+			, iif(cfg.flags.UnsignedChar and cfg.platform ~= "Android", unsignedChar, " ")
 			)
 
-		if cfg.platform == "TegraAndroid" then
+		if cfg.platform == "Android" then
 			_p(3,'<SignedChar>%s</SignedChar>', tostring(cfg.flags.UnsignedChar == nil))
 			_p(3,'<GenerateDebugInformation>%s</GenerateDebugInformation>', tostring(cfg.flags.Symbols ~= nil))
 			if cfg.androidcppstandard then
@@ -503,7 +503,7 @@
 			else
 				_p(3,'<OptimizationLevel>Level2</OptimizationLevel>')
 			end
-		elseif cfg.platform == "TegraAndroid" then
+		elseif cfg.platform == "Android" then
 			local opt = optimisation(cfg)
 			if opt == "Disabled" then
 				_p(3,'<OptimizationLevel>O0</OptimizationLevel>')
@@ -588,7 +588,7 @@
 			if cfg.flags.FatalWarnings then
 				_p(3, '<WarningsAsErrors>true</WarningsAsErrors>')
 			end
-		elseif cfg.platform == "TegraAndroid" then
+		elseif cfg.platform == "Android" then
 			if cfg.flags.PedanticWarnings or cfg.flags.ExtraWarnings then
 				_p(3, '<Warnings>AllWarnings</Warnings>')
 			elseif cfg.flags.MinimumWarnings then
@@ -918,7 +918,7 @@
 			end
 		end
 
-		if cfg.platform == "TegraAndroid" then
+		if cfg.platform == "Android" then
 			if cfg.androidlinker then
 				_p(3,'<UseLinker>%s</UseLinker>',cfg.androidlinker)
 			end
@@ -990,7 +990,7 @@
 
 			-- On Android, we need to shove a linking group in to resolve libs
 			-- with circular deps.
-			if cfg.platform == "TegraAndroid" then
+			if cfg.platform == "Android" then
 				deps = "-Wl,--start-group;" .. deps .. ";-Wl,--end-group"
 			end
 
@@ -1012,7 +1012,7 @@
 
 	function ant_build(prj, cfg)
 		-- only include this bit for Tegra
-		if cfg.platform == "TegraAndroid" then
+		if cfg.platform == "Android" then
 			local files = vc2010.getfilegroup(prj, "AndroidBuild")
 			_p(2,'<AntBuild>')
 			if #files > 0 then
@@ -1339,7 +1339,7 @@
 					-- Android and NX need a full path to an object file, not a dir.
 					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 					local namestyle = premake.getnamestyle(cfg)
-					if namestyle == "TegraAndroid" or namestyle == "NX" then
+					if namestyle == "Android" or namestyle == "NX" then
 						_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s.o</ObjectFileName>', premake.esc(vsconfig.name), premake.esc(path.translate(path.trimdots(path.removeext(file.name)))) )
 					else
 						if disambiguation > 0 then
@@ -1597,7 +1597,7 @@
 			  iif(isnx,                           'OasisNXDebugger'
 			, iif(cfg.platform == "Orbis",        'ORBISDebugger'
 			, iif(cfg.platform == "Durango",      'XboxOneVCppDebugger'
-			, iif(cfg.platform == "TegraAndroid", 'AndroidDebugger'
+			, iif(cfg.platform == "Android", 'AndroidDebugger'
 			, iif(vstudio.iswinrt(),              'AppHostLocalDebugger'
 			,                                     'WindowsLocalDebugger'
 			)))))
@@ -1633,7 +1633,7 @@
 			_p(2, '<DeployMode>%s</DeployMode>', cfg.deploymode)
 		end
 
-		if cfg.platform == "TegraAndroid" then
+		if cfg.platform == "Android" then
 			if cfg.androiddebugintentparams then
 				_p(2, '<IntentParams>%s</IntentParams>'
 					, table.concat(cfg.androiddebugintentparams, " ")

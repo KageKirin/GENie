@@ -80,11 +80,11 @@
 			nosharedlibs    = true,
 			namestyle       = "windows",
 		},
-		TegraAndroid =
+		Android =
 		{
-			cfgsuffix       = "tegraandroid",
+			cfgsuffix       = "android",
 			iscrosscompiler = true,
-			namestyle       = "TegraAndroid",
+			namestyle       = "Android",
 		},
 		NX32 =
 		{

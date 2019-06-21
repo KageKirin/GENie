@@ -806,7 +806,7 @@
 			scope = "config",
 		},
 
-		-- Tegra Android options
+		-- Android options
 		androidtargetapi =
 		{
 			kind = "string",

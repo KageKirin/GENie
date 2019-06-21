@@ -535,7 +535,7 @@
 			elseif kind == "SharedLib" then
 				ext = ".prx"
 			end
-		elseif namestyle == "TegraAndroid" then
+		elseif namestyle == "Android" then
 			-- the .so->.apk happens later for Application types
 			if kind == "ConsoleApp" or kind == "WindowedApp" or kind == "SharedLib" then
 				prefix = "lib"
