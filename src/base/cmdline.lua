@@ -76,6 +76,7 @@
 			{ "xbox360",     "Xbox 360" },
 			{ "durango",     "Xbox One" },
 			{ "ARM",         "ARM" },
+			{ "Android",     "Android" },
 			{ "PowerPC",     "PowerPC" },
 		}
 	}
