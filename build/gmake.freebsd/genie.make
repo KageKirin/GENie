@@ -47,53 +47,91 @@ ifeq ($(config),release)
   TARGETDIR           = ../../bin/bsd
   override TARGET              = $(TARGETDIR)/genie
   DEFINES            += -DNDEBUG -DLUA_COMPAT_MODULE -DLUA_USE_POSIX -DLUA_USE_DLOPEN
-  INCLUDES           += -I"../../src/host/lua-5.3.0/src"
+  INCLUDES           += -I"../../src/host/luajit-2.0.5/src"
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
-  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os
+  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -Wno-implicit-fallthrough
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -Wno-implicit-fallthrough
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -Wno-implicit-fallthrough
+  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -Wno-implicit-fallthrough
+  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -Os -m64 -Wno-implicit-fallthrough
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS        += $(LDFLAGS) -L. -s -rdynamic
+  ALL_LDFLAGS        += $(LDFLAGS) -L"." -s -rdynamic
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -lm
   EXTERNAL_LIBS      +=
-  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  LINKOBJS            = $(OBJECTS)
+  LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbitlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcode.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcorolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lctype.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldblib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldebug.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldo.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lfunc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lgc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/linit.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/liolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/llex.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmathlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmem.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loadlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lobject.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lopcodes.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loslib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lparser.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstate.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstring.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstrlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltable.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltablib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lundump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_asm.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_fold.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_lib.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_peobj.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/minilua.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_aux.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_base.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_bit.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_debug.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_ffi.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_init.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_io.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_jit.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_math.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_os.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_package.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_string.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_table.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_alloc.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_api.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_asm.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bc.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bcread.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bcwrite.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_carith.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ccall.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ccallback.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cconv.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cdata.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_char.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_clib.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cparse.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_crecord.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ctype.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_debug.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_dispatch.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_err.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ffrecord.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_func.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_gc.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_gdbjit.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ir.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_lex.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_lib.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_load.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_mcode.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_meta.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_obj.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_dce.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_fold.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_loop.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_mem.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_narrow.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_sink.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_split.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_parse.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_record.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_snap.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_state.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_str.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_strscan.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_tab.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_trace.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_udata.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_vmevent.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_vmmath.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/ljamalg.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/luajit.o \
 	$(OBJDIR)/src/host/os_chdir.o \
 	$(OBJDIR)/src/host/os_copyfile.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -130,53 +168,91 @@ ifeq ($(config),debug)
   TARGETDIR           = ../../bin/bsd
   override TARGET              = $(TARGETDIR)/genie
   DEFINES            += -D_DEBUG -DLUA_COMPAT_MODULE -DLUA_USE_POSIX -DLUA_USE_DLOPEN
-  INCLUDES           += -I"../../src/host/lua-5.3.0/src"
+  INCLUDES           += -I"../../src/host/luajit-2.0.5/src"
   ALL_CPPFLAGS       += $(CPPFLAGS) -MMD -MP -MP $(DEFINES) $(INCLUDES)
-  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
-  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g
+  ALL_ASMFLAGS       += $(ASMFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -Wno-implicit-fallthrough
+  ALL_CFLAGS         += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -Wno-implicit-fallthrough
+  ALL_CXXFLAGS       += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -Wno-implicit-fallthrough
+  ALL_OBJCFLAGS      += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -Wno-implicit-fallthrough
+  ALL_OBJCPPFLAGS    += $(CXXFLAGS) $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH) -Wall -Wextra -g -m64 -Wno-implicit-fallthrough
   ALL_RESFLAGS       += $(RESFLAGS) $(DEFINES) $(INCLUDES)
-  ALL_LDFLAGS        += $(LDFLAGS) -L. -rdynamic
+  ALL_LDFLAGS        += $(LDFLAGS) -L"." -rdynamic
+  LIBDEPS            +=
   LDDEPS             +=
   LIBS               += $(LDDEPS) -lm
   EXTERNAL_LIBS      +=
-  LINKCMD             = $(CC) -o $(TARGET) $(OBJECTS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
+  LINKOBJS            = $(OBJECTS)
+  LINKCMD             = $(CC) -o $(TARGET) $(LINKOBJS) $(RESOURCES) $(ARCH) $(ALL_LDFLAGS) $(LIBS)
   OBJECTS := \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lbitlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcode.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lcorolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lctype.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldblib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldebug.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldo.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ldump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lfunc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lgc.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/linit.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/liolib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/llex.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmathlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lmem.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loadlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lobject.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lopcodes.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/loslib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lparser.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstate.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstring.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lstrlib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltable.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltablib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/ltm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lundump.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o \
-	$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_asm.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_fold.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_lib.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_peobj.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host/minilua.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_aux.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_base.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_bit.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_debug.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_ffi.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_init.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_io.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_jit.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_math.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_os.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_package.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_string.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lib_table.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_alloc.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_api.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_asm.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bc.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bcread.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bcwrite.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_carith.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ccall.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ccallback.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cconv.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cdata.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_char.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_clib.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cparse.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_crecord.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ctype.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_debug.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_dispatch.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_err.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ffrecord.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_func.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_gc.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_gdbjit.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ir.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_lex.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_lib.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_load.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_mcode.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_meta.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_obj.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_dce.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_fold.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_loop.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_mem.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_narrow.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_sink.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_split.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_parse.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_record.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_snap.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_state.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_str.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_strscan.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_tab.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_trace.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_udata.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_vmevent.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/lj_vmmath.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/ljamalg.o \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/luajit.o \
 	$(OBJDIR)/src/host/os_chdir.o \
 	$(OBJDIR)/src/host/os_copyfile.o \
 	$(OBJDIR)/src/host/os_getcwd.o \
@@ -211,7 +287,8 @@ endif
 OBJDIRS := \
 	$(OBJDIR) \
 	$(OBJDIR)/src/host \
-	$(OBJDIR)/src/host/lua-5.3.0/src \
+	$(OBJDIR)/src/host/luajit-2.0.5/src \
+	$(OBJDIR)/src/host/luajit-2.0.5/src/host \
 
 RESOURCES := \
 
@@ -220,7 +297,7 @@ RESOURCES := \
 all: $(OBJDIRS) $(TARGETDIR) prebuild prelink $(TARGET)
 	@:
 
-$(TARGET): $(GCH) $(OBJECTS) $(LDDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
+$(TARGET): $(GCH) $(OBJECTS) $(LIBDEPS) $(EXTERNAL_LIBS) $(RESOURCES) | $(TARGETDIR) $(OBJDIRS)
 	@echo Linking genie
 	$(SILENT) $(LINKCMD)
 	$(POSTBUILDCMDS)
@@ -259,223 +336,367 @@ $(GCH_OBJC): $(PCH) $(MAKEFILE) | $(OBJDIR)
 	$(SILENT) $(CC) $(ALL_OBJCFLAGS) -x objective-c-header $(DEFINES) $(INCLUDES) -o "$@" -c "$<"
 endif
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lapi.o: ../../src/host/lua-5.3.0/src/lapi.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm.o: ../../src/host/luajit-2.0.5/src/host/buildvm.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lauxlib.o: ../../src/host/lua-5.3.0/src/lauxlib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_asm.o: ../../src/host/luajit-2.0.5/src/host/buildvm_asm.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lbaselib.o: ../../src/host/lua-5.3.0/src/lbaselib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_fold.o: ../../src/host/luajit-2.0.5/src/host/buildvm_fold.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lbitlib.o: ../../src/host/lua-5.3.0/src/lbitlib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_lib.o: ../../src/host/luajit-2.0.5/src/host/buildvm_lib.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lcode.o: ../../src/host/lua-5.3.0/src/lcode.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/host/buildvm_peobj.o: ../../src/host/luajit-2.0.5/src/host/buildvm_peobj.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lcorolib.o: ../../src/host/lua-5.3.0/src/lcorolib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/host/minilua.o: ../../src/host/luajit-2.0.5/src/host/minilua.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lctype.o: ../../src/host/lua-5.3.0/src/lctype.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_aux.o: ../../src/host/luajit-2.0.5/src/lib_aux.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ldblib.o: ../../src/host/lua-5.3.0/src/ldblib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_base.o: ../../src/host/luajit-2.0.5/src/lib_base.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ldebug.o: ../../src/host/lua-5.3.0/src/ldebug.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_bit.o: ../../src/host/luajit-2.0.5/src/lib_bit.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ldo.o: ../../src/host/lua-5.3.0/src/ldo.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_debug.o: ../../src/host/luajit-2.0.5/src/lib_debug.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ldump.o: ../../src/host/lua-5.3.0/src/ldump.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_ffi.o: ../../src/host/luajit-2.0.5/src/lib_ffi.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lfunc.o: ../../src/host/lua-5.3.0/src/lfunc.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_init.o: ../../src/host/luajit-2.0.5/src/lib_init.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lgc.o: ../../src/host/lua-5.3.0/src/lgc.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_io.o: ../../src/host/luajit-2.0.5/src/lib_io.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/linit.o: ../../src/host/lua-5.3.0/src/linit.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_jit.o: ../../src/host/luajit-2.0.5/src/lib_jit.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/liolib.o: ../../src/host/lua-5.3.0/src/liolib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_math.o: ../../src/host/luajit-2.0.5/src/lib_math.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/llex.o: ../../src/host/lua-5.3.0/src/llex.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_os.o: ../../src/host/luajit-2.0.5/src/lib_os.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lmathlib.o: ../../src/host/lua-5.3.0/src/lmathlib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_package.o: ../../src/host/luajit-2.0.5/src/lib_package.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lmem.o: ../../src/host/lua-5.3.0/src/lmem.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_string.o: ../../src/host/luajit-2.0.5/src/lib_string.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/loadlib.o: ../../src/host/lua-5.3.0/src/loadlib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lib_table.o: ../../src/host/luajit-2.0.5/src/lib_table.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lobject.o: ../../src/host/lua-5.3.0/src/lobject.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_alloc.o: ../../src/host/luajit-2.0.5/src/lj_alloc.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lopcodes.o: ../../src/host/lua-5.3.0/src/lopcodes.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_api.o: ../../src/host/luajit-2.0.5/src/lj_api.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/loslib.o: ../../src/host/lua-5.3.0/src/loslib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_asm.o: ../../src/host/luajit-2.0.5/src/lj_asm.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lparser.o: ../../src/host/lua-5.3.0/src/lparser.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bc.o: ../../src/host/luajit-2.0.5/src/lj_bc.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lstate.o: ../../src/host/lua-5.3.0/src/lstate.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bcread.o: ../../src/host/luajit-2.0.5/src/lj_bcread.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lstring.o: ../../src/host/lua-5.3.0/src/lstring.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_bcwrite.o: ../../src/host/luajit-2.0.5/src/lj_bcwrite.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lstrlib.o: ../../src/host/lua-5.3.0/src/lstrlib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_carith.o: ../../src/host/luajit-2.0.5/src/lj_carith.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ltable.o: ../../src/host/lua-5.3.0/src/ltable.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ccall.o: ../../src/host/luajit-2.0.5/src/lj_ccall.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ltablib.o: ../../src/host/lua-5.3.0/src/ltablib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ccallback.o: ../../src/host/luajit-2.0.5/src/lj_ccallback.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/ltm.o: ../../src/host/lua-5.3.0/src/ltm.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cconv.o: ../../src/host/luajit-2.0.5/src/lj_cconv.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lundump.o: ../../src/host/lua-5.3.0/src/lundump.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cdata.o: ../../src/host/luajit-2.0.5/src/lj_cdata.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lutf8lib.o: ../../src/host/lua-5.3.0/src/lutf8lib.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_char.o: ../../src/host/luajit-2.0.5/src/lj_char.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lvm.o: ../../src/host/lua-5.3.0/src/lvm.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_clib.o: ../../src/host/luajit-2.0.5/src/lj_clib.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/lua-5.3.0/src/lzio.o: ../../src/host/lua-5.3.0/src/lzio.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_cparse.o: ../../src/host/luajit-2.0.5/src/lj_cparse.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_chdir.o: ../../src/host/os_chdir.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_crecord.o: ../../src/host/luajit-2.0.5/src/lj_crecord.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_copyfile.o: ../../src/host/os_copyfile.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ctype.o: ../../src/host/luajit-2.0.5/src/lj_ctype.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_getcwd.o: ../../src/host/os_getcwd.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_debug.o: ../../src/host/luajit-2.0.5/src/lj_debug.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_is64bit.o: ../../src/host/os_is64bit.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_dispatch.o: ../../src/host/luajit-2.0.5/src/lj_dispatch.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_isdir.o: ../../src/host/os_isdir.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_err.o: ../../src/host/luajit-2.0.5/src/lj_err.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_isfile.o: ../../src/host/os_isfile.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ffrecord.o: ../../src/host/luajit-2.0.5/src/lj_ffrecord.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_match.o: ../../src/host/os_match.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_func.o: ../../src/host/luajit-2.0.5/src/lj_func.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_mkdir.o: ../../src/host/os_mkdir.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_gc.o: ../../src/host/luajit-2.0.5/src/lj_gc.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_pathsearch.o: ../../src/host/os_pathsearch.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_gdbjit.o: ../../src/host/luajit-2.0.5/src/lj_gdbjit.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_rmdir.o: ../../src/host/os_rmdir.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_ir.o: ../../src/host/luajit-2.0.5/src/lj_ir.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_stat.o: ../../src/host/os_stat.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_lex.o: ../../src/host/luajit-2.0.5/src/lj_lex.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_ticks.o: ../../src/host/os_ticks.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_lib.o: ../../src/host/luajit-2.0.5/src/lj_lib.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/os_uuid.o: ../../src/host/os_uuid.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_load.o: ../../src/host/luajit-2.0.5/src/lj_load.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/path_getabsolute.o: ../../src/host/path_getabsolute.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_mcode.o: ../../src/host/luajit-2.0.5/src/lj_mcode.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/path_getrelative.o: ../../src/host/path_getrelative.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_meta.o: ../../src/host/luajit-2.0.5/src/lj_meta.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/path_helpers.o: ../../src/host/path_helpers.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_obj.o: ../../src/host/luajit-2.0.5/src/lj_obj.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/path_isabsolute.o: ../../src/host/path_isabsolute.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_dce.o: ../../src/host/luajit-2.0.5/src/lj_opt_dce.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/premake.o: ../../src/host/premake.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_fold.o: ../../src/host/luajit-2.0.5/src/lj_opt_fold.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/premake_main.o: ../../src/host/premake_main.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_loop.o: ../../src/host/luajit-2.0.5/src/lj_opt_loop.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/scripts.o: ../../src/host/scripts.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_mem.o: ../../src/host/luajit-2.0.5/src/lj_opt_mem.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/string_endswith.o: ../../src/host/string_endswith.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_narrow.o: ../../src/host/luajit-2.0.5/src/lj_opt_narrow.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/string_hash.o: ../../src/host/string_hash.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_sink.o: ../../src/host/luajit-2.0.5/src/lj_opt_sink.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_opt_split.o: ../../src/host/luajit-2.0.5/src/lj_opt_split.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_parse.o: ../../src/host/luajit-2.0.5/src/lj_parse.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_record.o: ../../src/host/luajit-2.0.5/src/lj_record.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_snap.o: ../../src/host/luajit-2.0.5/src/lj_snap.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_state.o: ../../src/host/luajit-2.0.5/src/lj_state.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_str.o: ../../src/host/luajit-2.0.5/src/lj_str.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_strscan.o: ../../src/host/luajit-2.0.5/src/lj_strscan.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_tab.o: ../../src/host/luajit-2.0.5/src/lj_tab.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_trace.o: ../../src/host/luajit-2.0.5/src/lj_trace.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_udata.o: ../../src/host/luajit-2.0.5/src/lj_udata.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_vmevent.o: ../../src/host/luajit-2.0.5/src/lj_vmevent.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/lj_vmmath.o: ../../src/host/luajit-2.0.5/src/lj_vmmath.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/ljamalg.o: ../../src/host/luajit-2.0.5/src/ljamalg.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/luajit-2.0.5/src/luajit.o: ../../src/host/luajit-2.0.5/src/luajit.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host/luajit-2.0.5/src
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_chdir.o: ../../src/host/os_chdir.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_copyfile.o: ../../src/host/os_copyfile.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_getcwd.o: ../../src/host/os_getcwd.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_is64bit.o: ../../src/host/os_is64bit.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_isdir.o: ../../src/host/os_isdir.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_isfile.o: ../../src/host/os_isfile.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_match.o: ../../src/host/os_match.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_mkdir.o: ../../src/host/os_mkdir.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_pathsearch.o: ../../src/host/os_pathsearch.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_rmdir.o: ../../src/host/os_rmdir.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_stat.o: ../../src/host/os_stat.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_ticks.o: ../../src/host/os_ticks.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/os_uuid.o: ../../src/host/os_uuid.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/path_getabsolute.o: ../../src/host/path_getabsolute.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/path_getrelative.o: ../../src/host/path_getrelative.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/path_helpers.o: ../../src/host/path_helpers.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/path_isabsolute.o: ../../src/host/path_isabsolute.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/premake.o: ../../src/host/premake.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/premake_main.o: ../../src/host/premake_main.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/scripts.o: ../../src/host/scripts.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/string_endswith.o: ../../src/host/string_endswith.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
+	@echo $(notdir $<)
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
+
+$(OBJDIR)/src/host/string_hash.o: ../../src/host/string_hash.c $(GCH) $(MAKEFILE) | $(OBJDIR)/src/host
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 

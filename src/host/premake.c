@@ -239,7 +239,8 @@ int process_arguments(lua_State* L, int argc, const char** argv)
 			while (i < argc)
 			{
 				lua_pushstring(L, argv[i++]);
-				lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);
+				/*lua_rawseti(L, -2, lua_rawlen(L, -2) + 1);*/
+				lua_rawseti(L, -2, lua_objlen(L, -2) + 1);
 			}
 		}
 	}

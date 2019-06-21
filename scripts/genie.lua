@@ -27,13 +27,15 @@
 		}
 
 		includedirs {
-			"../src/host/lua-5.3.0/src"
+			-- "../src/host/lua-5.3.0/src",
+			"../src/host/luajit-2.1.0-beta3/src",
 		}
 
 		files {
 			"../**.lua",
 			"../src/**.h",
 			"../src/**.c",
+			"../src/**.S",
 			"../src/host/scripts.c",
 		}
 
@@ -43,6 +45,17 @@
 			"../src/host/lua-5.3.0/src/luac.c",
 			"../src/host/lua-5.3.0/**.lua",
 			"../src/host/lua-5.3.0/etc/*.c",
+			"../src/host/luajit-2.1.0-beta3/src/lua.c",
+			"../src/host/luajit-2.1.0-beta3/src/luac.c",
+			"../src/host/luajit-2.1.0-beta3/**.lua",
+			"../src/host/luajit-2.1.0-beta3/etc/*.c",
+		}
+
+		removefiles {
+			"../src/host/lua-5.3.0/**.c",
+			"../src/host/luajit-2.1.0-beta3/src/ljamalg.c",
+			"../src/host/luajit-2.1.0-beta3/src/host/*.c",
+			"../src/host/luajit-2.1.0-beta3/src/luajit.c",
 		}
 
 		buildoptions {
@@ -50,11 +63,11 @@
 		}
 
 		configuration "Debug"
-			defines     { "_DEBUG", "LUA_COMPAT_MODULE" }
+			defines     { "_DEBUG", "LUA_COMPAT_MODULE", "LUAJIT_ENABLE_LUA52COMPAT" }
 			flags       { "Symbols" }
 
 		configuration "Release"
-			defines     { "NDEBUG", "LUA_COMPAT_MODULE" }
+			defines     { "NDEBUG", "LUA_COMPAT_MODULE", "LUAJIT_ENABLE_LUA52COMPAT" }
 			flags       { "OptimizeSize" }
 
 		configuration "vs*"
@@ -78,9 +91,10 @@
 			linkoptions  { "-rdynamic" }
 
 		configuration "macosx"
-			targetdir   "../bin/darwin"
-			defines     { "LUA_USE_MACOSX" }
-			links       { "CoreServices.framework" }
+			targetdir    "../bin/darwin"
+			defines      { "LUA_USE_MACOSX" }
+			linkoptions  { "-pagezero_size 10000", "-image_base 100000000" }
+			links        { "CoreServices.framework" }
 
 		configuration { "macosx", "gmake" }
 			buildoptions { "-mmacosx-version-min=10.6" }
