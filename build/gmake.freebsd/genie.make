@@ -111,8 +111,8 @@ ifeq ($(config),release)
 	$(OBJDIR)/src/host/path_getrelative.o \
 	$(OBJDIR)/src/host/path_helpers.o \
 	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/premake.o \
-	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/genie.o \
+	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
 	$(OBJDIR)/src/host/string_hash.o \
@@ -194,8 +194,8 @@ ifeq ($(config),debug)
 	$(OBJDIR)/src/host/path_getrelative.o \
 	$(OBJDIR)/src/host/path_helpers.o \
 	$(OBJDIR)/src/host/path_isabsolute.o \
-	$(OBJDIR)/src/host/premake.o \
-	$(OBJDIR)/src/host/premake_main.o \
+	$(OBJDIR)/src/host/genie.o \
+	$(OBJDIR)/src/host/genie_main.o \
 	$(OBJDIR)/src/host/scripts.o \
 	$(OBJDIR)/src/host/string_endswith.o \
 	$(OBJDIR)/src/host/string_hash.o \
@@ -459,11 +459,11 @@ $(OBJDIR)/src/host/path_isabsolute.o: ../../src/host/path_isabsolute.c $(GCH) $(
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/premake.o: ../../src/host/premake.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/genie.o: ../../src/host/genie.c $(GCH) $(MAKEFILE)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
-$(OBJDIR)/src/host/premake_main.o: ../../src/host/premake_main.c $(GCH) $(MAKEFILE)
+$(OBJDIR)/src/host/genie_main.o: ../../src/host/genie_main.c $(GCH) $(MAKEFILE)
 	@echo $(notdir $<)
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -c "$<"
 
