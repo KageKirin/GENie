@@ -1,5 +1,5 @@
 --
--- Premake 4.x build configuration script
+-- GENie 1.x build configuration script
 --
 
 --
@@ -7,7 +7,7 @@
 -- default when folks build using the makefile. That way they don't have to
 -- worry about the /scripts argument and all that.
 --
-	premake.make.override = { "TARGET" }
+	genie.make.override = { "TARGET" }
 
 	solution "genie"
 		configurations {
@@ -38,7 +38,7 @@
 		}
 
 		excludes {
-			"../src/premake.lua",
+			"../src/genie.lua",
 			"../src/host/lua-5.3.0/src/lua.c",
 			"../src/host/lua-5.3.0/src/luac.c",
 			"../src/host/lua-5.3.0/**.lua",

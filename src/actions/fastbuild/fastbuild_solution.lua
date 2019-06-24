@@ -4,7 +4,7 @@
 -- arbitrarily changed each time it's generated. There are several places in this file
 -- where sorts are done for that reason.
 
-	function premake.fastbuild.solution(sln)
+	function genie.fastbuild.solution(sln)
 		-- Presuppose we are building a fastbuild config for vs2015 only.
 
 		io.indent = '    '
@@ -158,14 +158,14 @@
 		end
 
 		local sortedprojs = {}
-		for prj in premake.solution.eachproject(sln) do
+		for prj in genie.solution.eachproject(sln) do
 			table.insert(sortedprojs, prj)
 		end
 
 		table.sort(sortedprojs, projkindsort)
 
 		for _, prj in ipairs(sortedprojs) do
-			local fname = premake.project.getbasename(prj.name, '%%.bff')
+			local fname = genie.project.getbasename(prj.name, '%%.bff')
 			fname = path.join(prj.location, fname)
 			fname = path.getrelative(sln.location, fname)
 			_p('#include "%s"', fname)

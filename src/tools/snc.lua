@@ -5,7 +5,7 @@
 --
 
 
-	premake.snc = { }
+	genie.snc = { }
 
 
 -- TODO: Will cfg.system == "windows" ever be true for SNC? If
@@ -15,13 +15,13 @@
 -- Set default tools
 --
 
-	premake.snc.cc     = "snc"
-	premake.snc.cxx    = "g++"
-	premake.snc.ar     = "ar"
+	genie.snc.cc     = "snc"
+	genie.snc.cxx    = "g++"
+	genie.snc.ar     = "ar"
 
 
 --
--- Translation of Premake flags into SNC flags
+-- Translation of GENie flags into SNC flags
 --
 
 	local cflags =
@@ -42,7 +42,7 @@
 -- Map platforms to flags
 --
 
-	premake.snc.platforms =
+	genie.snc.platforms =
 	{
 		PS3 = {
 			cc         = "ppu-lv2-g++",
@@ -52,20 +52,20 @@
 		}
 	}
 
-	local platforms = premake.snc.platforms
+	local platforms = genie.snc.platforms
 
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-	function premake.snc.getcppflags(cfg)
+	function genie.snc.getcppflags(cfg)
 		local result = { }
 		table.insert(result, platforms[cfg.platform].cppflags)
 		return result
 	end
 
-	function premake.snc.getcflags(cfg)
+	function genie.snc.getcflags(cfg)
 		local result = table.translate(cfg.flags, cflags)
 		table.insert(result, platforms[cfg.platform].flags)
 		if cfg.kind == "SharedLib" then
@@ -75,7 +75,7 @@
 		return result
 	end
 
-	function premake.snc.getcxxflags(cfg)
+	function genie.snc.getcxxflags(cfg)
 		local result = table.translate(cfg.flags, cxxflags)
 		return result
 	end
@@ -86,7 +86,7 @@
 -- Returns a list of linker flags, based on the supplied configuration.
 --
 
-	function premake.snc.getldflags(cfg)
+	function genie.snc.getldflags(cfg)
 		local result = { }
 
 		if not cfg.flags.Symbols then
@@ -114,9 +114,9 @@
 -- #1729227 for background on why library paths must be split.
 --
 
-	function premake.snc.getlibdirflags(cfg)
+	function genie.snc.getlibdirflags(cfg)
 		local result = { }
-		for _, value in ipairs(premake.getlinks(cfg, "all", "directory")) do
+		for _, value in ipairs(genie.getlinks(cfg, "all", "directory")) do
 			table.insert(result, '-L' .. _MAKE.esc(value))
 		end
 		return result
@@ -131,7 +131,7 @@
 -- library gets updated.
 -- Not currently supported on this toolchain.
 --
-	function premake.snc.getlibfiles(cfg)
+	function genie.snc.getlibfiles(cfg)
 		local result = {}
 		return result
 	end
@@ -142,9 +142,9 @@
 	-- background on why the path must be split.
 	--
 
-	function premake.snc.getlinkflags(cfg)
+	function genie.snc.getlinkflags(cfg)
 		local result = {}
-		for _, value in ipairs(premake.getlinks(cfg, "system", "name")) do
+		for _, value in ipairs(genie.getlinks(cfg, "system", "name")) do
 			table.insert(result, '-l' .. _MAKE.esc(value))
 		end
 		return result
@@ -156,7 +156,7 @@
 -- Decorate defines for the SNC command line.
 --
 
-	function premake.snc.getdefines(defines)
+	function genie.snc.getdefines(defines)
 		local result = { }
 		for _,def in ipairs(defines) do
 			table.insert(result, '-D' .. def)
@@ -170,7 +170,7 @@
 -- Decorate include file search paths for the SNC command line.
 --
 
-	function premake.snc.getincludedirs(includedirs)
+	function genie.snc.getincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
 			table.insert(result, "-I" .. _MAKE.esc(dir))

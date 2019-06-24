@@ -3,21 +3,21 @@
 -- Provides Green Hills Software-specific configuration strings.
 --
 
-	premake.ghs = { }
-	premake.ghs.namestyle = "PS3"
+	genie.ghs = { }
+	genie.ghs.namestyle = "PS3"
 
 
 --
 -- Set default tools
 --
 
-	premake.ghs.cc     = "ccppc"
-	premake.ghs.cxx    = "cxppc"
-	premake.ghs.ar     = "cxppc"
+	genie.ghs.cc     = "ccppc"
+	genie.ghs.cxx    = "cxppc"
+	genie.ghs.ar     = "cxppc"
 	
 
 --
--- Translation of Premake flags into GHS flags
+-- Translation of GENie flags into GHS flags
 --
 
 	local cflags =
@@ -41,7 +41,7 @@
 -- Map platforms to flags
 --
 
-	premake.ghs.platforms =
+	genie.ghs.platforms =
 	{
 		Native = {
 			cppflags = "-MMD",
@@ -62,28 +62,28 @@
 		}
 	}
 
-	local platforms = premake.ghs.platforms
+	local platforms = genie.ghs.platforms
 
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-	function premake.ghs.getcppflags(cfg)
+	function genie.ghs.getcppflags(cfg)
 		local flags = { }
 		table.insert(flags, platforms[cfg.platform].cppflags)
 		return flags
 	end
 
 
-	function premake.ghs.getcflags(cfg)
+	function genie.ghs.getcflags(cfg)
 		local result = table.translate(cfg.flags, cflags)
 		table.insert(result, platforms[cfg.platform].flags)
 		return result
 	end
 
 
-	function premake.ghs.getcxxflags(cfg)
+	function genie.ghs.getcxxflags(cfg)
 		local result = table.translate(cfg.flags, cxxflags)
 		return result
 	end
@@ -93,7 +93,7 @@
 -- Returns a list of linker flags, based on the supplied configuration.
 --
 
-	function premake.ghs.getldflags(cfg)
+	function genie.ghs.getldflags(cfg)
 		local result = { }
 		
 		local platform = platforms[cfg.platform]
@@ -110,9 +110,9 @@
 -- #1729227 for background on why library paths must be split.
 --
 
-	function premake.ghs.getlibdirflags(cfg)
+	function genie.ghs.getlibdirflags(cfg)
 		local result = { }
-		for _, value in ipairs(premake.getlinks(cfg, "all", "directory")) do
+		for _, value in ipairs(genie.getlinks(cfg, "all", "directory")) do
 			table.insert(result, '-L' .. _MAKE.esc(value))
 		end
 		return result
@@ -125,7 +125,7 @@
 -- library gets updated.
 -- Not currently supported on this toolchain.
 --
-	function premake.ghs.getlibfiles(cfg)
+	function genie.ghs.getlibfiles(cfg)
 		local result = {}
 		return result
 	end
@@ -136,9 +136,9 @@
 -- background on why the path must be split.
 --
 
-	function premake.ghs.getlinkflags(cfg)
+	function genie.ghs.getlinkflags(cfg)
 		local result = {}
-		for _, value in ipairs(premake.getlinks(cfg, "system", "name")) do
+		for _, value in ipairs(genie.getlinks(cfg, "system", "name")) do
 			table.insert(result, '-lnk=' .. _MAKE.esc(value))
 		end
 		return result
@@ -151,7 +151,7 @@
 --  ndx: true if the final step of a split archive
 --
 
-	function premake.ghs.getarchiveflags(prj, cfg, ndx)
+	function genie.ghs.getarchiveflags(prj, cfg, ndx)
 		if prj.options.ArchiveSplit then
 			error("ghs tool does not support split archives")
 		end
@@ -168,7 +168,7 @@
 -- Decorate defines for the GHS command line.
 --
 
-	function premake.ghs.getdefines(defines)
+	function genie.ghs.getdefines(defines)
 		local result = { }
 		for _,def in ipairs(defines) do
 			table.insert(result, '-D' .. def)
@@ -182,7 +182,7 @@
 -- Decorate include file search paths for the GCC command line.
 --
 
-	function premake.ghs.getincludedirs(includedirs)
+	function genie.ghs.getincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
 			table.insert(result, "-I" .. _MAKE.esc(dir))
@@ -196,6 +196,6 @@
 -- makesettings blocks.
 --
 
-	function premake.ghs.getcfgsettings(cfg)
+	function genie.ghs.getcfgsettings(cfg)
 		return platforms[cfg.platform].cfgsettings
 	end

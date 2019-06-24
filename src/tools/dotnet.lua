@@ -5,12 +5,12 @@
 --
 
 
-	premake.dotnet = { }
-	premake.dotnet.namestyle = "windows"
+	genie.dotnet = { }
+	genie.dotnet.namestyle = "windows"
 
 
 --
--- Translation of Premake flags into CSC flags
+-- Translation of GENie flags into CSC flags
 --
 
 	local flags =
@@ -28,7 +28,7 @@
 -- Return the default build action for a given file, based on the file extension.
 --
 
-	function premake.dotnet.getbuildaction(fcfg)
+	function genie.dotnet.getbuildaction(fcfg)
 		local ext = path.getextension(fcfg.name):lower()
 		if fcfg.buildaction == "Compile" or ext == ".cs" then
 			return "Compile"
@@ -47,7 +47,7 @@
 -- Returns the compiler filename (they all use the same arguments)
 --
 
-	function premake.dotnet.getcompilervar(cfg)
+	function genie.dotnet.getcompilervar(cfg)
 		if (_OPTIONS.dotnet == "msnet") then
 			return "csc"
 		elseif (_OPTIONS.dotnet == "mono") then
@@ -63,7 +63,7 @@
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-	function premake.dotnet.getflags(cfg)
+	function genie.dotnet.getflags(cfg)
 		local result = table.translate(cfg.flags, flags)
 		return result
 	end
@@ -71,10 +71,10 @@
 
 
 --
--- Translates the Premake kind into the CSC kind string.
+-- Translates the GENie kind into the CSC kind string.
 --
 
-	function premake.dotnet.getkind(cfg)
+	function genie.dotnet.getkind(cfg)
 		if (cfg.kind == "ConsoleApp") then
 			return "Exe"
 		elseif (cfg.kind == "WindowedApp") then

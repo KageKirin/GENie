@@ -7,12 +7,12 @@
 
 -- A top-level namespace for support functions
 
-	premake = { }
+	genie = { }
 
 
 -- The list of supported platforms; also update list in cmdline.lua
 
-	premake.platforms =
+	genie.platforms =
 	{
 		Native =
 		{
@@ -122,7 +122,7 @@
 
 		-- if the file doesn't exist, check the search path
 		if (not os.isfile(fname)) then
-			local path = os.pathsearch(fname, _OPTIONS["scripts"], os.getenv("PREMAKE_PATH"))
+			local path = os.pathsearch(fname, _OPTIONS["scripts"], os.getenv("GENIE_PATH"))
 			if (path) then
 				fname = path.."/"..fname
 			end
@@ -166,7 +166,7 @@
 --
 
 	function include(fname)
-		local dir, name = premake.findDefaultScript(fname, false)
+		local dir, name = genie.findDefaultScript(fname, false)
 		if dir ~= nil then
 			return dofile(dir .. "/" .. name)
 		end

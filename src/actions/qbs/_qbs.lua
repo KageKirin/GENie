@@ -3,9 +3,9 @@
 -- https://github.com/bkaradzic/GENie#license
 --
 
-premake.qbs = { }
+genie.qbs = { }
 
-local qbs = premake.qbs
+local qbs = genie.qbs
 
 newaction
 {
@@ -27,15 +27,15 @@ newaction
 		io.eol    = "\n"
 		io.indent = "\t"
 		io.escaper(qbs.esc)
-		premake.generate(sln, sln.name .. ".creator.qbs",      qbs.generate_solution)
+		genie.generate(sln, sln.name .. ".creator.qbs",      qbs.generate_solution)
 		io.indent = " "
-		premake.generate(sln, sln.name .. ".creator.qbs.user", qbs.generate_user)
+		genie.generate(sln, sln.name .. ".creator.qbs.user", qbs.generate_user)
 	end,
 
 	onproject = function(prj)
 		io.eol    = "\n"
 		io.indent = "\t"
 		io.escaper(qbs.esc)
-		premake.generate(prj, prj.name .. ".qbs", qbs.generate_project)
+		genie.generate(prj, prj.name .. ".qbs", qbs.generate_project)
 	end,
 }

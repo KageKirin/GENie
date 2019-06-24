@@ -4,19 +4,19 @@
 --
 
 
-	premake.valac = { }
+	genie.valac = { }
 
 
 --
 -- Set default tools
 --
 
-	premake.valac.valac  = "valac"
-	premake.valac.cc     = "gcc"
+	genie.valac.valac  = "valac"
+	genie.valac.cc     = "gcc"
 
 
 --
--- Translation of Premake flags into GCC flags
+-- Translation of GENie flags into GCC flags
 --
 
 	local valaflags =
@@ -40,13 +40,13 @@
 		Symbols                   = "-g",                             -- Produce debug information
 	}
 
-	premake.valac.platforms = {}
+	genie.valac.platforms = {}
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-	function premake.valac.getvalaflags(cfg)
+	function genie.valac.getvalaflags(cfg)
 		return table.translate(cfg.flags, valaflags)
 	end
 
@@ -56,7 +56,7 @@
 -- Decorate pkgs for the Vala command line.
 --
 
-	function premake.valac.getlinks(links)
+	function genie.valac.getlinks(links)
 		local result = { }
 		for _, pkg in ipairs(links) do
 			table.insert(result, '--pkg ' .. pkg)
@@ -70,7 +70,7 @@
 -- Decorate defines for the Vala command line.
 --
 
-	function premake.valac.getdefines(defines)
+	function genie.valac.getdefines(defines)
 		local result = { }
 		for _, def in ipairs(defines) do
 			table.insert(result, '-D ' .. def)
@@ -84,7 +84,7 @@
 -- Decorate C flags for the Vala command line.
 --
 
-	function premake.valac.getbuildoptions(buildoptions)
+	function genie.valac.getbuildoptions(buildoptions)
 		local result = { }
 		for _, def in ipairs(buildoptions) do
 			table.insert(result, '-X ' .. def)
@@ -96,7 +96,7 @@
 -- Decorate vapidirs for the Vala command line.
 --
 
-	function premake.valac.getvapidirs(vapidirs)
+	function genie.valac.getvapidirs(vapidirs)
 		local result = { }
 		for _, def in ipairs(vapidirs) do
 			table.insert(result, '--vapidir=' .. def)

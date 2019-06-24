@@ -4,8 +4,8 @@
 -- Copyright (c) 2009 Jason Perkins and the Premake project
 --
 
-	local xcode = premake.xcode
-	local tree = premake.tree
+	local xcode = genie.xcode
+	local tree = genie.tree
 
 --
 -- Create a tree corresponding to what is shown in the Xcode project browser
@@ -18,13 +18,13 @@
 --
 
 	function xcode.buildprjtree(prj)
-		local tr = premake.project.buildsourcetree(prj, true)
+		local tr = genie.project.buildsourcetree(prj, true)
 
 		-- create a list of build configurations and assign IDs
 		tr.configs = {}
 		for _, cfgname in ipairs(prj.solution.configurations) do
 			for _, platform in ipairs(prj.solution.xcode.platforms) do
-				local cfg = premake.getconfig(prj, cfgname, platform)
+				local cfg = genie.getconfig(prj, cfgname, platform)
 				cfg.xcode = {}
 				cfg.xcode.targetid = xcode.newid(prj.xcode.projectnode, "tgt:"..platform..cfgname)
 				cfg.xcode.projectid = xcode.newid(tr, "prj:"..platform..cfgname)
@@ -69,8 +69,8 @@
 
 		-- the special folder "Frameworks" lists all linked frameworks
 		tr.frameworks = tree.new("Frameworks")
-		for cfg in premake.eachconfig(prj) do
-			for _, link in ipairs(premake.getlinks(cfg, "system", "fullpath")) do
+		for cfg in genie.eachconfig(prj) do
+			for _, link in ipairs(genie.getlinks(cfg, "system", "fullpath")) do
 				local name = path.getname(link)
 				if xcode.isframework(name) and not tr.frameworks.children[name] then
 					node = tree.insert(tr.frameworks, tree.new(name))
@@ -90,7 +90,7 @@
 
 		-- the special folder "Projects" lists sibling project dependencies
 		tr.projects = tree.new("Projects")
-		for _, dep in ipairs(premake.getdependencies(prj, "sibling", "object")) do
+		for _, dep in ipairs(genie.getdependencies(prj, "sibling", "object")) do
 			-- create a child node for the dependency's xcodeproj
 			local xcpath = xcode.getxcodeprojname(dep)
 			local xcnode = tree.insert(tr.projects, tree.new(path.getname(xcpath)))
@@ -102,7 +102,7 @@
 			xcnode.targetdependid = xcode.newid(xcnode, "targdep")
 
 			-- create a grandchild node for the dependency's link target
-			local cfg = premake.getconfig(dep, prj.configurations[1])
+			local cfg = genie.getconfig(dep, prj.configurations[1])
 			node = tree.insert(xcnode, tree.new(cfg.linktarget.name))
 			node.path = cfg.linktarget.fullpath
 			node.cfg = cfg

@@ -7,8 +7,8 @@
 -- Copyright (c) 2008-2011 Jason Perkins and the Premake project
 --
 
-	premake.config = { }
-	local config = premake.config
+	genie.config = { }
+	local config = genie.config
 
 
 --
@@ -17,7 +17,7 @@
 -- (and might also be useful elsewhere).
 --
 
-	function premake.config.isdebugbuild(cfg)
+	function genie.config.isdebugbuild(cfg)
 		-- If any of the specific runtime flags are set
 		if cfg.flags.DebugRuntime then
 			return true
@@ -45,14 +45,14 @@
 -- Return an iterator over each file included in this configuration.
 --
 
-	function premake.config.eachfile(cfg)
+	function genie.config.eachfile(cfg)
 		local i = 0
 		local t = cfg.files
 		return function ()
 			i = i + 1
 			if (i <= #t) then
 				local fcfg = cfg.__fileconfigs[t[i]]
-				fcfg.vpath = premake.project.getvpath(cfg.project, fcfg.name)
+				fcfg.vpath = genie.project.getvpath(cfg.project, fcfg.name)
 				return fcfg
 			end
 		end
@@ -63,7 +63,7 @@
 -- Determines if this configuration can be linked incrementally.
 --
 
-	function premake.config.isincrementallink(cfg)
+	function genie.config.isincrementallink(cfg)
 		if cfg.kind == "StaticLib" then
 			return false
 		end
@@ -75,7 +75,7 @@
 -- Determine if this configuration uses one of the optimize flags.
 --
 
-	function premake.config.isoptimizedbuild(flags)
+	function genie.config.isoptimizedbuild(flags)
 		return flags.Optimize or flags.OptimizeSize or flags.OptimizeSpeed
 	end
 
@@ -86,7 +86,7 @@
 -- instead of incremental.
 --
 
-	function premake.config.islinkeroptimizedbuild(flags)
+	function genie.config.islinkeroptimizedbuild(flags)
 		return config.isoptimizedbuild(flags) and not flags.NoOptimizeLink
 	end
 
@@ -95,7 +95,7 @@
 -- Determines if this configuration uses edit and continue.
 --
 
-	function premake.config.iseditandcontinue(cfg)
+	function genie.config.iseditandcontinue(cfg)
 		if cfg.flags.NoEditAndContinue
 				or cfg.flags.Managed
 				or (cfg.kind ~= "StaticLib" and not config.isincrementallink(cfg))

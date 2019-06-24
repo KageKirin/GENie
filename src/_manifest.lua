@@ -1,11 +1,11 @@
 --
 -- _manifest.lua
--- Manage the list of built-in Premake scripts.
+-- Manage the list of built-in GENie scripts.
 -- Copyright (c) 2002-2011 Jason Perkins and the Premake project
 --
 
 -- The master list of built-in scripts. Order is important! If you want to
--- build a new script into Premake, add it to this list.
+-- build a new script into GENie, add it to this list.
 
 	return
 	{
@@ -37,7 +37,7 @@
 		"tools/swift.lua",
 		"base/validate.lua",
 		"base/help.lua",
-		"base/premake.lua",
+		"base/genie.lua",
 		"base/iter.lua",
 		"base/set.lua",
 

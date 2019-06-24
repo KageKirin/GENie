@@ -3,17 +3,17 @@
 -- Copyright (c) 2016 Stuart Carnie and the GENie project
 --
 
-local ninja = premake.ninja
+local ninja = genie.ninja
 local swift = { }
-local p     = premake
+local p     = genie
 
 -- generate project + config build using incremental approach of generating individual .o files
 function ninja.generate_swift_incremental(prj)
 	local pxy = ninja.get_proxy("prj", prj)
-	local tool = premake.gettool(prj)
+	local tool = genie.gettool(prj)
 
 	-- build a list of supported target platforms that also includes a generic build
-	local platforms = premake.filterplatforms(prj.solution, tool.platforms, "Native")
+	local platforms = genie.filterplatforms(prj.solution, tool.platforms, "Native")
 
 	for _, platform in ipairs(platforms) do
 		for cfg in p.eachconfig(pxy, platform) do
@@ -23,7 +23,7 @@ function ninja.generate_swift_incremental(prj)
 end
 
 function swift.generate_config(prj, cfg)
-	local tool = premake.gettool(prj)
+	local tool = genie.gettool(prj)
 
 	local flags = {
 		swiftcflags = ninja.list(table.join(tool.getswiftcflags(cfg), cfg.buildoptions_swiftc)),
@@ -147,7 +147,7 @@ end
 
 function swift.linker(prj, cfg, depfiles, tool)
 	local all_ldflags = ninja.list(table.join(tool.getlibdirflags(cfg), tool.getldflags(cfg), cfg.linkoptions))
-	local lddeps      = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
+	local lddeps      = ninja.list(genie.getlinks(cfg, "siblings", "fullpath")) 
 	local libs        = lddeps .. " " .. ninja.list(tool.getlinkflags(cfg))
 
 	local function writevars()

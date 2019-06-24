@@ -10,10 +10,10 @@
 -- in the session to be sure they meet some minimum requirements.
 --
 
-	function premake.checkprojects()
-		local action = premake.action.current()
+	function genie.checkprojects()
+		local action = genie.action.current()
 		
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 		
 			-- every solution must have at least one project
 			if (#sln.projects == 0) then
@@ -25,7 +25,7 @@
 				return nil, "solution '" .. sln.name .. "' needs configurations"
 			end
 			
-			for prj in premake.solution.eachproject(sln) do
+			for prj in genie.solution.eachproject(sln) do
 
 				-- every project must have a language
 				if (not prj.language) then
@@ -39,7 +39,7 @@
 					end
 				end
 
-				for cfg in premake.eachconfig(prj) do								
+				for cfg in genie.eachconfig(prj) do								
 					
 					-- every config must have a kind
 					if (not cfg.kind) then
@@ -71,8 +71,8 @@
 -- to make sure they are compatible and supported.
 --
 
-	function premake.checktools()
-		local action = premake.action.current()
+	function genie.checktools()
+		local action = genie.action.current()
 		if (not action.valid_tools) then 
 			return true 
 		end

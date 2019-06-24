@@ -1,5 +1,5 @@
 --
--- _premake_main.lua
+-- _genie_main.lua
 -- Script-side entry point for the main program logic.
 -- Copyright (c) 2002-2011 Jason Perkins and the Premake project
 --
@@ -14,9 +14,9 @@
 
 	local function injectplatform(platform)
 		if not platform then return true end
-		platform = premake.checkvalue(platform, premake.fields.platforms.allowed)
+		platform = genie.checkvalue(platform, genie.fields.platforms.allowed)
 
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			local platforms = sln.platforms or { }
 
 			-- an empty table is equivalent to a native build
@@ -44,7 +44,7 @@
 -- Script-side program entry point.
 --
 
-	function _premake_main(scriptpath)
+	function _genie_main(scriptpath)
 
 		-- if running off the disk (in debug mode), load everything
 		-- listed in _manifest.lua; the list divisions make sure
@@ -63,11 +63,11 @@
 
 		-- Now that the scripts are loaded, I can use path.getabsolute() to properly
 		-- canonicalize the executable path.
-		_PREMAKE_COMMAND = path.getabsolute(_PREMAKE_COMMAND)
+		_GENIE_COMMAND = path.getabsolute(_GENIE_COMMAND)
 
 		-- Set up the environment for the chosen action early, so side-effects
 		-- can be picked up by the scripts.
-		premake.action.set(_ACTION)
+		genie.action.set(_ACTION)
 
 		-- Seed the random number generator so actions don't have to do it themselves
 		math.randomseed(os.time())
@@ -82,7 +82,7 @@
 				error("No genie script '" .. fname .. "' found!", 2)
 			end
 		else
-			local dir, name = premake.findDefaultScript(path.getabsolute("./"))
+			local dir, name = genie.findDefaultScript(path.getabsolute("./"))
 			if dir ~= nil then
 				os.chdir(dir)
 				dofile(name)
@@ -94,23 +94,23 @@
 			printf("GENie - Project generator tool %s", _GENIE_VERSION_STR)
 			printf("https://github.com/bkaradzic/GENie")
 			if (not _OPTIONS["version"]) then
-				premake.showhelp()
+				genie.showhelp()
 			end
 			return 1
 		end
 
 		-- Validate the command-line arguments. This has to happen after the
 		-- script has run to allow for project-specific options
-		action = premake.action.current()
+		action = genie.action.current()
 		if (not action) then
 			error("Error: no such action '" .. _ACTION .. "'", 0)
 		end
 
-		ok, err = premake.option.validate(_OPTIONS)
+		ok, err = genie.option.validate(_OPTIONS)
 		if (not ok) then error("Error: " .. err, 0) end
 
 		-- Sanity check the current project setup
-		ok, err = premake.checktools()
+		ok, err = genie.checktools()
 		if (not ok) then error("Error: " .. err, 0) end
 
 		-- If a platform was specified on the command line, inject it now
@@ -119,19 +119,19 @@
 
 		-- work-in-progress: build the configurations
 		print("Building configurations...")
-		premake.bake.buildconfigs()
+		genie.bake.buildconfigs()
 
-		ok, err = premake.checkprojects()
+		ok, err = genie.checkprojects()
 		if (not ok) then error("Error: " .. err, 0) end
 
-		premake.stats = { }
+		genie.stats = { }
 
-		premake.stats.num_generated = 0
-		premake.stats.num_skipped   = 0
+		genie.stats.num_generated = 0
+		genie.stats.num_skipped   = 0
 
 		-- Hand over control to the action
 		printf("Running action '%s'...", action.trigger)
-		premake.action.call(action.trigger)
+		genie.action.call(action.trigger)
 
 		if (nil ~= _OPTIONS["debug-profiler"]) then
 			profiler:stop()
@@ -145,8 +145,8 @@
 		end
 
 		printf("Done. Generated %d/%d projects."
-			, premake.stats.num_generated
-			, premake.stats.num_generated+premake.stats.num_skipped
+			, genie.stats.num_generated
+			, genie.stats.num_generated+genie.stats.num_skipped
 			)
 		return 0
 

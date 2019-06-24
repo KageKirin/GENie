@@ -4,9 +4,9 @@
 -- Copyright (c) 2009-2011 Jason Perkins and the Premake project
 --
 
-	premake.vstudio.vc2010 = { }
-	local vc2010 = premake.vstudio.vc2010
-	local vstudio = premake.vstudio
+	genie.vstudio.vc2010 = { }
+	local vc2010 = genie.vstudio.vc2010
+	local vstudio = genie.vstudio
 
 
 	local function vs2010_config(prj)
@@ -21,7 +21,7 @@
 		end
 		_p(1,'<ItemGroup Label="ProjectConfigurations">')
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-				_p(2,'<ProjectConfiguration Include="%s">', premake.esc(cfginfo.name))
+				_p(2,'<ProjectConfiguration Include="%s">', genie.esc(cfginfo.name))
 					_p(3,'<Configuration>%s</Configuration>',cfginfo.buildcfg)
 					_p(3,'<Platform>%s</Platform>',cfginfo.platform)
 				_p(2,'</ProjectConfiguration>')
@@ -30,7 +30,7 @@
 	end
 
 	local function vs2010_globals(prj)
-		local action = premake.action.current()
+		local action = genie.action.current()
 		_p(1,'<PropertyGroup Label="Globals">')
 			_p(2, '<ProjectGuid>{%s}</ProjectGuid>',prj.uuid)
 			_p(2, '<RootNamespace>%s</RootNamespace>',prj.name)
@@ -113,9 +113,9 @@
 
 	function vc2010.configurationPropertyGroup(cfg, cfginfo)
 		_p(1, '<PropertyGroup '..if_config_and_platform() ..' Label="Configuration">'
-			, premake.esc(cfginfo.name))
+			, genie.esc(cfginfo.name))
 
-		local is2019 = premake.action.current() == premake.action.get("vs2019")
+		local is2019 = genie.action.current() == genie.action.get("vs2019")
 		if is2019 then
 		    _p(2, '<VCProjectVersion>%s</VCProjectVersion>', action.vstudio.toolsVersion)
 			if cfg.flags.UnitySupport then
@@ -124,7 +124,7 @@
 		end
 		_p(2, '<ConfigurationType>%s</ConfigurationType>', vc2010.config_type(cfg))
 		_p(2, '<UseDebugLibraries>%s</UseDebugLibraries>', iif(optimisation(cfg) == "Disabled","true","false"))
-		_p(2, '<PlatformToolset>%s</PlatformToolset>',     premake.vstudio.toolset)
+		_p(2, '<PlatformToolset>%s</PlatformToolset>',     genie.vstudio.toolset)
 
 		if os.is64bit() then
 			_p(2, '<PreferredToolArchitecture>x64</PreferredToolArchitecture>')
@@ -168,7 +168,7 @@
 			_p(2,'<NintendoSdkRoot>$(NINTENDO_SDK_ROOT)\\</NintendoSdkRoot>')
 			_p(2,'<NintendoSdkSpec>NX</NintendoSdkSpec>')
 			--TODO: Allow specification of the 'Develop' build type
-			if premake.config.isdebugbuild(cfg) then
+			if genie.config.isdebugbuild(cfg) then
 				_p(2,'<NintendoSdkBuildType>Debug</NintendoSdkBuildType>')
 			else
 				_p(2,'<NintendoSdkBuildType>Release</NintendoSdkBuildType>')
@@ -176,7 +176,7 @@
 		end
 
 		-- Workaround for https://github.com/Microsoft/msbuild/issues/2353
-		if cfg.flags.Symbols and (premake.action.current() == premake.action.get("vs2017") or is2019) then
+		if cfg.flags.Symbols and (genie.action.current() == genie.action.get("vs2017") or is2019) then
 			_p(2, '<DebugSymbols>true</DebugSymbols>')
 		end
 
@@ -186,9 +186,9 @@
 
 	local function import_props(prj)
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+			local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 			_p(1,'<ImportGroup '..if_config_and_platform() ..' Label="PropertySheets">'
-					,premake.esc(cfginfo.name))
+					,genie.esc(cfginfo.name))
 				_p(2,'<Import Project="$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props" Condition="exists(\'$(UserRootDir)\\Microsoft.Cpp.$(Platform).user.props\')" Label="LocalAppDataPlatform" />')
 
 			if #cfg.propertysheets > 0 then
@@ -211,7 +211,7 @@
 
 	function vc2010.outputProperties(prj)
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+			local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 			local target = cfg.buildtarget
 			local outdir = add_trailing_backslash(target.directory)
 			local intdir = add_trailing_backslash(iif(action.vstudio.intDirAbsolute
@@ -221,17 +221,17 @@
 							, cfg.objectsdir
 							))
 
-			_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', premake.esc(cfginfo.name))
+			_p(1,'<PropertyGroup '..if_config_and_platform() ..'>', genie.esc(cfginfo.name))
 
-			_p(2,'<OutDir>%s</OutDir>', iif(outdir:len() > 0, premake.esc(outdir), ".\\"))
+			_p(2,'<OutDir>%s</OutDir>', iif(outdir:len() > 0, genie.esc(outdir), ".\\"))
 
 			if cfg.platform == "Xbox360" then
-				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', premake.esc(target.name))
+				_p(2,'<OutputFile>$(OutDir)%s</OutputFile>', genie.esc(target.name))
 			end
 
-			_p(2,'<IntDir>%s</IntDir>', premake.esc(intdir))
-			_p(2,'<TargetName>%s</TargetName>', premake.esc(path.getbasename(target.name)))
-			_p(2,'<TargetExt>%s</TargetExt>', premake.esc(path.getextension(target.name)))
+			_p(2,'<IntDir>%s</IntDir>', genie.esc(intdir))
+			_p(2,'<TargetName>%s</TargetName>', genie.esc(path.getbasename(target.name)))
+			_p(2,'<TargetExt>%s</TargetExt>', genie.esc(path.getextension(target.name)))
 
 			if cfg.kind == "SharedLib" then
 				local ignore = (cfg.flags.NoImportLib ~= nil)
@@ -252,7 +252,7 @@
 				end
 
 				if cfg.pullmappingfile ~= nil then
-					_p(2,'<PullMappingFile>%s</PullMappingFile>', premake.esc(cfg.pullmappingfile))
+					_p(2,'<PullMappingFile>%s</PullMappingFile>', genie.esc(cfg.pullmappingfile))
 				end
 
 				_p(2, '<LayoutExtensionFilter>*.pdb;*.ilk;*.exp;*.lib;*.winmd;*.appxrecipe;*.pri;*.idb</LayoutExtensionFilter>')
@@ -260,11 +260,11 @@
 			end
 
 			if cfg.kind ~= "StaticLib" then
-				_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(premake.config.isincrementallink(cfg)))
+				_p(2,'<LinkIncremental>%s</LinkIncremental>', tostring(genie.config.isincrementallink(cfg)))
 			end
 
 			if cfg.applicationdatadir ~= nil then
-				_p(2,'<ApplicationDataDir>%s</ApplicationDataDir>', premake.esc(cfg.applicationdatadir))
+				_p(2,'<ApplicationDataDir>%s</ApplicationDataDir>', genie.esc(cfg.applicationdatadir))
 			end
 
 			if cfg.flags.NoManifest then
@@ -278,7 +278,7 @@
 	local function runtime(cfg)
 		local runtime
 		local flags = cfg.flags
-		if premake.config.isdebugbuild(cfg) then
+		if genie.config.isdebugbuild(cfg) then
 			runtime = iif(flags.StaticRuntime and not flags.Managed, "MultiThreadedDebug", "MultiThreadedDebugDLL")
 		else
 			runtime = iif(flags.StaticRuntime and not flags.Managed, "MultiThreaded", "MultiThreadedDLL")
@@ -304,7 +304,7 @@
 			end
 
 			_p(indent,'<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'
-				,premake.esc(defines))
+				,genie.esc(defines))
 		else
 			_p(indent,'<PreprocessorDefinitions></PreprocessorDefinitions>')
 		end
@@ -315,14 +315,14 @@
 
 		if #includedirs> 0 then
 			_p(indent,'<AdditionalIncludeDirectories>%s;%%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>'
-					,premake.esc(path.translate(table.concat(includedirs, ";"), '\\')))
+					,genie.esc(path.translate(table.concat(includedirs, ";"), '\\')))
 		end
 	end
 
 	local function using_dirs(indent,cfg)
 		if #cfg.usingdirs > 0 then
 			_p(indent,'<AdditionalUsingDirectories>%s;%%(AdditionalUsingDirectories)</AdditionalUsingDirectories>'
-					,premake.esc(path.translate(table.concat(cfg.usingdirs, ";"), '\\')))
+					,genie.esc(path.translate(table.concat(cfg.usingdirs, ";"), '\\')))
 		end
 	end
 
@@ -426,7 +426,7 @@
 			if cfg.flags.C7DebugInfo then
 				debug_info = "OldStyle"
 			elseif (action.vstudio.supports64bitEditContinue == false and cfg.platform == "x64")
-				or not premake.config.iseditandcontinue(cfg)
+				or not genie.config.iseditandcontinue(cfg)
 			then
 				debug_info = "ProgramDatabase"
 			else
@@ -438,7 +438,7 @@
 	end
 
 	local function minimal_build(cfg)
-		if premake.config.isdebugbuild(cfg) and cfg.flags.EnableMinimalRebuild then
+		if genie.config.isdebugbuild(cfg) and cfg.flags.EnableMinimalRebuild then
 			_p(3,'<MinimalRebuild>true</MinimalRebuild>')
 		else
 			_p(3,'<MinimalRebuild>false</MinimalRebuild>')
@@ -458,7 +458,7 @@
 	local function forcedinclude_files(indent,cfg)
 		if #cfg.forcedincludes > 0 then
 			_p(indent,'<ForcedIncludeFiles>%s</ForcedIncludeFiles>'
-					,premake.esc(path.translate(table.concat(cfg.forcedincludes, ";"), '\\')))
+					,genie.esc(path.translate(table.concat(cfg.forcedincludes, ";"), '\\')))
 		end
 	end
 
@@ -480,7 +480,7 @@
 		end
 
 		_p(3,'<AdditionalOptions>%s %s%%(AdditionalOptions)</AdditionalOptions>'
-			, table.concat(premake.esc(buildoptions), " ")
+			, table.concat(genie.esc(buildoptions), " ")
 			, iif(cfg.flags.UnsignedChar and cfg.platform ~= "TegraAndroid", unsignedChar, " ")
 			)
 
@@ -523,7 +523,7 @@
 		preprocessor(3, cfg)
 		minimal_build(cfg)
 
-		if premake.config.isoptimizedbuild(cfg.flags) then
+		if genie.config.isoptimizedbuild(cfg.flags) then
 			-- Edit and continue is unstable with release/optimized projects. If the current project
 			-- is optimized, but linker optimizations are disabled and has opted out of edit and continue
 			-- support, then ensure that function level linking is disabled. This ensures that libs that
@@ -615,8 +615,8 @@
 			_p(3, '<TreatWarningAsError>true</TreatWarningAsError>')
 		end
 
-		if premake.action.current() == premake.action.get("vs2017") or
-		   premake.action.current() == premake.action.get("vs2019") then
+		if genie.action.current() == genie.action.get("vs2017") or
+		   genie.action.current() == genie.action.get("vs2019") then
 			cppstandard_vs2017_or_2019(cfg)
 		end
 
@@ -678,19 +678,19 @@
 	local function event_hooks(cfg)
 		if #cfg.postbuildcommands> 0 then
 		    _p(2,'<PostBuildEvent>')
-				_p(3,'<Command>%s</Command>',premake.esc(table.implode(cfg.postbuildcommands, "", "", "\r\n")))
+				_p(3,'<Command>%s</Command>',genie.esc(table.implode(cfg.postbuildcommands, "", "", "\r\n")))
 			_p(2,'</PostBuildEvent>')
 		end
 
 		if #cfg.prebuildcommands> 0 then
 		    _p(2,'<PreBuildEvent>')
-				_p(3,'<Command>%s</Command>',premake.esc(table.implode(cfg.prebuildcommands, "", "", "\r\n")))
+				_p(3,'<Command>%s</Command>',genie.esc(table.implode(cfg.prebuildcommands, "", "", "\r\n")))
 			_p(2,'</PreBuildEvent>')
 		end
 
 		if #cfg.prelinkcommands> 0 then
 		    _p(2,'<PreLinkEvent>')
-				_p(3,'<Command>%s</Command>',premake.esc(table.implode(cfg.prelinkcommands, "", "", "\r\n")))
+				_p(3,'<Command>%s</Command>',genie.esc(table.implode(cfg.prelinkcommands, "", "", "\r\n")))
 			_p(2,'</PreLinkEvent>')
 		end
 	end
@@ -698,7 +698,7 @@
 	local function additional_options(indent,cfg)
 		if #cfg.linkoptions > 0 then
 				_p(indent,'<AdditionalOptions>%s %%(AdditionalOptions)</AdditionalOptions>',
-					table.concat(premake.esc(cfg.linkoptions), " "))
+					table.concat(genie.esc(cfg.linkoptions), " "))
 		end
 	end
 
@@ -734,19 +734,19 @@
 	end
 
 	local function ismanagedprj(prj, cfgname, pltname)
-		local cfg = premake.getconfig(prj, cfgname, pltname)
+		local cfg = genie.getconfig(prj, cfgname, pltname)
 		return cfg.flags.Managed == true
 	end
 
 	local function getcfglinks(cfg)
 		local haswholearchive = #cfg.wholearchive > 0
-		local msvcnaming 	  = premake.getnamestyle(cfg) == "windows"
-		local iscppprj   	  = premake.iscppproject(cfg)
-		local isnetprj   	  = premake.isdotnetproject(cfg)
+		local msvcnaming 	  = genie.getnamestyle(cfg) == "windows"
+		local iscppprj   	  = genie.iscppproject(cfg)
+		local isnetprj   	  = genie.isdotnetproject(cfg)
 		local linkobjs   	  = {}
 		local links      	  = iif(haswholearchive
-			, premake.getlinks(cfg, "all", "object")
-			, premake.getlinks(cfg, "system", "fullpath")
+			, genie.getlinks(cfg, "all", "object")
+			, genie.getlinks(cfg, "system", "fullpath")
 			)
 
 		for _, link in ipairs(links) do
@@ -770,7 +770,7 @@
 			end
 
 			if name then
-				-- If we called premake.getlinks with "object", we need to
+				-- If we called genie.getlinks with "object", we need to
 				-- re-add the file extensions since it didn't do it for us.
 				if haswholearchive and msvcnaming then
 					if iscppprj then
@@ -792,14 +792,14 @@
 			_p(2, '<MASM>')
 
 			_p(3,'<AdditionalOptions>%s %%(AdditionalOptions)</AdditionalOptions>'
-				, table.concat(premake.esc(table.join(cfg.buildoptions, cfg.buildoptions_asm)), " ")
+				, table.concat(genie.esc(table.join(cfg.buildoptions, cfg.buildoptions_asm)), " ")
 				)
 
 			local includedirs = table.join(cfg.userincludedirs, cfg.includedirs, cfg.systemincludedirs)
 
 			if #includedirs > 0 then
 				_p(3, '<IncludePaths>%s;%%(IncludePaths)</IncludePaths>'
-					, premake.esc(path.translate(table.concat(includedirs, ";"), '\\'))
+					, genie.esc(path.translate(table.concat(includedirs, ";"), '\\'))
 					)
 			end
 
@@ -811,12 +811,12 @@
 			-- _WIN32:  For 32-bit platforms
 			-- _WIN64:  For 64-bit platforms
 			-- _EXPORT: `EXPORT` for shared libraries, empty for other project kinds
-			table.insertflat(defines, iif(premake.config.isdebugbuild(cfg), "_DEBUG", {}))
+			table.insertflat(defines, iif(genie.config.isdebugbuild(cfg), "_DEBUG", {}))
 			table.insert(defines, iif(cfg.platform == "x64", "_WIN64", "_WIN32"))
 			table.insert(defines, iif(prj.kind == "SharedLib", "_EXPORT=EXPORT", "_EXPORT="))
 
 			_p(3, '<PreprocessorDefinitions>%s;%%(PreprocessorDefinitions)</PreprocessorDefinitions>'
-				, premake.esc(table.concat(defines, ";"))
+				, genie.esc(table.concat(defines, ";"))
 				)
 
 			if cfg.flags.FatalWarnings then
@@ -855,8 +855,8 @@
 --
 
 	function vc2010.link(cfg)
-		local vs2017OrLater = premake.action.current() == premake.action.get("vs2017") or
-		    premake.action.current() == premake.action.get("vs2019")
+		local vs2017OrLater = genie.action.current() == genie.action.get("vs2017") or
+		    genie.action.current() == genie.action.get("vs2019")
 		local links  = getcfglinks(cfg)
 
 		_p(2,'<Link>')
@@ -874,7 +874,7 @@
 				)
 		end
 
-		if premake.config.islinkeroptimizedbuild(cfg.flags) then
+		if genie.config.islinkeroptimizedbuild(cfg.flags) then
 			if cfg.platform == "Orbis" then
 				_p(3,'<DataStripping>StripFuncsAndData</DataStripping>')
 				_p(3,'<DuplicateStripping>true</DuplicateStripping>')
@@ -882,12 +882,12 @@
 				_p(3,'<EnableCOMDATFolding>true</EnableCOMDATFolding>')
 				_p(3,'<OptimizeReferences>true</OptimizeReferences>')
 			end
-		elseif cfg.platform == "Orbis" and premake.config.iseditandcontinue(cfg) then
+		elseif cfg.platform == "Orbis" and genie.config.iseditandcontinue(cfg) then
 			_p(3,'<EditAndContinue>true</EditAndContinue>')
 		end
 
 		if cfg.finalizemetasource ~= nil then
-			_p(3,'<FinalizeMetaSource>%s</FinalizeMetaSource>', premake.esc(cfg.finalizemetasource))
+			_p(3,'<FinalizeMetaSource>%s</FinalizeMetaSource>', genie.esc(cfg.finalizemetasource))
 		end
 
 		if cfg.kind ~= 'StaticLib' then
@@ -905,7 +905,7 @@
 
 			import_lib(cfg)
 
-			local deffile = premake.findfile(cfg, ".def")
+			local deffile = genie.findfile(cfg, ".def")
 			if deffile then
 				_p(3,'<ModuleDefinitionFile>%s</ModuleDefinitionFile>', deffile)
 			end
@@ -951,7 +951,7 @@
 		end
 
 		_p(tab, '<AdditionalLibraryDirectories>%s;%%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>'
-			, premake.esc(path.translate(table.concat(dirs, ';'), '\\'))
+			, genie.esc(path.translate(table.concat(dirs, ';'), '\\'))
 			)
 	end
 
@@ -1018,7 +1018,7 @@
 			if #files > 0 then
 				_p(3,'<AndroidManifestLocation>%s</AndroidManifestLocation>',path.translate(files[1].name))
 			end
-			local isdebugbuild = premake.config.isdebugbuild(cfg)
+			local isdebugbuild = genie.config.isdebugbuild(cfg)
 			_p(3,'<AntBuildType>%s</AntBuildType>',iif(isdebugbuild, 'Debug','Release'))
 			_p(3,'<Debuggable>%s</Debuggable>',tostring(cfg.flags.AntBuildDebuggable ~= nil))
 			if #cfg.antbuildjavasourcedirs > 0 then
@@ -1052,9 +1052,9 @@
 
 	local function item_definitions(prj)
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+			local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 			_p(1,'<ItemDefinitionGroup ' ..if_config_and_platform() ..'>'
-					,premake.esc(cfginfo.name))
+					,genie.esc(cfginfo.name))
 				vs10_clcompile(cfg)
 				resource_compile(cfg)
 				item_def_lib(cfg)
@@ -1090,7 +1090,7 @@
 			}
 
 			local foundAppxManifest = false
-			for file in premake.project.eachfile(prj, true) do
+			for file in genie.project.eachfile(prj, true) do
 				if path.issourcefilevs(file.name) then
 					table.insert(sortedfiles.ClCompile, file)
 				elseif path.iscppheader(file.name) then
@@ -1125,7 +1125,7 @@
 
 				local fcfg = {}
 				fcfg.name = prj.name .. "/Package.appxmanifest"
-				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
+				fcfg.vpath = genie.project.getvpath(prj, fcfg.name)
 				table.insert(sortedfiles.AppxManifest, fcfg)
 
 				-- We also need a link to the splash screen because WinRT is retarded
@@ -1239,7 +1239,7 @@
 			local config_mappings = {}
 
 			for _, cfginfo in ipairs(configs) do
-				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+				local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 				if cfg.pchheader and cfg.pchsource and not cfg.flags.NoPCH then
 					config_mappings[cfginfo] = path.translate(cfg.pchsource, "\\")
 				end
@@ -1253,7 +1253,7 @@
 
 				if not prjexcluded then
 					for _, vsconfig in ipairs(configs) do
-						local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+						local cfg = genie.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 						local fileincfg = table.icontains(cfg.files, file.name)
 						local cfgexcluded = table.icontains(cfg.excludes, file.name)
 
@@ -1273,7 +1273,7 @@
 							_p(3, '<ExcludedFromBuild '
 								.. if_config_and_platform()
 								.. '>true</ExcludedFromBuild>'
-								, premake.esc(cfgname)
+								, genie.esc(cfgname)
 								)
 						end
 					end
@@ -1317,7 +1317,7 @@
 		if #files > 0  then
 			local config_mappings = {}
 			for _, cfginfo in ipairs(configs) do
-				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+				local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 				if cfg.pchheader and cfg.pchsource and not cfg.flags.NoPCH then
 					config_mappings[cfginfo] = path.translate(cfg.pchsource, "\\")
 				end
@@ -1337,13 +1337,13 @@
 
 				for _, vsconfig in ipairs(configs) do
 					-- Android and NX need a full path to an object file, not a dir.
-					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
-					local namestyle = premake.getnamestyle(cfg)
+					local cfg = genie.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					local namestyle = genie.getnamestyle(cfg)
 					if namestyle == "TegraAndroid" or namestyle == "NX" then
-						_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s.o</ObjectFileName>', premake.esc(vsconfig.name), premake.esc(path.translate(path.trimdots(path.removeext(file.name)))) )
+						_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s.o</ObjectFileName>', genie.esc(vsconfig.name), genie.esc(path.translate(path.trimdots(path.removeext(file.name)))) )
 					else
 						if disambiguation > 0 then
-							_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s\\</ObjectFileName>', premake.esc(vsconfig.name), tostring(disambiguation))
+							_p(3, '<ObjectFileName '.. if_config_and_platform() .. '>$(IntDir)%s\\</ObjectFileName>', genie.esc(vsconfig.name), tostring(disambiguation))
 						end
 					end
 				end
@@ -1361,22 +1361,22 @@
 
 				for _, cfginfo in ipairs(configs) do
 					if config_mappings[cfginfo] and translatedpath == config_mappings[cfginfo] then
-						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>Create</PrecompiledHeader>', premake.esc(cfginfo.name))
+						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>Create</PrecompiledHeader>', genie.esc(cfginfo.name))
 						config_mappings[cfginfo] = nil  --only one source file per pch
 					end
 				end
 
 				local nopch = table.icontains(prj.nopch, file.name)
 				for _, vsconfig in ipairs(configs) do
-					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					local cfg = genie.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 					if nopch or table.icontains(cfg.nopch, file.name) then
-						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>NotUsing</PrecompiledHeader>', premake.esc(vsconfig.name))
+						_p(3,'<PrecompiledHeader '.. if_config_and_platform() .. '>NotUsing</PrecompiledHeader>', genie.esc(vsconfig.name))
 					end
 				end
 
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
-					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					local cfg = genie.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 					local fileincfg = table.icontains(cfg.files, file.name)
 					local cfgexcluded = table.icontains(cfg.excludes, file.name)
 
@@ -1384,7 +1384,7 @@
 						_p(3, '<ExcludedFromBuild '
 							.. if_config_and_platform()
 							.. '>true</ExcludedFromBuild>'
-							, premake.esc(vsconfig.name)
+							, genie.esc(vsconfig.name)
 							)
 					end
 				end
@@ -1392,9 +1392,9 @@
 				if prj.flags and prj.flags.Managed then
 					local prjforcenative = table.icontains(prj.forcenative, file.name)
 					for _,vsconfig in ipairs(configs) do
-						local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+						local cfg = genie.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 						if prjforcenative or table.icontains(cfg.forcenative, file.name) then
-							_p(3, '<CompileAsManaged ' .. if_config_and_platform() .. '>false</CompileAsManaged>', premake.esc(vsconfig.name))
+							_p(3, '<CompileAsManaged ' .. if_config_and_platform() .. '>false</CompileAsManaged>', genie.esc(vsconfig.name))
 						end
 					end
 				end
@@ -1416,7 +1416,7 @@
 
 				local excluded = table.icontains(prj.excludes, file.name)
 				for _, vsconfig in ipairs(configs) do
-					local cfg = premake.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
+					local cfg = genie.getconfig(prj, vsconfig.src_buildcfg, vsconfig.src_platform)
 					local fileincfg = table.icontains(cfg.files, file.name)
 					local cfgexcluded = table.icontains(cfg.excludes, file.name)
 
@@ -1424,7 +1424,7 @@
 						_p(3, '<ExcludedFromBuild '
 							.. if_config_and_platform()
 							.. '>true</ExcludedFromBuild>'
-							, premake.esc(vsconfig.name)
+							, genie.esc(vsconfig.name)
 							)
 					end
 				end
@@ -1457,7 +1457,7 @@
 -- Output the VC2010 C/C++ project file
 --
 
-	function premake.vs2010_vcxproj(prj)
+	function genie.vs2010_vcxproj(prj)
 		local usemasm = hasmasmfiles(prj)
 
 		io.indent = "  "
@@ -1469,7 +1469,7 @@
 			_p(1,'<Import Project="$(VCTargetsPath)\\Microsoft.Cpp.Default.props" />')
 
 			for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-				local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+				local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 				vc2010.configurationPropertyGroup(cfg, cfginfo)
 			end
 
@@ -1535,7 +1535,7 @@
 --
 
 	function vc2010.projectReferences(prj)
-		local deps = premake.getdependencies(prj)
+		local deps = genie.getdependencies(prj)
 
 		if #deps == 0 and #prj.vsimportreferences == 0 then
 			return
@@ -1563,7 +1563,7 @@
 			-- Convert the path from being relative to the project to being
 			-- relative to the solution, for lookup.
 			local slnrelpath = path.rebase(ref, prj.location, sln.location)
-			local iprj = premake.vstudio.getimportprj(slnrelpath, prj.solution)
+			local iprj = genie.vstudio.getimportprj(slnrelpath, prj.solution)
 			_p(2,'<ProjectReference Include=\"%s\">', ref)
 			_p(3,'<Project>{%s}</Project>', iprj.uuid)
 			_p(2,'</ProjectReference>')
@@ -1642,12 +1642,12 @@
 		end
 	end
 
-	function premake.vs2010_vcxproj_user(prj)
+	function genie.vs2010_vcxproj_user(prj)
 		io.indent = "  "
 		vc2010.header()
 		for _, cfginfo in ipairs(prj.solution.vstudio_configs) do
-			local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
-			_p('  <PropertyGroup '.. if_config_and_platform() ..'>', premake.esc(cfginfo.name))
+			local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+			_p('  <PropertyGroup '.. if_config_and_platform() ..'>', genie.esc(cfginfo.name))
 			vc2010.debugdir(cfg)
 			_p('  </PropertyGroup>')
 		end
@@ -1664,7 +1664,7 @@
 	}
 
 	function png1x1(obj, filename)
-		filename = premake.project.getfilename(obj, filename)
+		filename = genie.project.getfilename(obj, filename)
 
 		local f, err = io.open(filename, "wb")
 		if f then
@@ -1675,7 +1675,7 @@
 		end
 	end
 
-	function premake.vs2010_appxmanifest(prj)
+	function genie.vs2010_appxmanifest(prj)
 		io.indent = "  "
 		io.eol = "\r\n"
 		_p('<?xml version="1.0" encoding="utf-8"?>')

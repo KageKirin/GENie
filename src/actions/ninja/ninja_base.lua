@@ -4,7 +4,7 @@
 -- Author:      Stuart Carnie (stuart.carnie at gmail.com)
 --
 
-local ninja = premake.ninja
+local ninja = genie.ninja
 
 function ninja.esc(value)
 	value = value:gsub("%$", "$$") -- TODO maybe there is better way

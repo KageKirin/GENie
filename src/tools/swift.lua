@@ -4,23 +4,23 @@
 --
 
 
-	premake.swift = { }
+	genie.swift = { }
 
 
 --
 -- Set default tools
 --
 
-	premake.swift.swiftc   = "swiftc"
-	premake.swift.swift    = "swift"
-	premake.swift.cc       = "gcc"
-	premake.swift.ar       = "ar"
-	premake.swift.ld       = "ld"
-	premake.swift.dsymutil = "dsymutil"
+	genie.swift.swiftc   = "swiftc"
+	genie.swift.swift    = "swift"
+	genie.swift.cc       = "gcc"
+	genie.swift.ar       = "ar"
+	genie.swift.ld       = "ld"
+	genie.swift.dsymutil = "dsymutil"
 
 
 --
--- Translation of Premake flags into Swift flags
+-- Translation of GENie flags into Swift flags
 --
 
 local swiftcflags =
@@ -38,7 +38,7 @@ local swiftlinkflags = {
 	StaticRuntime             = "-static-stdlib",
 }
 
-premake.swift.platforms = {
+genie.swift.platforms = {
 	Native = {
 		swiftcflags    = "",
 		swiftlinkflags = "",
@@ -49,29 +49,29 @@ premake.swift.platforms = {
 	}
 }
 
-local platforms = premake.swift.platforms
+local platforms = genie.swift.platforms
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-function premake.swift.get_sdk_path(cfg)
+function genie.swift.get_sdk_path(cfg)
 	return string.trim(os.outputof("xcrun --show-sdk-path"))
 end
 
-function premake.swift.get_sdk_platform_path(cfg)
+function genie.swift.get_sdk_platform_path(cfg)
 	return string.trim(os.outputof("xcrun --show-sdk-platform-path"))
 end
 
-function premake.swift.get_toolchain_path(cfg)
+function genie.swift.get_toolchain_path(cfg)
 	return string.trim(os.outputof("xcode-select -p")) .. "/Toolchains/XcodeDefault.xctoolchain"
 end
 
-function premake.swift.gettarget(cfg)
+function genie.swift.gettarget(cfg)
 	return "-target x86_64-apple-macosx10.11"
 end
 
-function premake.swift.getswiftcflags(cfg)
+function genie.swift.getswiftcflags(cfg)
 	local result = table.translate(cfg.flags, swiftcflags)
 	table.insert(result, platforms[cfg.platform].swiftcflags)
 	
@@ -81,12 +81,12 @@ function premake.swift.getswiftcflags(cfg)
 		table.insert(result, "-parse-as-library")
 	end
 	
-	table.insert(result, premake.swift.gettarget(cfg))
+	table.insert(result, genie.swift.gettarget(cfg))
 	
 	return result
 end
 
-function premake.swift.getswiftlinkflags(cfg)
+function genie.swift.getswiftlinkflags(cfg)
 	local result = table.translate(cfg.flags, swiftlinkflags)
 	table.insert(result, platforms[cfg.platform].swiftlinkflags)
 	
@@ -98,12 +98,12 @@ function premake.swift.getswiftlinkflags(cfg)
 		table.insert(result, "-emit-executable")
 	end
 	
-	table.insert(result, premake.swift.gettarget(cfg))
+	table.insert(result, genie.swift.gettarget(cfg))
 	
 	return result
 end
 
-function premake.swift.getmodulemaps(cfg)
+function genie.swift.getmodulemaps(cfg)
 	local maps = {}
 	if next(cfg.swiftmodulemaps) then
 		for _, mod in ipairs(cfg.swiftmodulemaps) do
@@ -113,14 +113,14 @@ function premake.swift.getmodulemaps(cfg)
 	return maps
 end
 
-function premake.swift.getlibdirflags(cfg)
-	return premake.gcc.getlibdirflags(cfg)
+function genie.swift.getlibdirflags(cfg)
+	return genie.gcc.getlibdirflags(cfg)
 end
 
-function premake.swift.getldflags(cfg)
+function genie.swift.getldflags(cfg)
 	local result = { platforms[cfg.platform].ldflags }
 	
-	local links = premake.getlinks(cfg, "siblings", "basename")
+	local links = genie.getlinks(cfg, "siblings", "basename")
 	for _,v in ipairs(links) do
 		if path.getextension(v) == ".framework" then
 			table.insert(result, "-framework "..v)
@@ -132,10 +132,10 @@ function premake.swift.getldflags(cfg)
 	return result
 end
 
-function premake.swift.getlinkflags(cfg)
-	return premake.gcc.getlinkflags(cfg)
+function genie.swift.getlinkflags(cfg)
+	return genie.gcc.getlinkflags(cfg)
 end
 
-function premake.swift.getarchiveflags(cfg)
+function genie.swift.getarchiveflags(cfg)
 	return ""
 end

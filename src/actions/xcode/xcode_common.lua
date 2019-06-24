@@ -3,9 +3,9 @@
 -- Functions to generate the different sections of an Xcode project.
 -- Copyright (c) 2009-2011 Jason Perkins and the Premake project
 --
-	premake.xcode.parameters = { }
-	local xcode = premake.xcode
-	local tree  = premake.tree
+	genie.xcode.parameters = { }
+	local xcode = genie.xcode
+	local tree  = genie.tree
 --
 -- Return the Xcode build category for a given file, based on the file extension.
 --
@@ -63,7 +63,7 @@
 	function xcode.getconfigname(cfg)
 		local name = cfg.name
 		if #cfg.project.solution.xcode.platforms > 1 then
-			name = name .. " " .. premake.action.current().valid_platforms[cfg.platform]
+			name = name .. " " .. genie.action.current().valid_platforms[cfg.platform]
 		end
 		return name
 	end
@@ -219,7 +219,7 @@
 	function xcode.getxcodeprojname(prj)
 		-- if there is a solution with matching name, then use "projectname1.xcodeproj"
 		-- just get something working for now
-		local fname = premake.project.getfilename(prj, "%%.xcodeproj")
+		local fname = genie.project.getfilename(prj, "%%.xcodeproj")
 		return fname
 	end
 
@@ -340,17 +340,17 @@
 	function xcode.preparesolution(sln)
 		-- create and cache a list of supported platforms
 		sln.xcode = { }
-		sln.xcode.platforms = premake.filterplatforms(sln, premake.action.current().valid_platforms, "Universal")
+		sln.xcode.platforms = genie.filterplatforms(sln, genie.action.current().valid_platforms, "Universal")
 
-		for prj in premake.solution.eachproject(sln) do
+		for prj in genie.solution.eachproject(sln) do
 			-- need a configuration to get the target information
-			local cfg = premake.getconfig(prj, prj.configurations[1], sln.xcode.platforms[1])
+			local cfg = genie.getconfig(prj, prj.configurations[1], sln.xcode.platforms[1])
 
 			-- build the product tree node
-			local node = premake.tree.new(path.getname(cfg.buildtarget.bundlepath))
+			local node = genie.tree.new(path.getname(cfg.buildtarget.bundlepath))
 			node.cfg = cfg
-			node.id = premake.xcode.newid(node, "product")
-			node.targetid = premake.xcode.newid(node, "target")
+			node.id = genie.xcode.newid(node, "product")
+			node.targetid = genie.xcode.newid(node, "target")
 
 			-- attach it to the project
 			prj.xcode = {}
@@ -1203,7 +1203,7 @@ end
 		if #cfg.wholearchive > 0 then
 			local linkopts = {}
 
-			for _, depcfg in ipairs(premake.getlinks(cfg, "siblings", "object")) do
+			for _, depcfg in ipairs(genie.getlinks(cfg, "siblings", "object")) do
 				if table.icontains(cfg.wholearchive, depcfg.project.name) then
 					local linkpath = path.rebase(depcfg.linktarget.fullpath, depcfg.location, cfg.location)
 					table.insert(linkopts, "-force_load")

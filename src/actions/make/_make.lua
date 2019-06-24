@@ -5,8 +5,8 @@
 --
 
 	_MAKE = { }
-	premake.make = { }
-	local make = premake.make
+	genie.make = { }
+	local make = genie.make
 
 --
 -- Escape a string so it can be written to a makefile.
@@ -59,13 +59,13 @@
 -- it screws up the escaping of spaces and parethesis (anyone know a solution?)
 --
 
-	function premake.make_copyrule(source, target)
+	function genie.make_copyrule(source, target)
 		_p('%s: %s', target, source)
 		_p('\t@echo Copying $(notdir %s)', target)
 		_p('\t-$(call COPY,%s,%s)', source, target)
 	end
 
-	function premake.make_mkdirrule(var)
+	function genie.make_mkdirrule(var)
 		_p('\t@echo Creating %s', var)
 		_p('\t-$(call MKDIR,%s)', var)
 		_p('')
@@ -94,7 +94,7 @@
 	function _MAKE.getmakefilename(this, searchprjs)
 		-- how many projects/solutions use this location?
 		local count = 0
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			if (sln.location == this.location) then count = count + 1 end
 			if (searchprjs) then
 				for _,prj in ipairs(sln.projects) do
@@ -164,28 +164,28 @@
 		},
 
 		onsolution = function(sln)
-			premake.generate(sln, _MAKE.getmakefilename(sln, false), premake.make_solution)
+			genie.generate(sln, _MAKE.getmakefilename(sln, false), genie.make_solution)
 		end,
 
 		onproject = function(prj)
 			local makefile = _MAKE.getmakefilename(prj, true)
-			if premake.isdotnetproject(prj) then
-				premake.generate(prj, makefile, premake.make_csharp)
-			elseif premake.iscppproject(prj) then
-				premake.generate(prj, makefile, premake.make_cpp)
-			elseif premake.isswiftproject(prj) then
-				premake.generate(prj, makefile, premake.make_swift)
+			if genie.isdotnetproject(prj) then
+				genie.generate(prj, makefile, genie.make_csharp)
+			elseif genie.iscppproject(prj) then
+				genie.generate(prj, makefile, genie.make_cpp)
+			elseif genie.isswiftproject(prj) then
+				genie.generate(prj, makefile, genie.make_swift)
 			else
-				premake.generate(prj, makefile, premake.make_vala)
+				genie.generate(prj, makefile, genie.make_vala)
 			end
 		end,
 
 		oncleansolution = function(sln)
-			premake.clean.file(sln, _MAKE.getmakefilename(sln, false))
+			genie.clean.file(sln, _MAKE.getmakefilename(sln, false))
 		end,
 
 		oncleanproject = function(prj)
-			premake.clean.file(prj, _MAKE.getmakefilename(prj, true))
+			genie.clean.file(prj, _MAKE.getmakefilename(prj, true))
 		end,
 
 		gmake = {}

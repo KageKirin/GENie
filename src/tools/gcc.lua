@@ -5,22 +5,22 @@
 --
 
 
-	premake.gcc = { }
+	genie.gcc = { }
 
 
 --
 -- Set default tools
 --
 
-	premake.gcc.cc     = "gcc"
-	premake.gcc.cxx    = "g++"
-	premake.gcc.ar     = "ar"
-	premake.gcc.rc     = "windres"
-	premake.gcc.llvm   = false
+	genie.gcc.cc     = "gcc"
+	genie.gcc.cxx    = "g++"
+	genie.gcc.ar     = "ar"
+	genie.gcc.rc     = "windres"
+	genie.gcc.llvm   = false
 
 
 --
--- Translation of Premake flags into GCC flags
+-- Translation of GENie flags into GCC flags
 --
 
 	local cflags =
@@ -61,7 +61,7 @@
 -- Map platforms to flags
 --
 
-	premake.gcc.platforms =
+	genie.gcc.platforms =
 	{
 		Native = {
 			cppflags = "-MMD -MP",
@@ -118,14 +118,14 @@
 		}
 	}
 
-	local platforms = premake.gcc.platforms
+	local platforms = genie.gcc.platforms
 
 
 --
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-	function premake.gcc.getcppflags(cfg)
+	function genie.gcc.getcppflags(cfg)
 		local flags = { }
 		table.insert(flags, platforms[cfg.platform].cppflags)
 
@@ -139,7 +139,7 @@
 	end
 
 
-	function premake.gcc.getcflags(cfg)
+	function genie.gcc.getcflags(cfg)
 		local result = table.translate(cfg.flags, cflags)
 		table.insert(result, platforms[cfg.platform].flags)
 		if cfg.system ~= "windows" and cfg.kind == "SharedLib" then
@@ -149,13 +149,13 @@
 	end
 
 
-	function premake.gcc.getcxxflags(cfg)
+	function genie.gcc.getcxxflags(cfg)
 		local result = table.translate(cfg.flags, cxxflags)
 		return result
 	end
 
 
-	function premake.gcc.getobjcflags(cfg)
+	function genie.gcc.getobjcflags(cfg)
 		return table.translate(cfg.flags, objcflags)
 	end
 
@@ -164,7 +164,7 @@
 -- Returns a list of linker flags, based on the supplied configuration.
 --
 
-	function premake.gcc.getldflags(cfg)
+	function genie.gcc.getldflags(cfg)
 		local result = { }
 
 		-- OS X has a bug, see http://lists.apple.com/archives/Darwin-dev/2006/Sep/msg00084.html
@@ -212,9 +212,9 @@
 -- #1729227 for background on why library paths must be split.
 --
 
-	function premake.gcc.getlibdirflags(cfg)
+	function genie.gcc.getlibdirflags(cfg)
 		local result = { }
-		for _, value in ipairs(premake.getlinks(cfg, "all", "directory")) do
+		for _, value in ipairs(genie.getlinks(cfg, "all", "directory")) do
 			table.insert(result, '-L\"' .. value .. '\"')
 		end
 		return result
@@ -225,7 +225,7 @@
 -- to a library file, false otherwise.
 --  p: path
 --
-	function premake.gcc.islibfile(p)
+	function genie.gcc.islibfile(p)
 		if path.getextension(p) == ".a" then
 			return true
 		end
@@ -240,10 +240,10 @@
 -- library gets updated.
 --  cfg: configuration
 --
-	function premake.gcc.getlibfiles(cfg)
+	function genie.gcc.getlibfiles(cfg)
 		local result = {}
-		for _, value in ipairs(premake.getlinks(cfg, "system", "fullpath")) do
-			if premake.gcc.islibfile(value) then
+		for _, value in ipairs(genie.getlinks(cfg, "system", "fullpath")) do
+			if genie.gcc.islibfile(value) then
 				table.insert(result, _MAKE.esc(value))
 			end
 		end
@@ -256,10 +256,10 @@
 -- background on why the path must be split.
 --
 
-	function premake.gcc.getlinkflags(cfg)
+	function genie.gcc.getlinkflags(cfg)
 		local result = {}
-		for _, value in ipairs(premake.getlinks(cfg, "system", "fullpath")) do
-			if premake.gcc.islibfile(value) then
+		for _, value in ipairs(genie.getlinks(cfg, "system", "fullpath")) do
+			if genie.gcc.islibfile(value) then
 				value = path.rebase(value, cfg.project.location, cfg.location)
 				table.insert(result, _MAKE.esc(value))
 			elseif path.getextension(value) == ".framework" then
@@ -275,8 +275,8 @@
 -- Get the arguments for whole-archive linking.
 --
 
-	function premake.gcc.wholearchive(lib)
-		if premake.gcc.llvm then
+	function genie.gcc.wholearchive(lib)
+		if genie.gcc.llvm then
 			return {"-force_load", lib}
 		else
 			return {"-Wl,--whole-archive", lib, "-Wl,--no-whole-archive"}
@@ -290,7 +290,7 @@
 --  ndx: true if the final step of a split archive
 --
 
-	function premake.gcc.getarchiveflags(prj, cfg, ndx)
+	function genie.gcc.getarchiveflags(prj, cfg, ndx)
 		local result = {}
 		if cfg.platform:startswith("Universal") then
 				if prj.options.ArchiveSplit then
@@ -299,13 +299,13 @@
 				table.insert(result, '-o')
 		else
 			if (not prj.options.ArchiveSplit) then
-				if premake.gcc.llvm then
+				if genie.gcc.llvm then
 					table.insert(result, 'rcs')
 				else
 					table.insert(result, '-rcs')
 				end
 			else
-				if premake.gcc.llvm then
+				if genie.gcc.llvm then
 					if (not ndx) then
 						table.insert(result, 'qc')
 					else
@@ -328,7 +328,7 @@
 -- Decorate defines for the GCC command line.
 --
 
-	function premake.gcc.getdefines(defines)
+	function genie.gcc.getdefines(defines)
 		local result = { }
 		for _,def in ipairs(defines) do
 			table.insert(result, "-D" .. def)
@@ -340,7 +340,7 @@
 -- Decorate include file search paths for the GCC command line.
 --
 
-	function premake.gcc.getincludedirs(includedirs)
+	function genie.gcc.getincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
 			table.insert(result, "-I\"" .. dir .. "\"")
@@ -352,7 +352,7 @@
 -- Decorate user include file search paths for the GCC command line.
 --
 
-	function premake.gcc.getquoteincludedirs(includedirs)
+	function genie.gcc.getquoteincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
 			table.insert(result, "-iquote \"" .. dir .. "\"")
@@ -364,7 +364,7 @@
 -- Decorate system include file search paths for the GCC command line.
 --
 
-	function premake.gcc.getsystemincludedirs(includedirs)
+	function genie.gcc.getsystemincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
 			table.insert(result, "-isystem \"" .. dir .. "\"")
@@ -377,6 +377,6 @@
 -- makesettings blocks.
 --
 
-	function premake.gcc.getcfgsettings(cfg)
+	function genie.gcc.getcfgsettings(cfg)
 		return platforms[cfg.platform].cfgsettings
 	end

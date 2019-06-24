@@ -1,11 +1,11 @@
 --
--- premake.lua
+-- genie.lua
 -- High-level processing functions.
 -- Copyright (c) 2002-2009 Jason Perkins and the Premake project
 --
 
-	premake._filelevelconfig = false
-	premake._checkgenerate = true
+	genie._filelevelconfig = false
+	genie._checkgenerate = true
 
 --
 -- Open a file for output, and call a function to actually do the writing.
@@ -14,26 +14,26 @@
 -- @param obj
 --    A solution or project object; will be based to the callback function.
 -- @param filename
---    The output filename; see the docs for premake.project.getfilename()
+--    The output filename; see the docs for genie.project.getfilename()
 --    for the expected format.
 -- @param callback
 --    The function responsible for writing the file, should take a solution
 --    or project as a parameters.
 --
 
-	function premake.generate(obj, filename, callback)
+	function genie.generate(obj, filename, callback)
 		local prev  = io.capture()
 		local abort = (callback(obj) == false)
 		local new   = io.endcapture(prev)
 
 		if abort then
-			premake.stats.num_skipped = premake.stats.num_skipped + 1
+			genie.stats.num_skipped = genie.stats.num_skipped + 1
 			return
 		end
 
-		filename = premake.project.getfilename(obj, filename)
+		filename = genie.project.getfilename(obj, filename)
 
-		if (premake._checkgenerate) then
+		if (genie._checkgenerate) then
 			local delta = false
 
 			local f, err = io.open(filename, "rb")
@@ -61,10 +61,10 @@
 				f:write(new)
 				f:close()
 
-				premake.stats.num_generated = premake.stats.num_generated + 1
+				genie.stats.num_generated = genie.stats.num_generated + 1
 			else
 	--			printf("Skipping %s as its contents would not change.", filename)
-				premake.stats.num_skipped = premake.stats.num_skipped + 1
+				genie.stats.num_skipped = genie.stats.num_skipped + 1
 			end
 		else
 			printf("Generating %s...", filename)
@@ -76,13 +76,13 @@
 
 			f:write(new)
 			f:close()
-			premake.stats.num_generated = premake.stats.num_generated + 1
+			genie.stats.num_generated = genie.stats.num_generated + 1
 		end
 	end
 
 
 --
--- Finds a valid premake build file in the specified directory
+-- Finds a valid genie build file in the specified directory
 -- Used by both the main genie process, and include commands
 --
 -- @param dir
@@ -92,12 +92,12 @@
 --    script need to look upwards in the file system
 --
 
-	function premake.findDefaultScript(dir, search_upwards)
+	function genie.findDefaultScript(dir, search_upwards)
 		search_upwards = search_upwards or true
 
 		local last = ""
 		while dir ~= last do
-			for _, name in ipairs({ "genie.lua", "solution.lua", "premake4.lua" }) do
+			for _, name in ipairs({ "genie.lua", "solution.lua", "genie.lua" }) do
 
 				local script0 = dir .. "/" .. name
 				if (os.isfile(script0)) then

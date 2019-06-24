@@ -4,21 +4,21 @@
 -- Copyright (c) 2008 Jason Perkins and the Premake project
 --
 
-	premake.ow = { }
-	premake.ow.namestyle = "windows"
+	genie.ow = { }
+	genie.ow.namestyle = "windows"
 
 
 --
 -- Set default tools
 --
 
-	premake.ow.cc     = "WCL386"
-	premake.ow.cxx    = "WCL386"
-	premake.ow.ar     = "ar"
+	genie.ow.cc     = "WCL386"
+	genie.ow.cxx    = "WCL386"
+	genie.ow.ar     = "ar"
 
 
 --
--- Translation of Premake flags into OpenWatcom flags
+-- Translation of GENie flags into OpenWatcom flags
 --
 
 	local cflags =
@@ -46,7 +46,7 @@
 -- No specific platform support yet
 --
 
-	premake.ow.platforms =
+	genie.ow.platforms =
 	{
 		Native = {
 			flags = ""
@@ -59,11 +59,11 @@
 -- Returns a list of compiler flags, based on the supplied configuration.
 --
 
-	function premake.ow.getcppflags(cfg)
+	function genie.ow.getcppflags(cfg)
 		return {}
 	end
 
-	function premake.ow.getcflags(cfg)
+	function genie.ow.getcflags(cfg)
 		local result = table.translate(cfg.flags, cflags)
 		if (cfg.flags.Symbols) then
 			table.insert(result, "-hw")   -- Watcom debug format for Watcom debugger
@@ -71,7 +71,7 @@
 		return result
 	end
 
-	function premake.ow.getcxxflags(cfg)
+	function genie.ow.getcxxflags(cfg)
 		local result = table.translate(cfg.flags, cxxflags)
 		return result
 	end
@@ -82,7 +82,7 @@
 -- Returns a list of linker flags, based on the supplied configuration.
 --
 
-	function premake.ow.getldflags(cfg)
+	function genie.ow.getldflags(cfg)
 		local result = { }
 
 		if (cfg.flags.Symbols) then
@@ -101,7 +101,7 @@
 -- library gets updated.
 -- Not currently supported on this toolchain.
 --
-	function premake.ow.getlibfiles(cfg)
+	function genie.ow.getlibfiles(cfg)
 		local result = {}
 		return result
 	end
@@ -111,7 +111,7 @@
 -- library names.
 --
 
-	function premake.ow.getlinkflags(cfg)
+	function genie.ow.getlinkflags(cfg)
 		local result = { }
 		return result
 	end
@@ -122,7 +122,7 @@
 -- Decorate defines for the command line.
 --
 
-	function premake.ow.getdefines(defines)
+	function genie.ow.getdefines(defines)
 		local result = { }
 		for _,def in ipairs(defines) do
 			table.insert(result, '-D' .. def)
@@ -136,7 +136,7 @@
 -- Decorate include file search paths for the command line.
 --
 
-	function premake.ow.getincludedirs(includedirs)
+	function genie.ow.getincludedirs(includedirs)
 		local result = { }
 		for _,dir in ipairs(includedirs) do
 			table.insert(result, '-I "' .. dir .. '"')

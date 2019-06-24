@@ -1,5 +1,5 @@
-	premake.fastbuild = { }
-	local fastbuild = premake.fastbuild
+	genie.fastbuild = { }
+	local fastbuild = genie.fastbuild
 
 	newaction
 	{
@@ -27,18 +27,18 @@
 		},
 
 		onsolution = function(sln)
-			premake.generate(sln, "fbuild.bff", premake.fastbuild.solution)
+			genie.generate(sln, "fbuild.bff", genie.fastbuild.solution)
 		end,
 
 		onproject = function(prj)
-			premake.generate(prj, "%%.bff", premake.fastbuild.project)
+			genie.generate(prj, "%%.bff", genie.fastbuild.project)
 		end,
 
 		oncleansolution = function(sln)
-			premake.clean.file(sln, "fbuild.bff")
+			genie.clean.file(sln, "fbuild.bff")
 		end,
 
 		oncleanproject  = function(prj)
-			premake.clean.file(prj, "%%.bff")
+			genie.clean.file(prj, "%%.bff")
 		end,
 	}

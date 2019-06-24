@@ -4,14 +4,14 @@
 -- Copyright (c) 2002-2009 Jason Perkins and the Premake project
 --
 
-	premake.action = { }
+	genie.action = { }
 
 
 --
 -- The list of registered actions.
 --
 
-	premake.action.list = { }
+	genie.action.list = { }
 	
 
 --
@@ -21,7 +21,7 @@
 --    The new action object.
 -- 
 
-	function premake.action.add(a)
+	function genie.action.add(a)
 		-- validate the action object, at least a little bit
 		local missing
 		for _, field in ipairs({"description", "trigger"}) do
@@ -35,7 +35,7 @@
 		end
 
 		-- add it to the master list
-		premake.action.list[a.trigger] = a		
+		genie.action.list[a.trigger] = a		
 	end
 
 
@@ -48,13 +48,13 @@
 --    None.
 --
 
-	function premake.action.call(name)
-		local a = premake.action.list[name]
-		for sln in premake.solution.each() do
+	function genie.action.call(name)
+		local a = genie.action.list[name]
+		for sln in genie.solution.each() do
 			if a.onsolution then
 				a.onsolution(sln)
 			end
-			for prj in premake.solution.eachproject(sln) do
+			for prj in genie.solution.eachproject(sln) do
 				if a.onproject then
 					a.onproject(prj)
 				end
@@ -74,8 +74,8 @@
 --    The current action, or nil if _ACTION is nil or does not match any action.
 --
 
-	function premake.action.current()
-		return premake.action.get(_ACTION)
+	function genie.action.current()
+		return genie.action.get(_ACTION)
 	end
 	
 	
@@ -88,8 +88,8 @@
 --    The requested action, or nil if the action does not exist.
 --
 
-	function premake.action.get(name)
-		return premake.action.list[name]
+	function genie.action.get(name)
+		return genie.action.list[name]
 	end
 
 
@@ -97,10 +97,10 @@
 -- Iterator for the list of actions.
 --
 
-	function premake.action.each()
+	function genie.action.each()
 		-- sort the list by trigger
 		local keys = { }
-		for _, action in pairs(premake.action.list) do
+		for _, action in pairs(genie.action.list) do
 			table.insert(keys, action.trigger)
 		end
 		table.sort(keys)
@@ -108,7 +108,7 @@
 		local i = 0
 		return function()
 			i = i + 1
-			return premake.action.list[keys[i]]
+			return genie.action.list[keys[i]]
 		end
 	end
 
@@ -120,10 +120,10 @@
 --    The name of the action to activate.
 --
 
-	function premake.action.set(name)
+	function genie.action.set(name)
 		_ACTION = name
 		-- Some actions imply a particular operating system
-		local action = premake.action.get(name)
+		local action = genie.action.get(name)
 		if action then
 			_OS = action.os or _OS
 		end
@@ -141,7 +141,7 @@
 --    True if the feature is supported, false otherwise.
 --
 
-	function premake.action.supports(action, feature)
+	function genie.action.supports(action, feature)
 		if not action then
 			return false
 		end

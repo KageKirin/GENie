@@ -5,5 +5,5 @@
 --
 
 	
-	premake.msc = { }
-	premake.msc.namestyle = "windows"
+	genie.msc = { }
+	genie.msc.namestyle = "windows"

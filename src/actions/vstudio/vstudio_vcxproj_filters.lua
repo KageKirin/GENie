@@ -4,8 +4,8 @@
 -- Copyright (c) 2009-2011 Jason Perkins and the Premake project
 --
 
-	local vc2010 = premake.vstudio.vc2010
-	local project = premake.project
+	local vc2010 = genie.vstudio.vc2010
+	local project = genie.project
 
 
 --
@@ -18,7 +18,7 @@
 		local filters = { }
 		local filterfound = false
 
-		for file in premake.project.eachfile(prj, true) do
+		for file in genie.project.eachfile(prj, true) do
 			-- split the path into its component parts
 			local folders = string.explode(file.vpath, "/", true)
 			local path = ""

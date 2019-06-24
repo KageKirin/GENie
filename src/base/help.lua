@@ -5,7 +5,7 @@
 --
 
 
-	function premake.showhelp()
+	function genie.showhelp()
 
 		-- display the basic usage
 		printf("")
@@ -16,7 +16,7 @@
 		-- display all options
 		printf("OPTIONS")
 		printf("")
-		for option in premake.option.each() do
+		for option in genie.option.each() do
 			local trigger = option.trigger
 			local description = option.description
 			if (option.value) then trigger = trigger .. "=" .. option.value end
@@ -34,7 +34,7 @@
 		-- display all actions
 		printf("ACTIONS")
 		printf("")
-		for action in premake.action.each() do
+		for action in genie.action.each() do
 			printf(" %-17s %s", action.trigger, action.description)
 		end
 		printf("")

@@ -4,7 +4,7 @@
 -- Copyright (c) 2009 Jason Perkins and the Premake project
 --
 
-	premake.xcode = { }
+	genie.xcode = { }
 
 --
 -- Verify only single target kind for Xcode project
@@ -13,10 +13,10 @@
 --    Project to be analyzed
 --
 
-	function premake.xcode.checkproject(prj)
+	function genie.xcode.checkproject(prj)
 		-- Xcode can't mix target kinds within a project
 		local last
-		for cfg in premake.eachconfig(prj) do
+		for cfg in genie.eachconfig(prj) do
 			if last and last ~= cfg.kind then
 				error("Project '" .. prj.name .. "' uses more than one target kind; not supported by Xcode", 0)
 			end
@@ -28,4 +28,4 @@
 -- Set default toolset
 --
 
-	premake.xcode.toolset = "macosx"
+	genie.xcode.toolset = "macosx"

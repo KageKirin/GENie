@@ -4,12 +4,12 @@
 -- Copyright (c) 2002-2009 Jason Perkins and the Premake project
 --
 
-	premake.solution = { }
+	genie.solution = { }
 
 
 -- The list of defined solutions (which contain projects, etc.)
 
-	premake.solution.list = { }
+	genie.solution.list = { }
 
 
 --
@@ -19,12 +19,12 @@
 --    The new solution's name.
 --
 
-	function premake.solution.new(name)
+	function genie.solution.new(name)
 		local sln = { }
 
 		-- add to master list keyed by both name and index
-		table.insert(premake.solution.list, sln)
-		premake.solution.list[name] = sln
+		table.insert(genie.solution.list, sln)
+		genie.solution.list[name] = sln
 			
 		-- attach a type descriptor
 		setmetatable(sln, { __type="solution" })
@@ -47,12 +47,12 @@
 --    An iterator function.
 --
 
-	function premake.solution.each()
+	function genie.solution.each()
 		local i = 0
 		return function ()
 			i = i + 1
-			if i <= #premake.solution.list then
-				return premake.solution.list[i]
+			if i <= #genie.solution.list then
+				return genie.solution.list[i]
 			end
 		end
 	end
@@ -67,12 +67,12 @@
 --    An iterator function.
 --
 
-	function premake.solution.eachproject(sln)
+	function genie.solution.eachproject(sln)
 		local i = 0
 		return function ()
 			i = i + 1
 			if (i <= #sln.projects) then
-				return premake.solution.getproject(sln, i)
+				return genie.solution.getproject(sln, i)
 			end
 		end
 	end
@@ -85,12 +85,12 @@
 -- @returns
 --    An iterator function.
 
-	function premake.solution.eachgroup(sln)
+	function genie.solution.eachgroup(sln)
 		local i = 0
 		return function()
 			i = i + 1
 			if(i <= #sln.groups) then
-				return premake.solution.getgroup(sln, i)
+				return genie.solution.getgroup(sln, i)
 			end
 		end
 	end
@@ -105,8 +105,8 @@
 --    The solution with the provided key.
 --
 
-	function premake.solution.get(key)
-		return premake.solution.list[key]
+	function genie.solution.get(key)
+		return genie.solution.list[key]
 	end
 
 
@@ -121,11 +121,11 @@
 --    The project at the given index.
 --
 
-	function premake.solution.getproject(sln, idx)
+	function genie.solution.getproject(sln, idx)
 		-- retrieve the root configuration of the project, with all of
 		-- the global (not configuration specific) settings collapsed
 		local prj = sln.projects[idx]
-		local cfg = premake.getconfig(prj)
+		local cfg = genie.getconfig(prj)
 		
 		-- root configuration doesn't have a name; use the project's
 		cfg.name = prj.name
@@ -142,7 +142,7 @@
 -- @returns
 --    The group at the given index
 	
-	function premake.solution.getgroup(sln, idx)
+	function genie.solution.getgroup(sln, idx)
 		local grp = sln.groups[idx]
 		return grp
 	end

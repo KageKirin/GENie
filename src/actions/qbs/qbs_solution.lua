@@ -3,7 +3,7 @@
 -- https://github.com/bkaradzic/GENie#license
 --
 
-local qbs = premake.qbs
+local qbs = genie.qbs
 
 function qbs.generate_solution(sln)
 
@@ -18,7 +18,7 @@ function qbs.generate_solution(sln)
 	_p(0, 'Project {')
 
 	_p(1, 'references: [')
-	for prj in premake.solution.eachproject(sln) do
+	for prj in genie.solution.eachproject(sln) do
 		_p(2, '"' .. prj.name .. '.qbs",')
 	end
 	_p(1, ']')
@@ -44,7 +44,7 @@ function qbs.generate_user(sln)
 	local startProject = 0
 	local idx = 0
 
-	for prj in premake.solution.eachproject(sln) do
+	for prj in genie.solution.eachproject(sln) do
 		if is_app(prj.kind) then
 			if sln.startproject == prj.name then
 				startProject = idx
@@ -199,7 +199,7 @@ function qbs.generate_user(sln)
 
 	-- RunConfiguration
 	idx = 0
-	for prj in premake.solution.eachproject(sln) do
+	for prj in genie.solution.eachproject(sln) do
 
 		if is_app(prj.kind) then
 --			_p(3, '<variable>ProjectExplorer.Project.Target.%d</variable>', idx)
@@ -218,7 +218,7 @@ function qbs.generate_user(sln)
 
 			_p(4, '<value type="QString" key="Qbs.RunConfiguration.CommandLineArguments"></value>')
 
-			local cfg = premake.getconfig(prj, nil, nil)
+			local cfg = genie.getconfig(prj, nil, nil)
 			if cfg.debugdir ~= nil then
 				_p(4, '<value type="QString" key="Qbs.RunConfiguration.WorkingDirectory">%s</value>', cfg.debugdir)
 			else

@@ -3,7 +3,7 @@
 -- https://github.com/bkaradzic/GENie#license
 --
 
-local qbs = premake.qbs
+local qbs = genie.qbs
 
 local function is_excluded(prj, cfg, file)
 	if table.icontains(prj.excludes, file) then
@@ -49,23 +49,23 @@ function qbs.generate_project(prj)
 	_p(indent, 'Depends { name: "cpp" }')
 
 	-- List dependencies, if there are any
-	local deps = premake.getdependencies(prj)
+	local deps = genie.getdependencies(prj)
 	if #deps > 0 then
 		for _, depprj in ipairs(deps) do
 			_p(indent, 'Depends { name: "%s" }', depprj.name)
 		end
 	end
 
-	local cc = premake.gettool(prj)
-	local platforms = premake.filterplatforms(prj.solution, cc.platforms, "Native")
+	local cc = genie.gettool(prj)
+	local platforms = genie.filterplatforms(prj.solution, cc.platforms, "Native")
 
 	for _, platform in ipairs(platforms) do
-		for cfg in premake.eachconfig(prj, platform) do
+		for cfg in genie.eachconfig(prj, platform) do
 
 			if cfg.platform ~= "Native" then
 
 				_p('');
-				_p(indent, 'Properties { /* %s */', premake.getconfigname(cfg.name, cfg.platform, true))
+				_p(indent, 'Properties { /* %s */', genie.getconfigname(cfg.name, cfg.platform, true))
 
 				indent = indent + 1
 
@@ -210,7 +210,7 @@ function qbs.generate_project(prj)
 				qbs.list(
 					  indent
 					, "cpp.staticLibraries"
-					, premake.getlinks(cfg, "system", "fullpath")
+					, genie.getlinks(cfg, "system", "fullpath")
 				)
 
 				qbs.list(

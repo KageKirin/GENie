@@ -4,7 +4,7 @@
 -- Copyright (c) 2015 Miodrag Milanovic
 --
 
-premake.cmake = { }
+genie.cmake = { }
 
 --
 -- Register the "cmake" action
@@ -20,15 +20,15 @@ newaction {
 		cc   = { "gcc" },
 	},
 	onsolution = function(sln)
-		premake.generate(sln, "CMakeLists.txt", premake.cmake.workspace)
+		genie.generate(sln, "CMakeLists.txt", genie.cmake.workspace)
 	end,
 	onproject = function(prj)
-		premake.generate(prj, "%%/CMakeLists.txt", premake.cmake.project)
+		genie.generate(prj, "%%/CMakeLists.txt", genie.cmake.project)
 	end,
 	oncleansolution = function(sln)
-		premake.clean.file(sln, "CMakeLists.txt")
+		genie.clean.file(sln, "CMakeLists.txt")
 	end,
 	oncleanproject = function(prj)
-		premake.clean.file(prj, "%%/CMakeLists.txt")
+		genie.clean.file(prj, "%%/CMakeLists.txt")
 	end
 }

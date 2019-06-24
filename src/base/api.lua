@@ -10,7 +10,7 @@
 -- functions are built programmatically below.
 --
 
-	premake.fields =
+	genie.fields =
 	{
 		archivesplit_size =
 		{
@@ -571,7 +571,7 @@
 		{
 			kind  = "list",
 			scope = "solution",
-			allowed = table.keys(premake.platforms),
+			allowed = table.keys(genie.platforms),
 		},
 
 		postbuildcommands =
@@ -917,7 +917,7 @@
 --
 
 
-	premake.check_paths = false
+	genie.check_paths = false
 
 --
 -- Check to see if a value exists in a list of values, using a
@@ -926,7 +926,7 @@
 -- use case-sensitive comparisions.
 --
 
-	function premake.checkvalue(value, allowed)
+	function genie.checkvalue(value, allowed)
 		if (allowed) then
 			if (type(allowed) == "function") then
 				return allowed(value)
@@ -952,13 +952,13 @@
 -- requested container, or nil and an error message.
 --
 
-	function premake.getobject(t)
+	function genie.getobject(t)
 		local container
 
 		if (t == "container" or t == "solution") then
-			container = premake.CurrentContainer
+			container = genie.CurrentContainer
 		else
-			container = premake.CurrentConfiguration
+			container = genie.CurrentConfiguration
 		end
 
 		if t == "solution" then
@@ -1002,7 +1002,7 @@
 --    The value of the target field, with the new value(s) added.
 --
 
-	function premake.setarray(obj, fieldname, value, allowed)
+	function genie.setarray(obj, fieldname, value, allowed)
 		obj[fieldname] = obj[fieldname] or {}
 
 		local function add(value, depth)
@@ -1011,7 +1011,7 @@
 					add(v, depth + 1)
 				end
 			else
-				value, err = premake.checkvalue(value, allowed)
+				value, err = genie.checkvalue(value, allowed)
 				if not value then
 					error(err, depth)
 				end
@@ -1031,7 +1031,7 @@
 --
 -- Adds table value to array of tables
 --
-	function premake.settable(obj, fieldname, value, allowed)
+	function genie.settable(obj, fieldname, value, allowed)
 		obj[fieldname] = obj[fieldname] or {}
 		table.insert(obj[fieldname], value)
 		return obj[fieldname]
@@ -1055,7 +1055,7 @@
 			elseif type(value) == "string" then
 				if value:find("*") then
 					local arr = matchfunc(value);
-					if (premake.check_paths) and (#arr == 0) then
+					if (genie.check_paths) and (#arr == 0) then
 						error("Can't find matching files for pattern :" .. value)
 					end
 					makeabsolute(arr, depth + 1)
@@ -1074,7 +1074,7 @@
 		for index, field in ipairs(fields) do
 			local ctype = field[1]
 			local fieldname = field[2]
-			local array = premake.setarray(ctype, fieldname, result)
+			local array = genie.setarray(ctype, fieldname, result)
 
 			if index == 1 then
 				retval = array
@@ -1084,22 +1084,22 @@
 		return retval
 	end
 
-	function premake.setdirarray(fields, value)
+	function genie.setdirarray(fields, value)
 		return domatchedarray(fields, value, os.matchdirs)
 	end
 
-	function premake.setfilearray(fields, value)
+	function genie.setfilearray(fields, value)
 		return domatchedarray(fields, value, os.matchfiles)
 	end
 
 
 --
 -- Adds values to a key-value field of a solution/project/configuration. `ctype`
--- specifies the container type (see premake.getobject) for the field.
+-- specifies the container type (see genie.getobject) for the field.
 --
 
-	function premake.setkeyvalue(ctype, fieldname, values)
-		local container, err = premake.getobject(ctype)
+	function genie.setkeyvalue(ctype, fieldname, values)
+		local container, err = genie.getobject(ctype)
 		if not container then
 			error(err, 4)
 		end
@@ -1127,19 +1127,19 @@
 
 --
 -- Set a new value for a string field of a solution/project/configuration. `ctype`
--- specifies the container type (see premake.getobject) for the field.
+-- specifies the container type (see genie.getobject) for the field.
 --
 
-	function premake.setstring(ctype, fieldname, value, allowed)
+	function genie.setstring(ctype, fieldname, value, allowed)
 		-- find the container for this value
-		local container, err = premake.getobject(ctype)
+		local container, err = genie.getobject(ctype)
 		if (not container) then
 			error(err, 4)
 		end
 
 		-- if a value was provided, set it
 		if (value) then
-			value, err = premake.checkvalue(value, allowed)
+			value, err = genie.checkvalue(value, allowed)
 			if (not value) then
 				error(err, 4)
 			end
@@ -1153,10 +1153,10 @@
 --
 -- Removes a value from an array
 --
-	function premake.remove(fieldname, value)
-		local cfg = premake.CurrentConfiguration
+	function genie.remove(fieldname, value)
+		local cfg = genie.CurrentConfiguration
 		cfg.removes = cfg.removes or {}
-		cfg.removes[fieldname] = premake.setarray(cfg.removes, fieldname, value)
+		cfg.removes[fieldname] = genie.setarray(cfg.removes, fieldname, value)
 	end
 
 
@@ -1165,9 +1165,9 @@
 --
 
 	local function accessor(name, value)
-		local kind    = premake.fields[name].kind
-		local scope   = premake.fields[name].scope
-		local allowed = premake.fields[name].allowed
+		local kind    = genie.fields[name].kind
+		local scope   = genie.fields[name].scope
+		local allowed = genie.fields[name].allowed
 
 		if (kind == "string" or kind == "path") and value then
 			if type(value) ~= "string" then
@@ -1176,28 +1176,28 @@
 		end
 
 		-- find the container for the value
-		local container, err = premake.getobject(scope)
+		local container, err = genie.getobject(scope)
 		if (not container) then
 			error(err, 3)
 		end
 
 		if kind == "string" then
-			return premake.setstring(scope, name, value, allowed)
+			return genie.setstring(scope, name, value, allowed)
 		elseif kind == "path" then
 			if value then value = path.getabsolute(value) end
-			return premake.setstring(scope, name, value)
+			return genie.setstring(scope, name, value)
 		elseif kind == "list" then
-			return premake.setarray(container, name, value, allowed)
+			return genie.setarray(container, name, value, allowed)
 		elseif kind == "table" then
-			return premake.settable(container, name, value, allowed)
+			return genie.settable(container, name, value, allowed)
 		elseif kind == "dirlist" then
-			return premake.setdirarray({{container, name}}, value)
+			return genie.setdirarray({{container, name}}, value)
 		elseif kind == "filelist" or kind == "absolutefilelist" then
 			-- HACK: If we're adding files, we should also add them to the project's
 			-- `allfiles` field. This is to support files being added per config.
 			local fields = {{container, name}}
 			if name == "files" then
-				local prj, err = premake.getobject("container")
+				local prj, err = genie.getobject("container")
 				if (not prj) then
 					error(err, 2)
 				end
@@ -1205,9 +1205,9 @@
 				-- global config. See the `project` function.
 				table.insert(fields, {prj.blocks[1], "allfiles"})
 			end
-			return premake.setfilearray(fields, value)
+			return genie.setfilearray(fields, value)
 		elseif kind == "keyvalue" or kind == "keypath" then
-			return premake.setkeyvalue(scope, name, value)
+			return genie.setkeyvalue(scope, name, value)
 		end
 	end
 
@@ -1217,7 +1217,7 @@
 -- Build all of the getter/setter functions from the metadata above.
 --
 
-	for name, info in pairs(premake.fields) do
+	for name, info in pairs(genie.fields) do
 		_G[name] = function(value)
 			return accessor(name, value)
 		end
@@ -1231,7 +1231,7 @@
 			if  name ~= "removefiles"
 			and name ~= "files" then
 				_G["remove"..name] = function(value)
-					premake.remove(name, value)
+					genie.remove(name, value)
 				end
 			end
 		end
@@ -1245,10 +1245,10 @@
 
 	function configuration(terms)
 		if not terms then
-			return premake.CurrentConfiguration
+			return genie.CurrentConfiguration
 		end
 
-		local container, err = premake.getobject("container")
+		local container, err = genie.getobject("container")
 		if (not container) then
 			error(err, 2)
 		end
@@ -1257,7 +1257,7 @@
 		cfg.terms = table.flatten({terms})
 
 		table.insert(container.blocks, cfg)
-		premake.CurrentConfiguration = cfg
+		genie.CurrentConfiguration = cfg
 
 		-- create a keyword list using just the indexed keyword items. This is a little
 		-- confusing: "terms" are what the user specifies in the script, "keywords" are
@@ -1268,7 +1268,7 @@
 		end
 
 		-- initialize list-type fields to empty tables
-		for name, field in pairs(premake.fields) do
+		for name, field in pairs(genie.fields) do
 			if (field.kind ~= "string" and field.kind ~= "path") then
 				cfg[name] = { }
 			end
@@ -1381,7 +1381,7 @@
 			sln.projects[name] = prj
 		end
 
-		local group = creategroupsfrompath(premake.CurrentGroup, sln)
+		local group = creategroupsfrompath(genie.CurrentGroup, sln)
 
 		if group ~= nil then
 			table.insert(group.projects, prj)
@@ -1401,17 +1401,17 @@
 	function usage(name)
 		if (not name) then
 			--Only return usage projects.
-			if(typex(premake.CurrentContainer) ~= "project") then return nil end
-			if(not premake.CurrentContainer.usage) then return nil end
-			return premake.CurrentContainer
+			if(typex(genie.CurrentContainer) ~= "project") then return nil end
+			if(not genie.CurrentContainer.usage) then return nil end
+			return genie.CurrentContainer
 		end
 
 		-- identify the parent solution
 		local sln
-		if (typex(premake.CurrentContainer) == "project") then
-			sln = premake.CurrentContainer.solution
+		if (typex(genie.CurrentContainer) == "project") then
+			sln = genie.CurrentContainer.solution
 		else
-			sln = premake.CurrentContainer
+			sln = genie.CurrentContainer
 		end
 		if (typex(sln) ~= "solution") then
 			error("no active solution", 2)
@@ -1420,32 +1420,32 @@
 		-- if this is a new project, or the project in that slot doesn't have a usage, create it
 		if((not sln.projects[name]) or
 			((not sln.projects[name].usage) and (not sln.projects[name].usageProj))) then
-			premake.CurrentContainer = createproject(name, sln, true)
+			genie.CurrentContainer = createproject(name, sln, true)
 		else
-			premake.CurrentContainer = iff(sln.projects[name].usage,
+			genie.CurrentContainer = iff(sln.projects[name].usage,
 			sln.projects[name], sln.projects[name].usageProj)
 		end
 
 		-- add an empty, global configuration to the project
 		configuration { }
 
-		return premake.CurrentContainer
+		return genie.CurrentContainer
 	end
 
 	function project(name)
 		if (not name) then
 			--Only return non-usage projects
-			if(typex(premake.CurrentContainer) ~= "project") then return nil end
-			if(premake.CurrentContainer.usage) then return nil end
-			return premake.CurrentContainer
+			if(typex(genie.CurrentContainer) ~= "project") then return nil end
+			if(genie.CurrentContainer.usage) then return nil end
+			return genie.CurrentContainer
 		end
 
 		-- identify the parent solution
 		local sln
-		if (typex(premake.CurrentContainer) == "project") then
-			sln = premake.CurrentContainer.solution
+		if (typex(genie.CurrentContainer) == "project") then
+			sln = genie.CurrentContainer.solution
 		else
-			sln = premake.CurrentContainer
+			sln = genie.CurrentContainer
 		end
 		if (typex(sln) ~= "solution") then
 			error("no active solution", 2)
@@ -1453,46 +1453,46 @@
 
 		-- if this is a new project, or the old project is a usage project, create it
 		if((not sln.projects[name]) or sln.projects[name].usage) then
-			premake.CurrentContainer = createproject(name, sln)
+			genie.CurrentContainer = createproject(name, sln)
 		else
-			premake.CurrentContainer = sln.projects[name];
+			genie.CurrentContainer = sln.projects[name];
 		end
 
 		-- add an empty, global configuration to the project
 		configuration { }
 
-		return premake.CurrentContainer
+		return genie.CurrentContainer
 	end
 
 
 	function solution(name)
 		if not name then
-			if typex(premake.CurrentContainer) == "project" then
-				return premake.CurrentContainer.solution
+			if typex(genie.CurrentContainer) == "project" then
+				return genie.CurrentContainer.solution
 			else
-				return premake.CurrentContainer
+				return genie.CurrentContainer
 			end
 		end
 
-		premake.CurrentContainer = premake.solution.get(name)
-		if (not premake.CurrentContainer) then
-			premake.CurrentContainer = premake.solution.new(name)
+		genie.CurrentContainer = genie.solution.get(name)
+		if (not genie.CurrentContainer) then
+			genie.CurrentContainer = genie.solution.new(name)
 		end
 
 		-- add an empty, global configuration
 		configuration { }
 
-		return premake.CurrentContainer
+		return genie.CurrentContainer
 	end
 
 
 	function group(name)
 		if not name then
-			return premake.CurrentGroup
+			return genie.CurrentGroup
 		end
-		premake.CurrentGroup = name
+		genie.CurrentGroup = name
 
-		return premake.CurrentGroup
+		return genie.CurrentGroup
 	end
 
 	function importvsproject(location)
@@ -1500,12 +1500,12 @@
 			error("Only available for visual studio actions")
 		end
 
-		sln, err = premake.getobject("solution")
+		sln, err = genie.getobject("solution")
 		if not sln then
 			error(err)
 		end
 
-		local group = creategroupsfrompath(premake.CurrentGroup, sln)
+		local group = creategroupsfrompath(genie.CurrentGroup, sln)
 
 		local project = {}
 		project.location = location
@@ -1524,7 +1524,7 @@
 --
 
 	function newaction(a)
-		premake.action.add(a)
+		genie.action.add(a)
 	end
 
 
@@ -1536,7 +1536,7 @@
 --
 
 	function newoption(opt)
-		premake.option.add(opt)
+		genie.option.add(opt)
 	end
 
 
@@ -1546,5 +1546,5 @@
 --
 
 	function enablefilelevelconfig()
-		premake._filelevelconfig = true
+		genie._filelevelconfig = true
 	end

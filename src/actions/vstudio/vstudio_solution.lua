@@ -4,18 +4,18 @@
 -- Copyright (c) 2009-2011 Jason Perkins and the Premake project
 --
 
-	premake.vstudio.sln2005 = { }
-	local vstudio = premake.vstudio
-	local sln2005 = premake.vstudio.sln2005
+	genie.vstudio.sln2005 = { }
+	local vstudio = genie.vstudio
+	local sln2005 = genie.vstudio.sln2005
 
 
 	function sln2005.generate(sln)
 		io.eol = '\r\n'
 
 		-- Precompute Visual Studio configurations
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 		-- Prepare imported projects
-		premake.vstudio.bakeimports(sln)
+		genie.vstudio.bakeimports(sln)
 
 		-- Mark the file as Unicode
 		_p('\239\187\191')
@@ -24,11 +24,11 @@
 
 		sln2005.header(sln)
 
-		for grp in premake.solution.eachgroup(sln) do
+		for grp in genie.solution.eachgroup(sln) do
 			sln2005.group(grp)
 		end
 
-		for prj in premake.solution.eachproject(sln) do
+		for prj in genie.solution.eachproject(sln) do
 			sln2005.project(prj)
 		end
         
@@ -83,7 +83,7 @@
 --
 
 	function sln2005.header(sln)
-		local action = premake.action.current()
+		local action = genie.action.current()
 		_p('Microsoft Visual Studio Solution File, Format Version %d.00', action.vstudio.solutionVersion)
 		if(_ACTION:sub(3) == "2015" or  _ACTION:sub(3) == "2017") then
 			_p('# Visual Studio %s', action.vstudio.toolsVersion:sub(1,2))
@@ -129,7 +129,7 @@
 --
 
 	function sln2005.projectdependencies(prj)
-		local deps = premake.getdependencies(prj)
+		local deps = genie.getdependencies(prj)
 		if #deps > 0 then
 			local function compareuuid(a, b) return a.uuid < b.uuid end
 			table.sort(deps, compareuuid)
@@ -169,7 +169,7 @@
 			-- C++ compatible target platform in the solution list.
 			local mapped
 			local buildfor
-			if premake.isdotnetproject(prj) then
+			if genie.isdotnetproject(prj) then
 				buildfor = "x64"
 				mapped = "Any CPU"
 			elseif prj.flags and prj.flags.Managed then
@@ -187,7 +187,7 @@
 			-- c# projects in a solution may not have a reference back to the solution, let
 			-- the default handling decide whether to build it or not
 			if prj.solution ~= nil then
-			    build_project = premake.getconfig(prj, cfg.src_buildcfg, cfg.src_platform).build
+			    build_project = genie.getconfig(prj, cfg.src_buildcfg, cfg.src_platform).build
 			end
 
 			_p('\t\t{%s}.%s.ActiveCfg = %s|%s', prj.uuid, cfg.name, cfg.buildcfg, mapped)
@@ -196,7 +196,7 @@
 				    _p('\t\t{%s}.%s.Build.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 			    end
 
-			    if premake.vstudio.iswinrt() and prj.kind == "WindowedApp" then
+			    if genie.vstudio.iswinrt() and prj.kind == "WindowedApp" then
    				    _p('\t\t{%s}.%s.Deploy.0 = %s|%s',  prj.uuid, cfg.name, cfg.buildcfg, mapped)
 			    end
 			end
@@ -210,7 +210,7 @@
 
 	function sln2005.project_platforms(sln)
 		_p('\tGlobalSection(ProjectConfigurationPlatforms) = postSolution')
-		for prj in premake.solution.eachproject(sln) do
+		for prj in genie.solution.eachproject(sln) do
 			sln2005.project_platform(prj, sln)
 		end
 		
@@ -239,13 +239,13 @@
 	function sln2005.project_groups(sln)
 		_p('\tGlobalSection(NestedProjects) = preSolution')
 
-		for grp in premake.solution.eachgroup(sln) do
+		for grp in genie.solution.eachgroup(sln) do
 			if grp.parent ~= nil then
 				_p('\t\t{%s} = {%s}', grp.uuid, grp.parent.uuid)
 			end
 		end
 
-		for prj in premake.solution.eachproject(sln) do
+		for prj in genie.solution.eachproject(sln) do
 			if prj.group ~= nil then
 				_p('\t\t{%s} = {%s}', prj.uuid, prj.group.uuid)
 			end

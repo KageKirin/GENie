@@ -4,7 +4,7 @@
 -- Copyright (c) 2008-2011 Jason Perkins and the Premake project
 --
 
-	premake.vstudio = { }
+	genie.vstudio = { }
 
 --
 -- Set default toolset
@@ -18,15 +18,15 @@
 		vs2017 = "v141",
 		vs2019 = "v142",
 	}
-	premake.vstudio.toolset = toolsets[_ACTION] or "unknown?"
-	premake.vstudio.splashpath = ''
-	premake.vstudio.xpwarning = true
+	genie.vstudio.toolset = toolsets[_ACTION] or "unknown?"
+	genie.vstudio.splashpath = ''
+	genie.vstudio.xpwarning = true
 
-	local vstudio = premake.vstudio
+	local vstudio = genie.vstudio
 
 
 --
--- Map Premake platform identifiers to the Visual Studio versions. Adds the Visual
+-- Map GENie platform identifiers to the Visual Studio versions. Adds the Visual
 -- Studio specific "any" and "mixed" to make solution generation easier.
 --
 
@@ -79,11 +79,11 @@
 	function vstudio.buildconfigs(sln)
 		local cfgs = { }
 
-		local platforms = premake.filterplatforms(sln, vstudio.platforms, "Native")
+		local platforms = genie.filterplatforms(sln, vstudio.platforms, "Native")
 
 		-- Figure out what's in this solution
-		local hascpp    = premake.hascppproject(sln)
-		local hasdotnet = premake.hasdotnetproject(sln)
+		local hascpp    = genie.hascppproject(sln)
+		local hasdotnet = genie.hasdotnetproject(sln)
 
 		-- "Mixed Platform" solutions are generally those containing both
 		-- C/C++ and .NET projects. Starting in VS2010, all .NET solutions
@@ -154,7 +154,7 @@
 -- for generating the solution.
 --
 
-	function premake.vstudio.bakeimports(sln)
+	function genie.vstudio.bakeimports(sln)
 		for _,iprj in ipairs(sln.importedprojects) do
 			if string.find(iprj.location, ".csproj") ~= nil then
 				iprj.language = "C#"
@@ -188,7 +188,7 @@
 --
 -- Look up a imported project by project path
 --
-	function premake.vstudio.getimportprj(prjpath, sln)
+	function genie.vstudio.getimportprj(prjpath, sln)
 		for _,iprj in ipairs(sln.importedprojects) do
 			if prjpath == iprj.relpath then
 				return iprj
@@ -203,16 +203,16 @@
 --
 
 	function vstudio.cleansolution(sln)
-		premake.clean.file(sln, "%%.sln")
-		premake.clean.file(sln, "%%.suo")
-		premake.clean.file(sln, "%%.ncb")
+		genie.clean.file(sln, "%%.sln")
+		genie.clean.file(sln, "%%.suo")
+		genie.clean.file(sln, "%%.ncb")
 		-- MonoDevelop files
-		premake.clean.file(sln, "%%.userprefs")
-		premake.clean.file(sln, "%%.usertasks")
+		genie.clean.file(sln, "%%.userprefs")
+		genie.clean.file(sln, "%%.usertasks")
 	end
 
 	function vstudio.cleanproject(prj)
-		local fname = premake.project.getfilename(prj, "%%")
+		local fname = genie.project.getfilename(prj, "%%")
 
 		os.remove(fname .. ".vcproj")
 		os.remove(fname .. ".vcproj.user")
@@ -249,7 +249,7 @@
 			pattern = iif(_ACTION > "vs2008", "%%.vcxproj", "%%.vcproj")
 		end
 
-		local fname = premake.project.getbasename(prj.name, pattern)
+		local fname = genie.project.getbasename(prj.name, pattern)
 		fname = path.join(prj.location, fname)
 		return fname
 	end

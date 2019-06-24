@@ -4,9 +4,9 @@
 -- Copyright (c) 2013 Jason Perkins and the Premake project
 --
 
-	premake.vstudio.vc2012 = {}
-	local vc2012 = premake.vstudio.vc2012
-	local vstudio = premake.vstudio
+	genie.vstudio.vc2012 = {}
+	local vc2012 = genie.vstudio.vc2012
+	local vstudio = genie.vstudio
 
 
 ---
@@ -30,24 +30,24 @@
 		},
 
 		onsolution = function(sln)
-			premake.generate(sln, "%%.sln", vstudio.sln2005.generate)
+			genie.generate(sln, "%%.sln", vstudio.sln2005.generate)
 		end,
 
 		onproject = function(prj)
-			if premake.isdotnetproject(prj) then
-				premake.generate(prj, "%%.csproj", vstudio.cs2005.generate)
-				premake.generate(prj, "%%.csproj.user", vstudio.cs2005.generate_user)
+			if genie.isdotnetproject(prj) then
+				genie.generate(prj, "%%.csproj", vstudio.cs2005.generate)
+				genie.generate(prj, "%%.csproj.user", vstudio.cs2005.generate_user)
 			else
-			premake.generate(prj, "%%.vcxproj", premake.vs2010_vcxproj)
-			premake.generate(prj, "%%.vcxproj.user", premake.vs2010_vcxproj_user)
-			premake.generate(prj, "%%.vcxproj.filters", vstudio.vc2010.generate_filters)
+			genie.generate(prj, "%%.vcxproj", genie.vs2010_vcxproj)
+			genie.generate(prj, "%%.vcxproj.user", genie.vs2010_vcxproj_user)
+			genie.generate(prj, "%%.vcxproj.filters", vstudio.vc2010.generate_filters)
 			end
 		end,
 
 
-		oncleansolution = premake.vstudio.cleansolution,
-		oncleanproject  = premake.vstudio.cleanproject,
-		oncleantarget   = premake.vstudio.cleantarget,
+		oncleansolution = genie.vstudio.cleansolution,
+		oncleanproject  = genie.vstudio.cleanproject,
+		oncleantarget   = genie.vstudio.cleantarget,
 
 		vstudio = {
 			solutionVersion = "12",

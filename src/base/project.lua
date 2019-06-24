@@ -4,7 +4,7 @@
 -- Copyright (c) 2002 Jason Perkins and the Premake project
 --
 
-	premake.project = { }
+	genie.project = { }
 
 
 --
@@ -17,8 +17,8 @@
 --    contains a reference back to the original project: prj = tr.project.
 --
 
-	function premake.project.buildsourcetree(prj, allfiles)
-		local tr = premake.tree.new(prj.name)
+	function genie.project.buildsourcetree(prj, allfiles)
+		local tr = genie.tree.new(prj.name)
 		tr.project = prj
 
 		local isvpath
@@ -27,13 +27,13 @@
 			node.isvpath = isvpath
 		end
 
-		for fcfg in premake.project.eachfile(prj, allfiles) do
+		for fcfg in genie.project.eachfile(prj, allfiles) do
 			isvpath = (fcfg.name ~= fcfg.vpath)
-			local node = premake.tree.add(tr, fcfg.vpath, onadd)
+			local node = genie.tree.add(tr, fcfg.vpath, onadd)
 			node.cfg = fcfg
 		end
 
-		premake.tree.sort(tr)
+		genie.tree.sort(tr)
 		return tr
 	end
 
@@ -44,7 +44,7 @@
 -- returned.
 --
 
-	function premake.eachconfig(prj, platform)
+	function genie.eachconfig(prj, platform)
 		-- I probably have the project root config, rather than the actual project
 		if prj.project then prj = prj.project end
 
@@ -54,7 +54,7 @@
 		return function ()
 			i = i + 1
 			if i <= #cfgs then
-				return premake.getconfig(prj, cfgs[i], platform)
+				return genie.getconfig(prj, cfgs[i], platform)
 			end
 		end
 	end
@@ -65,9 +65,9 @@
 -- Iterator for a project's files; returns a file configuration object.
 --
 
-	function premake.project.eachfile(prj, allfiles)
+	function genie.project.eachfile(prj, allfiles)
 		-- project root config contains the file config list
-		if not prj.project then prj = premake.getconfig(prj) end
+		if not prj.project then prj = genie.getconfig(prj) end
 		local i = 0
 		local t = iif(allfiles, prj.allfiles, prj.files)
 		local c = iif(allfiles, prj.__allfileconfigs, prj.__fileconfigs)
@@ -75,7 +75,7 @@
 			i = i + 1
 			if (i <= #t) then
 				local fcfg = c[t[i]]
-				fcfg.vpath = premake.project.getvpath(prj, fcfg.name)
+				fcfg.vpath = genie.project.getvpath(prj, fcfg.name)
 				return fcfg
 			end
 		end
@@ -87,11 +87,11 @@
 -- Apply XML escaping to a value.
 --
 
-	function premake.esc(value)
+	function genie.esc(value)
 		if (type(value) == "table") then
 			local result = { }
 			for _,v in ipairs(value) do
-				table.insert(result, premake.esc(v))
+				table.insert(result, genie.esc(v))
 			end
 			return result
 		else
@@ -119,7 +119,7 @@
 -- if the result set would otherwise be empty this platform will be used.
 --
 
-	function premake.filterplatforms(sln, map, default)
+	function genie.filterplatforms(sln, map, default)
 		local result = { }
 		local keys = { }
 		if sln.platforms then
@@ -144,9 +144,9 @@
 -- Locate a project by name; case insensitive.
 --
 
-	function premake.findproject(name)
-		for sln in premake.solution.each() do
-			for prj in premake.solution.eachproject(sln) do
+	function genie.findproject(name)
+		for sln in genie.solution.each() do
+			for prj in genie.solution.eachproject(sln) do
 				if (prj.name == name) then
 					return  prj
 				end
@@ -161,7 +161,7 @@
 -- items such as Windows .def files.
 --
 
-	function premake.findfile(prj, extension)
+	function genie.findfile(prj, extension)
 		for _, fname in ipairs(prj.files) do
 			if fname:endswith(extension) then return fname end
 		end
@@ -184,7 +184,7 @@
 --   configuration pair.
 --
 
-	function premake.getconfig(prj, cfgname, pltname)
+	function genie.getconfig(prj, cfgname, pltname)
 		-- might have the root configuration, rather than the actual project
 		prj = prj.project or prj
 
@@ -206,12 +206,12 @@
 -- long name is more readable.
 --
 
-	function premake.getconfigname(cfgname, platform, useshortname)
+	function genie.getconfigname(cfgname, platform, useshortname)
 		if cfgname then
 			local name = cfgname
 			if platform and platform ~= "Native" then
 				if useshortname then
-					name = name .. premake.platforms[platform].cfgsuffix
+					name = name .. genie.platforms[platform].cfgsuffix
 				else
 					name = name .. "|" .. platform
 				end
@@ -234,14 +234,14 @@
 --    A list of dependent projects, as an array of objects.
 --
 
-	function premake.getdependencies(prj)
+	function genie.getdependencies(prj)
 		-- make sure I've got the project and not root config
 		prj = prj.project or prj
 
 		local results = { }
 		for _, cfg in pairs(prj.__configs) do
 			for _, link in ipairs(cfg.links) do
-				local dep = premake.findproject(link)
+				local dep = genie.findproject(link)
 				if dep and not table.contains(results, dep) then
 					table.insert(results, dep)
 				end
@@ -266,7 +266,7 @@
 --    path components.
 --
 
-	function premake.project.getbasename(prjname, pattern)
+	function genie.project.getbasename(prjname, pattern)
 		return pattern:gsub("%%%%", prjname)
 	end
 
@@ -285,8 +285,8 @@
 --    from the current directory to the project location.
 --
 
-	function premake.project.getfilename(prj, pattern)
-		local fname = premake.project.getbasename(prj.name, pattern)
+	function genie.project.getfilename(prj, pattern)
+		local fname = genie.project.getbasename(prj.name, pattern)
 		fname = path.join(prj.location, fname)
 		return path.getrelative(os.getcwd(), fname)
 	end
@@ -308,7 +308,7 @@
 --   object    - return the project object of the dependency
 --
 
- 	function premake.getlinks(cfg, kind, part)
+ 	function genie.getlinks(cfg, kind, part)
 		-- if I'm building a list of link directories, include libdirs
 		local result = iif (part == "directory" and kind == "all", cfg.libdirs, {})
 
@@ -316,19 +316,19 @@
 		local cfgname = iif(cfg.name == cfg.project.name, "", cfg.name)
 
 		-- how should files be named?
-		local pathstyle = premake.getpathstyle(cfg)
-		local namestyle = premake.getnamestyle(cfg)
+		local pathstyle = genie.getpathstyle(cfg)
+		local namestyle = genie.getnamestyle(cfg)
 
 		local function canlink(source, target)
 			if (target.kind ~= "SharedLib" and target.kind ~= "StaticLib") then
 				return false
 			end
-			if premake.iscppproject(source) then
-				return premake.iscppproject(target)
-			elseif premake.isdotnetproject(source) then
-				return premake.isdotnetproject(target)
-			elseif premake.isswiftproject(source) then
-				return premake.isswiftproject(source) or premake.iscppproject(source)
+			if genie.iscppproject(source) then
+				return genie.iscppproject(target)
+			elseif genie.isdotnetproject(source) then
+				return genie.isdotnetproject(target)
+			elseif genie.isswiftproject(source) then
+				return genie.isswiftproject(source) or genie.iscppproject(source)
 			end
 		end
 
@@ -336,10 +336,10 @@
 			local item
 
 			-- is this a sibling project?
-			local prj = premake.findproject(link)
+			local prj = genie.findproject(link)
 			if prj and kind ~= "system" then
 
-				local prjcfg = premake.getconfig(prj, cfgname, cfg.platform)
+				local prjcfg = genie.getconfig(prj, cfgname, cfg.platform)
 				if kind == "dependencies" or canlink(cfg, prjcfg) then
 					if (part == "directory") then
 						item = path.rebase(prjcfg.linktarget.directory, prjcfg.location, cfg.location)
@@ -359,9 +359,9 @@
 				elseif (part == "fullpath") then
 					item = link
 					if namestyle == "windows" then
-						if premake.iscppproject(cfg) then
+						if genie.iscppproject(cfg) then
 							item = item .. ".lib"
-						elseif premake.isdotnetproject(cfg) then
+						elseif genie.isdotnetproject(cfg) then
 							item = item .. ".dll"
 						end
 					end
@@ -404,8 +404,8 @@
 --    The target naming style, one of "windows", "posix", or "PS3".
 --
 
-	function premake.getnamestyle(cfg)
-		return premake.platforms[cfg.platform].namestyle or premake.gettool(cfg).namestyle or "posix"
+	function genie.getnamestyle(cfg)
+		return genie.platforms[cfg.platform].namestyle or genie.gettool(cfg).namestyle or "posix"
 	end
 
 
@@ -420,8 +420,8 @@
 --    The target path style, one of "windows" or "posix".
 --
 
-	function premake.getpathstyle(cfg)
-		if premake.action.current().os == "windows" then
+	function genie.getpathstyle(cfg)
+		if genie.action.current().os == "windows" then
 			return "windows"
 		else
 			return "posix"
@@ -456,14 +456,14 @@
 --      bundlepath - the relative path and file name of the bundle
 --
 
-	function premake.gettarget(cfg, direction, pathstyle, namestyle, system)
+	function genie.gettarget(cfg, direction, pathstyle, namestyle, system)
 		if system == "bsd" then
 			system = "linux"
 		end
 
 		-- Fix things up based on the current system
 		local kind = cfg.kind
-		if premake.iscppproject(cfg) then
+		if genie.iscppproject(cfg) then
 			-- On Windows, shared libraries link against a static import library
 			if (namestyle == "windows" or system == "windows")
 				and kind == "SharedLib" and direction == "link"
@@ -595,22 +595,22 @@
 -- any relevant command-line options.
 --
 
-	function premake.gettool(cfg)
-		if premake.iscppproject(cfg) then
+	function genie.gettool(cfg)
+		if genie.iscppproject(cfg) then
 			if _OPTIONS.cc then
-				return premake[_OPTIONS.cc]
+				return genie[_OPTIONS.cc]
 			end
-			local action = premake.action.current()
+			local action = genie.action.current()
 			if action.valid_tools then
-				return premake[action.valid_tools.cc[1]]
+				return genie[action.valid_tools.cc[1]]
 			end
-			return premake.gcc
-		elseif premake.isdotnetproject(cfg) then
-			return premake.dotnet
-		elseif premake.isswiftproject(cfg) then
-			return premake.swift
+			return genie.gcc
+		elseif genie.isdotnetproject(cfg) then
+			return genie.dotnet
+		elseif genie.isswiftproject(cfg) then
+			return genie.swift
 		else
-			return premake.valac
+			return genie.valac
 		end
 	end
 
@@ -622,7 +622,7 @@
 -- the original path is returned.
 --
 
-	function premake.project.getvpath(prj, abspath)
+	function genie.project.getvpath(prj, abspath)
 		-- If there is no match, the result is the original filename
 		local vpath = abspath
 
@@ -702,9 +702,9 @@
 -- Returns true if the solution contains at least one C/C++ project.
 --
 
-	function premake.hascppproject(sln)
-		for prj in premake.solution.eachproject(sln) do
-			if premake.iscppproject(prj) then
+	function genie.hascppproject(sln)
+		for prj in genie.solution.eachproject(sln) do
+			if genie.iscppproject(prj) then
 				return true
 			end
 		end
@@ -716,9 +716,9 @@
 -- Returns true if the solution contains at least one .NET project.
 --
 
-	function premake.hasdotnetproject(sln)
-		for prj in premake.solution.eachproject(sln) do
-			if premake.isdotnetproject(prj) then
+	function genie.hasdotnetproject(sln)
+		for prj in genie.solution.eachproject(sln) do
+			if genie.isdotnetproject(prj) then
 				return true
 			end
 		end
@@ -730,7 +730,7 @@
 -- Returns true if the project use the C language.
 --
 
-	function premake.project.iscproject(prj)
+	function genie.project.iscproject(prj)
 		return prj.language == "C"
 	end
 
@@ -739,7 +739,7 @@
 -- Returns true if the project uses a C/C++ language.
 --
 
-	function premake.iscppproject(prj)
+	function genie.iscppproject(prj)
 		return (prj.language == "C" or prj.language == "C++")
 	end
 
@@ -749,7 +749,7 @@
 -- Returns true if the project uses a .NET language.
 --
 
-	function premake.isdotnetproject(prj)
+	function genie.isdotnetproject(prj)
 		return (prj.language == "C#")
 	end
 
@@ -757,7 +757,7 @@
 -- Returns true if the project uses the Vala language.
 --
 
-	function premake.isvalaproject(prj)
+	function genie.isvalaproject(prj)
 		return (prj.language == "Vala")
 	end
 
@@ -765,6 +765,6 @@
 -- Returns true if the project uses the Swift language.
 --
 
-	function premake.isswiftproject(prj)
+	function genie.isswiftproject(prj)
 		return (prj.language == "Swift")
 	end

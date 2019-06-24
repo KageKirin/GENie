@@ -37,7 +37,7 @@
 	{
 		trigger     = "file",
 		value       = "FILE",
-		description = "Read FILE as a Premake script; default is 'premake4.lua'"
+		description = "Read FILE as a GENie script; default is 'genie.lua'"
 	}
 
 	newoption

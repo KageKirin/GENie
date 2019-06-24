@@ -1,4 +1,4 @@
-function premake.qbs.list(indent, name, table)
+function genie.qbs.list(indent, name, table)
 	if #table > 0 then
 		_p(indent, '%s: [', name)
 		for _, item in ipairs(table) do

@@ -1,5 +1,5 @@
-local premake = premake
-local xcode = premake.xcode
+local genie = genie
+local xcode = genie.xcode
 
 xcode.allscheme = false
 
@@ -53,13 +53,13 @@ function xcode.workspace_generate(sln)
 	xcode.workspace_head()
 	xcode.reorderProjects(sln)
 
-	for grp in premake.solution.eachgroup(sln) do
+	for grp in genie.solution.eachgroup(sln) do
 		if grp.parent == nil then
 			xcode.workspace_group(grp, 1)
 		end
 	end
 
-	for prj in premake.solution.eachproject(sln) do
+	for prj in genie.solution.eachproject(sln) do
 		if prj.group == nil then
 			xcode.workspace_file_ref(prj, 1)
 		end
@@ -81,7 +81,7 @@ function xcode.workspace_scheme(sln)
 	local projects = {}
 	local primary = nil
 
-	for prj in premake.solution.eachproject(sln) do
+	for prj in genie.solution.eachproject(sln) do
 		if not primary or (sln.startproject == prj.name) then
 			primary = prj
 		end

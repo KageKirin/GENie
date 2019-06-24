@@ -3,12 +3,12 @@
 -- Define the Apple XCode 9.0 action and support functions.
 --
 
-	local premake = premake
-	premake.xcode9 = { }
+	local genie = genie
+	genie.xcode9 = { }
 
-	local xcode  = premake.xcode
-	local xcode8 = premake.xcode8
-	local xcode9 = premake.xcode9
+	local xcode  = genie.xcode
+	local xcode8 = genie.xcode8
+	local xcode9 = genie.xcode9
 
 	function xcode9.XCBuildConfiguration_Project(tr, prj, cfg)
 		local options = xcode8.XCBuildConfiguration_Project(tr, prj, cfg)
@@ -82,19 +82,19 @@
 		default_platform = "Native",
 
 		onsolution = function(sln)
-			premake.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode.workspace_generate)
-			premake.generate(sln, "%%.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings", xcode.workspace_settings)
-			premake.generate(sln, "%%.xcworkspace/xcshareddata/xcschemes/-ALL-.xcscheme", xcode.workspace_scheme)
+			genie.generate(sln, "%%.xcworkspace/contents.xcworkspacedata", xcode.workspace_generate)
+			genie.generate(sln, "%%.xcworkspace/xcshareddata/WorkspaceSettings.xcsettings", xcode.workspace_settings)
+			genie.generate(sln, "%%.xcworkspace/xcshareddata/xcschemes/-ALL-.xcscheme", xcode.workspace_scheme)
 		end,
 
 		onproject = function(prj)
-			premake.generate(prj, "%%.xcodeproj/project.pbxproj", xcode9.project)
+			genie.generate(prj, "%%.xcodeproj/project.pbxproj", xcode9.project)
 			xcode.generate_schemes(prj, "%%.xcodeproj/xcshareddata/xcschemes")
 		end,
 
 		oncleanproject = function(prj)
-			premake.clean.directory(prj, "%%.xcodeproj")
-			premake.clean.directory(prj, "%%.xcworkspace")
+			genie.clean.directory(prj, "%%.xcodeproj")
+			genie.clean.directory(prj, "%%.xcworkspace")
 		end,
 
 		oncheckproject = xcode.checkproject,

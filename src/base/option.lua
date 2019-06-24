@@ -4,14 +4,14 @@
 -- Copyright (c) 2002-2009 Jason Perkins and the Premake project
 --
 
-	premake.option = { }
+	genie.option = { }
 
 
 --
 -- The list of registered options.
 --
 
-	premake.option.list = { }
+	genie.option.list = { }
 
 
 --
@@ -21,7 +21,7 @@
 --    The new option object.
 --
 
-	function premake.option.add(opt)
+	function genie.option.add(opt)
 		-- some sanity checking
 		local missing
 		for _, field in ipairs({ "description", "trigger" }) do
@@ -35,7 +35,7 @@
 		end
 
 		-- add it to the master list
-		premake.option.list[opt.trigger] = opt
+		genie.option.list[opt.trigger] = opt
 	end
 
 
@@ -48,8 +48,8 @@
 --    The requested option, or nil if the option does not exist.
 --
 
-	function premake.option.get(name)
-		return premake.option.list[name]
+	function genie.option.get(name)
+		return genie.option.list[name]
 	end
 
 
@@ -57,10 +57,10 @@
 -- Iterator for the list of options.
 --
 
-	function premake.option.each()
+	function genie.option.each()
 		-- sort the list by trigger
 		local keys = { }
-		for _, option in pairs(premake.option.list) do
+		for _, option in pairs(genie.option.list) do
 			table.insert(keys, option.trigger)
 		end
 		table.sort(keys)
@@ -68,7 +68,7 @@
 		local i = 0
 		return function()
 			i = i + 1
-			return premake.option.list[keys[i]]
+			return genie.option.list[keys[i]]
 		end
 	end
 
@@ -82,10 +82,10 @@
 ---   True if the list of pairs are valid, false and an error message otherwise.
 --
 
-	function premake.option.validate(values)
+	function genie.option.validate(values)
 		for key, value in pairs(values) do
 			-- does this option exist
-			local opt = premake.option.get(key)
+			local opt = genie.option.get(key)
 			if (not opt) then
 				return false, "invalid option '" .. key .. "'"
 			end

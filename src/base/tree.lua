@@ -4,8 +4,8 @@
 -- Copyright (c) 2009 Jason Perkins and the Premake project
 --
 
-	premake.tree = { }
-	local tree = premake.tree
+	genie.tree = { }
+	local tree = genie.tree
 
 
 --
@@ -15,7 +15,7 @@
 --    The name of the tree, applied to the root node (optional).
 --
 
-	function premake.tree.new(n)
+	function genie.tree.new(n)
 		local t = {
 			name = n,
 			children = { }
@@ -38,7 +38,7 @@
 --    The new tree node.
 --
 
-	function premake.tree.add(tr, p, onaddfunc)
+	function genie.tree.add(tr, p, onaddfunc)
 		-- Special case "." refers to the current node
 		if p == "." then
 			return tr
@@ -84,7 +84,7 @@
 --    The child tree, to be inserted.
 --
 
-	function premake.tree.insert(parent, child)
+	function genie.tree.insert(parent, child)
 		table.insert(parent.children, child)
 		if child.name then
 			parent.children[child.name] = child
@@ -102,7 +102,7 @@
 --    The node to query.
 --
 
-	function premake.tree.getlocalpath(node)
+	function genie.tree.getlocalpath(node)
 		if node.parent.path then
 			return node.name
 		elseif node.cfg then
@@ -120,7 +120,7 @@
 --    The node to remove.
 --
 
-	function premake.tree.remove(node)
+	function genie.tree.remove(node)
 		local children = node.parent.children
 		for i = 1, #children do
 			if children[i] == node then
@@ -138,7 +138,7 @@
 --    The tree to sort.
 --
 
-	function premake.tree.sort(tr)
+	function genie.tree.sort(tr)
 		tree.traverse(tr, {
 			onnode = function(node)
 				table.sort(node.children, function(a,b)
@@ -173,7 +173,7 @@
 --    An optional starting value for the traversal depth; defaults to zero.
 --
 
-	function premake.tree.traverse(t, fn, includeroot, initialdepth)
+	function genie.tree.traverse(t, fn, includeroot, initialdepth)
 
 		-- forward declare my handlers, which call each other
 		local donode, dochildren

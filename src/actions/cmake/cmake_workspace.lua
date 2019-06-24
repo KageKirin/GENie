@@ -4,7 +4,7 @@
 -- Copyright (c) 2015 Miodrag Milanovic
 --
 
-function premake.cmake.workspace(sln)
+function genie.cmake.workspace(sln)
 	if (sln.location ~= _WORKING_DIR) then
 		local name = string.format("%s/CMakeLists.txt", _WORKING_DIR)
 		local f, err = io.open(name, "wb")
@@ -21,7 +21,7 @@ function premake.cmake.workspace(sln)
 	_p('cmake_minimum_required(VERSION 2.8.4)')
 	_p('')
 	for i,prj in ipairs(sln.projects) do
-		local name = premake.esc(prj.name)
+		local name = genie.esc(prj.name)
 		_p('add_subdirectory(%s)', name)
 	end
 end

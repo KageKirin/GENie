@@ -2,11 +2,11 @@
 
 -- 
 -- The project generation function, attached to the action in _example.lua.
--- By now, premake.generate() has created the project file using the name
+-- By now, genie.generate() has created the project file using the name
 -- provided in _example.lua, and redirected input to this new file.
 --
 
-	function premake.example.project(prj)
+	function genie.example.project(prj)
 		-- If necessary, set an explicit line ending sequence
 		-- io.eol = '\r\n'
 	
@@ -20,7 +20,7 @@
 
 		
 		-- List the build configurations, and the settings for each
-		for cfg in premake.eachconfig(prj) do
+		for cfg in genie.eachconfig(prj) do
 			_p('Configuration %s:', cfg.name)
 			_p(1, 'Objects directory: %s', cfg.objectsdir)
 
@@ -46,7 +46,7 @@
 			_p(1, 'Linking:')
 			_p(2, 'Library paths: %s', table.concat(cfg.libdirs, ";"))
 			_p(2, 'Options: %s', table.concat(cfg.linkoptions, " "))
-			_p(2, 'Libraries: %s', table.concat(premake.getlinks(cfg, "all", "fullpath")))
+			_p(2, 'Libraries: %s', table.concat(genie.getlinks(cfg, "all", "fullpath")))
 			_p('')
 			
 			if #cfg.prebuildcommands > 0 then
@@ -76,9 +76,9 @@
 
 		
 		-- List out the folders and files that make up the build
-		local tr = premake.project.buildsourcetree(prj)
-		premake.tree.sort(tr)
-		premake.tree.traverse(tr, {
+		local tr = genie.project.buildsourcetree(prj)
+		genie.tree.sort(tr)
+		genie.tree.traverse(tr, {
 			onbranch = function(node, depth)
 				_p(depth, path.getname(node.name) .. "/")
 			end,

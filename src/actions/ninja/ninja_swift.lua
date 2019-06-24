@@ -3,17 +3,17 @@
 -- Copyright (c) 2016 Stuart Carnie and the GENie project
 --
 
-local ninja = premake.ninja
+local ninja = genie.ninja
 local swift = {}
-local p     = premake
+local p     = genie
 
 -- generate project + config build file
 	function ninja.generate_swift(prj)
 		local pxy = ninja.get_proxy("prj", prj)
-		local tool = premake.gettool(prj)
+		local tool = genie.gettool(prj)
 		
 		-- build a list of supported target platforms that also includes a generic build
-		local platforms = premake.filterplatforms(prj.solution, tool.platforms, "Native")
+		local platforms = genie.filterplatforms(prj.solution, tool.platforms, "Native")
 
 		for _, platform in ipairs(platforms) do
 			for cfg in p.eachconfig(pxy, platform) do
@@ -23,7 +23,7 @@ local p     = premake
 	end
 	
 	function swift.generate_config(prj, cfg)
-		local tool = premake.gettool(prj)
+		local tool = genie.gettool(prj)
 		
 		local flags = {
 			swiftcflags    = ninja.list(tool.getswiftcflags(cfg)),
@@ -109,12 +109,12 @@ local p     = premake
 	end
 	
 	function swift.linker(prj, cfg, objfiles, tool)
-		local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath")) 
+		local lddeps = ninja.list(genie.getlinks(cfg, "siblings", "fullpath")) 
 		
 		if cfg.kind == "StaticLib" then
 			_p("build $target: ar %s | %s ", ninja.list(objfiles), lddeps)
 		else
-			local lddeps = ninja.list(premake.getlinks(cfg, "siblings", "fullpath"))
+			local lddeps = ninja.list(genie.getlinks(cfg, "siblings", "fullpath"))
 			_p("build $target: swiftlink %s | %s", ninja.list(objfiles), lddeps)
 		end
 	end

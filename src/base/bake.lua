@@ -9,8 +9,8 @@
 -- Copyright (c) 2008-2011 Jason Perkins and the Premake project
 --
 
-	premake.bake = { }
-	local bake = premake.bake
+	genie.bake = { }
+	local bake = genie.bake
 
 
 -- do not copy these fields into the configurations
@@ -45,7 +45,7 @@
 -- See the docs for configuration() for more information about the terms.
 --
 
-	function premake.getactiveterms(obj)
+	function genie.getactiveterms(obj)
 		-- While the `obj` argument is not used in this function, it should
 		-- remain accepted so users can override this function if need be, and
 		-- still have access to the context (solution/project).
@@ -72,10 +72,10 @@
 -- enables testing for required values in iskeywordsmatch(), below.
 --
 
-	function premake.iskeywordmatch(keyword, terms)
+	function genie.iskeywordmatch(keyword, terms)
 		-- is it negated?
 		if keyword:startswith("not ") then
-			return not premake.iskeywordmatch(keyword:sub(5), terms)
+			return not genie.iskeywordmatch(keyword:sub(5), terms)
 		end
 
 		for _, pattern in ipairs(keyword:explode(" or ")) do
@@ -97,10 +97,10 @@
 -- the config level).
 --
 
-	function premake.iskeywordsmatch(keywords, terms)
+	function genie.iskeywordsmatch(keywords, terms)
 		local hasrequired = false
 		for _, keyword in ipairs(keywords) do
-			local matched = premake.iskeywordmatch(keyword, terms)
+			local matched = genie.iskeywordmatch(keyword, terms)
 			if not matched then
 				return false
 			end
@@ -138,7 +138,7 @@
 		end
 
 		for name, value in pairs(obj) do
-			local field = premake.fields[name]
+			local field = genie.fields[name]
 			if field and value and not keeprelative[name] then
 				if field.kind == "path" then
 					obj[name] = path.getrelative(location, value)
@@ -179,7 +179,7 @@
 
 --
 -- Merge all of the fields from one object into another. String values are overwritten,
--- while list values are merged. Fields listed in premake.nocopy are skipped.
+-- while list values are merged. Fields listed in genie.nocopy are skipped.
 --
 -- @param dest
 --    The destination object, to contain the merged settings.
@@ -219,7 +219,7 @@
 		for fieldname, value in pairs(src) do
 			if not nocopy[fieldname] then
 				-- fields that are included in the API are merged...
-				local field = premake.fields[fieldname]
+				local field = genie.fields[fieldname]
 				if field then
 					if type(value) == "table" then
 						dest[fieldname] = mergefield(field.kind, dest[fieldname], value, field.mergecopiestotail)
@@ -289,7 +289,7 @@
 
 		-- now add in any blocks that match the filter terms
 		for _, blk in ipairs(obj.blocks) do
-			if (premake.iskeywordsmatch(blk.keywords, terms))then
+			if (genie.iskeywordsmatch(blk.keywords, terms))then
 				mergeobject(cfg, blk)
 				if (cfg.kind and not cfg.terms.kind) then
 					cfg.terms['kind'] = cfg.kind:lower()
@@ -332,7 +332,7 @@
 
 		-- build a set of configuration filter terms; only those configuration blocks
 		-- with a matching set of keywords will be included in the merged results
-		local terms = premake.getactiveterms(obj)
+		local terms = genie.getactiveterms(obj)
 
 		-- build a project-level configuration.
 		merge(result, obj, basis, terms)--this adjusts terms
@@ -371,7 +371,7 @@
 		local cfg_dirs = {}
 		local hit_counts = {}
 
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for _, prj in ipairs(sln.projects) do
 				for _, cfg in pairs(prj.__configs) do
 
@@ -396,7 +396,7 @@
 
 		-- Now assign an object directory to each configuration, skipping those
 		-- that are in use somewhere else in the session
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for _, prj in ipairs(sln.projects) do
 				for _, cfg in pairs(prj.__configs) do
 
@@ -420,16 +420,16 @@
 --
 
 	local function buildtargets()
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for _, prj in ipairs(sln.projects) do
 				for _, cfg in pairs(prj.__configs) do
 					-- determine which conventions the target should follow for this config
-					local pathstyle = premake.getpathstyle(cfg)
-					local namestyle = premake.getnamestyle(cfg)
+					local pathstyle = genie.getpathstyle(cfg)
+					local namestyle = genie.getnamestyle(cfg)
 
 					-- build the targets
-					cfg.buildtarget = premake.gettarget(cfg, "build", pathstyle, namestyle, cfg.system)
-					cfg.linktarget  = premake.gettarget(cfg, "link",  pathstyle, namestyle, cfg.system)
+					cfg.buildtarget = genie.gettarget(cfg, "build", pathstyle, namestyle, cfg.system)
+					cfg.linktarget  = genie.gettarget(cfg, "link",  pathstyle, namestyle, cfg.system)
 					if pathstyle == "windows" then
 						cfg.objectsdir = path.translate(cfg.objectsdir, "\\")
 					end
@@ -550,7 +550,7 @@
   -- Copies the field from dstCfg to srcCfg.
   --
   	local function copydependentfield(srcCfg, dstCfg, strSrcField)
-  		local srcField = premake.fields[strSrcField];
+  		local srcField = genie.fields[strSrcField];
   		local strDstField = strSrcField;
 
   		if type(srcCfg[strSrcField]) == "table" then
@@ -594,7 +594,7 @@
   -- not listed as linkage-only. It will copy the linking information for projects only if
   -- the source project is not a static library. It won't copy linking information
   -- if the project is in this solution; instead it will add that project to the configuration's
-  -- links field, expecting that Premake will handle the rest.
+  -- links field, expecting that GENie will handle the rest.
   --
   	local function copyusagedata(cfg, cfgname, linkToProjs)
   		local myPrj = cfg.project;
@@ -604,7 +604,7 @@
   			local srcPrj = prjEntry.usageProj;
   			local srcCfg = srcPrj.__configs[cfgname];
 
-  			for name, field in pairs(premake.fields) do
+  			for name, field in pairs(genie.fields) do
   				if(srcCfg[name]) then
   					if(field.usagecopy) then
   						if(not prjEntry.bLinkageOnly) then
@@ -632,7 +632,7 @@
 --
 
     local function inverseliteralvpaths()
-        for sln in premake.solution.each() do
+        for sln in genie.solution.each() do
             for _,prj in ipairs(sln.projects) do
                 prj.inversevpaths = {}
                 for replacement, patterns in pairs(prj.vpaths or {}) do
@@ -649,10 +649,10 @@
 -- Main function, controls the process of flattening the configurations.
 --
 
-	function premake.bake.buildconfigs()
+	function genie.bake.buildconfigs()
 
 		-- convert project path fields to be relative to project location
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for _, prj in ipairs(sln.projects) do
 				prj.location = prj.location or sln.location or prj.basedir
 				adjustpaths(prj.location, prj)
@@ -664,7 +664,7 @@
 		end
 
         -- convert paths for imported projects to be relative to solution location
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for _, iprj in ipairs(sln.importedprojects) do
 				iprj.location = path.getabsolute(iprj.location)
 			end
@@ -674,7 +674,7 @@
 
 		-- collapse configuration blocks, so that there is only one block per build
 		-- configuration/platform pair, filtered to the current operating environment
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			local basis = collapse(sln)
 			for _, prj in ipairs(sln.projects) do
 				prj.__configs = collapse(prj, basis)
@@ -687,7 +687,7 @@
 		-- This loop finds the projects that a configuration is connected to
 		-- via its "uses" field. It will then copy any usage project information from that
 		-- usage project to the configuration in question.
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for prjIx, prj in ipairs(sln.projects) do
 				if(not prj.usage) then
 					for cfgname, cfg in pairs(prj.__configs) do
@@ -699,7 +699,7 @@
 		end
 
 		-- mark all configurations that have been removed via their removes table.
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			for prjIx, prj in ipairs(sln.projects) do
 				for cfgName, cfg in pairs(prj.__configs) do
 					cfg.build = true
@@ -722,7 +722,7 @@
 		end
 
 		-- Remove all usage projects.
-		for sln in premake.solution.each() do
+		for sln in genie.solution.each() do
 			local removeList = {};
 			for index, prj in ipairs(sln.projects) do
 				if(prj.usage) then
@@ -754,16 +754,16 @@
 --    The configuration object to be fixed up.
 --
 
-	function premake.bake.postprocess(prj, cfg)
+	function genie.bake.postprocess(prj, cfg)
 		cfg.project   = prj
-		cfg.shortname = premake.getconfigname(cfg.name, cfg.platform, true)
-		cfg.longname  = premake.getconfigname(cfg.name, cfg.platform)
+		cfg.shortname = genie.getconfigname(cfg.name, cfg.platform, true)
+		cfg.longname  = genie.getconfigname(cfg.name, cfg.platform)
 
 		-- set the project location, if not already set
 		cfg.location = cfg.location or cfg.basedir
 
 		-- figure out the target system
-		local platform = premake.platforms[cfg.platform]
+		local platform = genie.platforms[cfg.platform]
 		if platform.iscrosscompiler then
 			cfg.system = cfg.platform
 		else
@@ -819,7 +819,7 @@
 		cfg.allfiles = allfiles
 
 		-- fixup the data
-		for name, field in pairs(premake.fields) do
+		for name, field in pairs(genie.fields) do
 			-- re-key flag fields for faster lookups
 			if field.isflags then
 				local values = cfg[name]
@@ -844,11 +844,11 @@
 				local fcfg = {}
 
 				-- Only do this if the script has called enablefilelevelconfig()
-				if premake._filelevelconfig then
+				if genie._filelevelconfig then
 					cfg.terms.required = fname:lower()
 					for _, blk in ipairs(cfg.project.blocks) do
 						-- BK - `iskeywordsmatch` call is super slow for large projects...
-						if (premake.iskeywordsmatch(blk.keywords, cfg.terms)) then
+						if (genie.iskeywordsmatch(blk.keywords, cfg.terms)) then
 							mergeobject(fcfg, blk)
 						end
 					end

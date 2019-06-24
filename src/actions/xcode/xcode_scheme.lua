@@ -2,8 +2,8 @@
 -- xcode_scheme.lua
 --
 
-local premake = premake
-local xcode   = premake.xcode
+local genie = genie
+local xcode   = genie.xcode
 
 
 --
@@ -11,7 +11,7 @@ local xcode   = premake.xcode
 --
 
 	local function buildableref(indent, prj, cfg)
-		cfg = cfg or premake.eachconfig(prj)()
+		cfg = cfg or genie.eachconfig(prj)()
 
 		_p(indent + 0, '<BuildableReference')
 		_p(indent + 1, 'BuildableIdentifier = "primary"')
@@ -85,7 +85,7 @@ local xcode   = premake.xcode
 		local bestcfg = nil
 		local bestscore = -1
 
-		for cfg in premake.eachconfig(prj) do
+		for cfg in genie.eachconfig(prj) do
 			local score = 0
 
 			if cfg.platform == "Native" then
@@ -227,11 +227,11 @@ local xcode   = premake.xcode
 		if (prj.kind == "ConsoleApp" or prj.kind == "WindowedApp") or (prj.options and prj.options.XcodeLibrarySchemes) then
 
 			if prj.options and prj.options.XcodeSchemeNoConfigs then
-				premake.generate(prj, path.join(base_path, "%%.xcscheme"),
+				genie.generate(prj, path.join(base_path, "%%.xcscheme"),
 					function(prj) xcode.scheme({prj}, prj) end)
 			else
-				for cfg in premake.eachconfig(prj) do
-					premake.generate(prj, path.join(base_path, "%% " .. cfg.name .. ".xcscheme"),
+				for cfg in genie.eachconfig(prj) do
+					genie.generate(prj, path.join(base_path, "%% " .. cfg.name .. ".xcscheme"),
 						function(prj) xcode.scheme({prj}, prj, cfg) end)
 				end
 			end

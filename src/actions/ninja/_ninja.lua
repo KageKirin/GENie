@@ -3,9 +3,9 @@
 -- https://github.com/bkaradzic/GENie#license
 --
 
-premake.ninja = { }
+genie.ninja = { }
 
-local p = premake
+local p = genie
 
 newaction
 {
@@ -42,7 +42,7 @@ newaction
 
 	oncleansolution = function(sln)
 		for _,name in ipairs(sln.configurations) do
-			premake.clean.file(sln, p.ninja.get_solution_name(sln, name))
+			genie.clean.file(sln, p.ninja.get_solution_name(sln, name))
 		end
 	end,
 
