@@ -24,10 +24,10 @@ end
 
 local function get_buffer()
 	io.capture()
-	premake.bake.buildconfigs()
-	sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-	prj = premake.solution.getproject(sln, 1)
-	premake.vs2010_vcxproj(prj)
+	genie.bake.buildconfigs()
+	sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+	prj = genie.solution.getproject(sln, 1)
+	genie.vs2010_vcxproj(prj)
 	local buffer = io.endcapture()
 	return buffer
 end
@@ -294,10 +294,10 @@ end
 
 local function get_managed_buffer(sln,prj)
 	io.capture()
-	premake.bake.buildconfigs()
-	sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-	prj = premake.solution.getproject(sln, 1)
-	premake.vs2010_vcxproj(prj)
+	genie.bake.buildconfigs()
+	sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+	prj = genie.solution.getproject(sln, 1)
+	genie.vs2010_vcxproj(prj)
 	local buffer = io.endcapture()
 	return buffer
 end

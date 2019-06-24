@@ -6,7 +6,7 @@
 
 	T.gcc_linking = {}
 	local suite = T.gcc_linking
-	local cpp = premake.make.cpp
+	local cpp = genie.make.cpp
 
 --
 -- Setup
@@ -20,9 +20,9 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		cfg = premake.getconfig(prj, "Debug")
-		cpp.linker(cfg, premake.gcc)
+		genie.bake.buildconfigs()
+		cfg = genie.getconfig(prj, "Debug")
+		cpp.linker(cfg, genie.gcc)
 	end
 
 

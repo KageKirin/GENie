@@ -6,7 +6,7 @@
 
 	T.vstudio_vs200x_debugdir = { }
 	local suite = T.vstudio_vs200x_debugdir
-	local vc200x = premake.vstudio.vc200x
+	local vc200x = genie.vstudio.vc200x
 
 
 --
@@ -20,9 +20,9 @@
 	end
 	
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 		vc200x.debugdir(prj)
 	end
 

@@ -29,7 +29,7 @@
 
 	function suite.cppflags_OnWindows()
 		cfg.system = "windows"
-		local r = premake.gcc.getcppflags(cfg)
+		local r = genie.gcc.getcppflags(cfg)
 		test.isequal("-MMD -MP", table.concat(r, " "))
 	end
 
@@ -40,21 +40,21 @@
 	function suite.cflags_SharedLib_Windows()
 		cfg.kind = "SharedLib"
 		cfg.system = "windows"
-		local r = premake.gcc.getcflags(cfg)
+		local r = genie.gcc.getcflags(cfg)
 		test.isequal('', table.concat(r,"|"))
 	end
 
 
 	function suite.cflags_OnFpFast()
 		cfg.flags = { "FloatFast" }
-		local r = premake.gcc.getcflags(cfg)
+		local r = genie.gcc.getcflags(cfg)
 		test.isequal('-ffast-math', table.concat(r,"|"))
 	end
 
 
 	function suite.cflags_OnFpStrict()
 		cfg.flags = { "FloatStrict" }
-		local r = premake.gcc.getcflags(cfg)
+		local r = genie.gcc.getcflags(cfg)
 		test.isequal('-ffloat-store', table.concat(r,"|"))
 	end
 
@@ -66,13 +66,13 @@
 	function suite.ldflags_SharedLib_Windows()
 		cfg.kind = "SharedLib"
 		cfg.system = "windows"
-		local r = premake.gcc.getldflags(cfg)
+		local r = genie.gcc.getldflags(cfg)
 		test.isequal('-s|-shared|-Wl,--out-implib="libMyProject.a"', table.concat(r,"|"))
 	end
 
 
 	function suite.linkflags_OnFrameworks()
 		cfg.links = { "Cocoa.framework" }
-		local r = premake.gcc.getlinkflags(cfg)
+		local r = genie.gcc.getlinkflags(cfg)
 		test.isequal('-framework Cocoa', table.concat(r,"|"))
 	end

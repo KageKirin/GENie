@@ -6,8 +6,8 @@
 
 	T.vstudio_vs2010_config_props = { }
 	local suite = T.vstudio_vs2010_config_props
-	local vc2010 = premake.vstudio.vc2010
-	local project = premake.project
+	local vc2010 = genie.vstudio.vc2010
+	local project = genie.project
 
 
 --
@@ -21,10 +21,10 @@
 	end
 
 	local function prepare(platform)
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 		local cfginfo = sln.vstudio_configs[1]
-		local cfg = premake.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
+		local cfg = genie.getconfig(prj, cfginfo.src_buildcfg, cfginfo.src_platform)
 		vc2010.configurationPropertyGroup(cfg, cfginfo)
 	end
 

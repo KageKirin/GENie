@@ -6,7 +6,7 @@
 	
 	T.make_settings = { }
 	local suite = T.make_settings
-	local make = premake.make
+	local make = genie.make
 	
 	local sln, prj, cfg
 	
@@ -26,14 +26,14 @@
 		configuration { "Release" }
 		makesettings { "RELEASE_LEVEL_SETTINGS" }
 		
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		cfg = premake.getconfig(prj, "Debug")
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		cfg = genie.getconfig(prj, "Debug")
 	end
 
 
 	function suite.writesProjectSettings()
-		make.settings(prj, premake.gcc)
+		make.settings(prj, genie.gcc)
 		test.capture [[
 SOLUTION_LEVEL_SETTINGS
 PROJECT_LEVEL_SETTINGS
@@ -42,7 +42,7 @@ PROJECT_LEVEL_SETTINGS
 	end
 
 	function suite.writesConfigSettings()
-		make.settings(cfg, premake.gcc)
+		make.settings(cfg, genie.gcc)
 		test.capture [[
 DEBUG_LEVEL_SETTINGS
 

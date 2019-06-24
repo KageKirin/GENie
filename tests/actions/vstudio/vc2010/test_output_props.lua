@@ -6,7 +6,7 @@
 
 	T.vstudio_vs2010_output_props = {}
 	local suite = T.vstudio_vs2010_output_props
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 
 --
@@ -21,9 +21,9 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		local prj = premake.solution.getproject(sln, 1)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+		local prj = genie.solution.getproject(sln, 1)
 		vc2010.outputProperties(prj)
 	end
 

@@ -1,3 +1,3 @@
 
-CALL ..\\bin\\debug\\premake4 /scripts=..\\src test
-::CALL ..\\bin\\release\\premake4 /scripts=..\\src test
+CALL ..\\bin\\debug\\genie /scripts=..\\src test
+::CALL ..\\bin\\release\\genie /scripts=..\\src test

@@ -6,7 +6,7 @@
 
 	T.vstudio_sln2005_layout = { }
 	local suite = T.vstudio_sln2005_layout
-	local sln2005 = premake.vstudio.sln2005
+	local sln2005 = genie.vstudio.sln2005
 
 
 	local sln
@@ -18,8 +18,8 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 		sln2005.generate(sln)
 	end	
 

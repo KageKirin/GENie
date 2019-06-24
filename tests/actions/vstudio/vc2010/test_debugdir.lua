@@ -6,7 +6,7 @@
 
 	T.vstudio_vs2010_debugdir = { }
 	local suite = T.vstudio_vs2010_debugdir
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 
 --
@@ -20,9 +20,9 @@
 	end
 	
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 		vc2010.debugdir(prj)
 	end
 
@@ -58,7 +58,7 @@
 
 	T.vs2010_debug_environment = { }
 	local vs10_debug_environment = T.vs2010_debug_environment
-	local vs2010 = premake.vstudio.vc2010
+	local vs2010 = genie.vstudio.vc2010
 
 	function vs10_debug_environment.config_noDebugEnvsTable_bufferDoesNotContainLocalDebuggerEnvironment()
 		vs2010.debugenvs( {flags={}} )

@@ -6,7 +6,7 @@
 
 	T.vstudio_vs2010_link_settings = { }
 	local suite = T.vstudio_vs2010_link_settings
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 
 --
@@ -21,9 +21,9 @@
 	end
 
 	local function prepare(platform)
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		cfg = premake.getconfig(prj, "Debug", platform)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+		cfg = genie.getconfig(prj, "Debug", platform)
 		vc2010.link(cfg)
 	end
 
@@ -173,7 +173,7 @@
 
 
 --
--- Use the x86 target for Premake's x32 platform.
+-- Use the x86 target for GENie's x32 platform.
 --
 
 	function suite.writesCorrectTarget_onX32Platform()
@@ -192,7 +192,7 @@
 
 
 --
--- Use the x64 target for Premake's x64 platform.
+-- Use the x64 target for GENie's x64 platform.
 --
 
 	function suite.writesCorrectTarget_onX64Platform()

@@ -57,7 +57,7 @@
 	end
 	
 	function suite.isempty_ReturnsFalseOnNotEmptyMap()
-		test.isfalse(table.isempty({ name = 'premake' }))
+		test.isfalse(table.isempty({ name = 'genie' }))
 	end
 	
 	function suite.isempty_ReturnsFalseOnNotEmptyMapWithFalseKey()

@@ -6,8 +6,8 @@
 
 	T.make_wiidev = { }
 	local suite = T.make_wiidev
-	local make = premake.make
-	local cpp = premake.make.cpp
+	local make = genie.make
+	local cpp = genie.make.cpp
 
 	local sln, prj, cfg
 
@@ -20,8 +20,8 @@
 
 		prj = project("MyProject")
 
-		premake.bake.buildconfigs()
-		cfg = premake.getconfig(prj, "Debug", "WiiDev")
+		genie.bake.buildconfigs()
+		cfg = genie.getconfig(prj, "Debug", "WiiDev")
 	end
 
 
@@ -30,7 +30,7 @@
 --
 
 	function suite.writesCorrectFlags()
-		cpp.flags(cfg, premake.gcc)
+		cpp.flags(cfg, genie.gcc)
 		test.capture [[
   ALL_CPPFLAGS  += $(CPPFLAGS) -MMD -MP -I$(LIBOGC_INC) $(MACHDEP) -MP $(DEFINES) $(INCLUDES)
   ALL_CFLAGS    += $(CFLAGS) $(ALL_CPPFLAGS) $(ARCH)
@@ -40,7 +40,7 @@
 	end
 
 	function suite.writesCorrectLinkFlags()
-		cpp.linker(cfg, premake.gcc)
+		cpp.linker(cfg, genie.gcc)
 		test.capture [[
   ALL_LDFLAGS   += $(LDFLAGS) -s -L$(LIBOGC_LIB) $(MACHDEP)
   		]]
@@ -52,7 +52,7 @@
 --
 
 	function suite.writesIncludeBlock()
-		make.settings(cfg, premake.gcc)
+		make.settings(cfg, genie.gcc)
 		test.capture [[
   ifeq ($(strip $(DEVKITPPC)),)
     $(error "DEVKITPPC environment variable is not set")'

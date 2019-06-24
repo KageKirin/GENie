@@ -1,6 +1,6 @@
 --
 -- tests/tests_stress.lua
--- Stress test for Premake.
+-- Stress test for GENie.
 -- Copyright (c) 2009 Jason Perkins and the Premake project
 --
 

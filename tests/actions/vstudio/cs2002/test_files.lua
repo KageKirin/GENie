@@ -6,7 +6,7 @@
 
 	T.vstudio_cs2002_files = { }
 	local suite = T.vstudio_cs2002_files
-	local cs2002 = premake.vstudio.cs2002
+	local cs2002 = genie.vstudio.cs2002
 
 
 --
@@ -20,9 +20,9 @@
 	end
 	
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 		cs2002.Files(prj)
 	end
 

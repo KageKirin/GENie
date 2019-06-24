@@ -25,7 +25,7 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
+		genie.bake.buildconfigs()
 	end
 	
 
@@ -36,8 +36,8 @@
 
 	function T.gmake_cs.BasicCfgBlock()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug")
-		premake.gmake_cs_config(cfg, premake.dotnet, {[cfg]={}})
+		local cfg = genie.getconfig(prj, "Debug")
+		genie.gmake_cs_config(cfg, genie.dotnet, {[cfg]={}})
 		test.capture [[
 ifneq (,$(findstring debug,$(config)))
   TARGETDIR  := .
@@ -59,8 +59,8 @@ endif
 	function T.gmake_cs.OnBuildOptions()
 		buildoptions { "/define:SYMBOL" }
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug")
-		premake.gmake_cs_config(cfg, premake.dotnet, {[cfg]={}})
+		local cfg = genie.getconfig(prj, "Debug")
+		genie.gmake_cs_config(cfg, genie.dotnet, {[cfg]={}})
 		test.capture [[
 ifneq (,$(findstring debug,$(config)))
   TARGETDIR  := .

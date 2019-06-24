@@ -6,7 +6,7 @@
 
 	T.vstudio_cs2005_propertygroup = { }
 	local suite = T.vstudio_cs2005_propertygroup
-	local cs2005 = premake.vstudio.cs2005
+	local cs2005 = genie.vstudio.cs2005
 
 
 --
@@ -21,9 +21,9 @@
 	end
 	
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		cfg = premake.getconfig(prj, "Debug")
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		cfg = genie.getconfig(prj, "Debug")
 		cs2005.propertygroup(cfg)
 	end
 

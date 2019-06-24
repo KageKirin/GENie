@@ -6,7 +6,7 @@
 
 	T.vstudio_sln2005_projects = { }
 	local suite = T.vstudio_sln2005_projects
-	local sln2005 = premake.vstudio.sln2005
+	local sln2005 = genie.vstudio.sln2005
 
 
 --
@@ -22,8 +22,8 @@
 	end
 	
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
 		sln2005.project(prj)
 	end
 

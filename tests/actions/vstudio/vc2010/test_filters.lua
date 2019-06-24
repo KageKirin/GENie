@@ -6,7 +6,7 @@
 
 	T.vs2010_filters = { }
 	local suite = T.vs2010_filters
-	local vc2010 = premake.vstudio.vc2010	
+	local vc2010 = genie.vstudio.vc2010	
 
 
 --
@@ -29,8 +29,8 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 	end
 
 

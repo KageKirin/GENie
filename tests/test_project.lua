@@ -4,7 +4,7 @@
 -- Copyright (c) 2008-2010 Jason Perkins and the Premake project
 --
 
-	local _project = premake.project
+	local _project = genie.project
 	
 	T.project = { }
 
@@ -29,8 +29,8 @@
 	function T.project.findproject_IsCaseSensitive()
 		local sln = test.createsolution()
 		local prj = test.createproject(sln)
-		premake.bake.buildconfigs()
-		test.isnil(premake.findproject("myproject"))
+		genie.bake.buildconfigs()
+		test.isnil(genie.findproject("myproject"))
 	end
 	
 	
@@ -53,12 +53,12 @@
 
 
 --
--- premake.getlinks() tests
+-- genie.getlinks() tests
 --
 
 	function T.project.getlinks_OnMscSystemLibs()
 		_OPTIONS.cc = "msc"
 		cfg.links = { "user32", "gdi32" }
-		result = premake.getlinks(cfg, "all", "fullpath")
+		result = genie.getlinks(cfg, "all", "fullpath")
 		test.isequal("user32.lib gdi32.lib", table.concat(result, " "))
 	end

@@ -44,8 +44,8 @@
 	end
 	
 	local function prepare()
-		premake.bake.buildconfigs()
-		premake.action.call("clean")		
+		genie.bake.buildconfigs()
+		genie.action.call("clean")		
 	end
 
 

@@ -6,7 +6,7 @@
 
 T.vs200x_filters = { }
 local suite = T.vs200x_filters
-local vc200x = premake.vstudio.vc200x
+local vc200x = genie.vstudio.vc200x
 
 
 --
@@ -29,9 +29,9 @@ local vc200x = premake.vstudio.vc200x
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		prj = premake.solution.getproject(sln,1)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+		prj = genie.solution.getproject(sln,1)
 	end
 
 

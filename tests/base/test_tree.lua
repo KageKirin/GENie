@@ -6,7 +6,7 @@
 
 	T.tree = { }
 	local suite = T.tree
-	local tree = premake.tree
+	local tree = genie.tree
 
 
 --

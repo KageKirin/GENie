@@ -6,7 +6,7 @@
 
 	T.vstudio_vs2010_links = { }
 	local suite = T.vstudio_vs2010_links
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 
 --
@@ -24,10 +24,10 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		prj2 = premake.solution.getproject(sln, 2)
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		prj2 = genie.solution.getproject(sln, 2)
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 	end
 
 

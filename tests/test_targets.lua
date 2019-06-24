@@ -1,6 +1,6 @@
 --
 -- tests/test_targets.lua
--- Automated test suite for premake.gettarget()
+-- Automated test suite for genie.gettarget()
 -- Copyright (c) 2008, 2009 Jason Perkins and the Premake project
 --
 
@@ -38,31 +38,31 @@
 
 	function T.targets.ConsoleApp_Build_WindowsNames()
 		cfg.kind = "ConsoleApp"
-		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.exe]], result.fullpath)
 	end
 
 	function T.targets.ConsoleApp_Build_PosixNames_OnWindows()
 		cfg.kind = "ConsoleApp"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "windows")
 		test.isequal([[../bin/MyProject.exe]], result.fullpath)
 	end
 
 	function T.targets.ConsoleApp_Build_PosixNames_OnLinux()
 		cfg.kind = "ConsoleApp"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "linux")
 		test.isequal([[../bin/MyProject]], result.fullpath)
 	end
 
 	function T.targets.ConsoleApp_Build_PosixNames_OnMacOSX()
 		cfg.kind = "ConsoleApp"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "macosx")
 		test.isequal([[../bin/MyProject]], result.fullpath)
 	end
 
 	function T.targets.ConsoleApp_Build_PS3Names()
 		cfg.kind = "ConsoleApp"
-		result = premake.gettarget(cfg, "build", "posix", "PS3", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "PS3", "macosx")
 		test.isequal([[../bin/MyProject.elf]], result.fullpath)
 	end
 
@@ -74,31 +74,31 @@
 
 	function T.targets.WindowedApp_Build_WindowsNames()
 		cfg.kind = "WindowedApp"
-		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.exe]], result.fullpath)
 	end
 
 	function T.targets.WindowedApp_Build_PosixNames_OnWindows()
 		cfg.kind = "WindowedApp"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "windows")
 		test.isequal([[../bin/MyProject.exe]], result.fullpath)
 	end
 
 	function T.targets.WindowedApp_Build_PosixNames_OnLinux()
 		cfg.kind = "WindowedApp"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "linux")
 		test.isequal([[../bin/MyProject]], result.fullpath)
 	end
 
 	function T.targets.WindowedApp_Build_PosixNames_OnMacOSX()
 		cfg.kind = "WindowedApp"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "macosx")
 		test.isequal([[../bin/MyProject.app/Contents/MacOS/MyProject]], result.fullpath)
 	end
 
 	function T.targets.WindowedApp_Build_PS3Names()
 		cfg.kind = "WindowedApp"
-		result = premake.gettarget(cfg, "build", "posix", "PS3", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "PS3", "macosx")
 		test.isequal([[../bin/MyProject.elf]], result.fullpath)
 	end
 
@@ -109,49 +109,49 @@
 
 	function T.targets.SharedLib_Build_WindowsNames()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.dll]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Link_WindowsNames()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "link", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.lib]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Build_PosixNames_OnWindows()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "windows")
 		test.isequal([[../bin/MyProject.dll]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Link_PosixNames_OnWindows()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "windows")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Build_PosixNames_OnLinux()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "linux")
 		test.isequal([[../bin/libMyProject.so]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Link_PosixNames_OnLinux()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "linux")
 		test.isequal([[../bin/libMyProject.so]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Build_PosixNames_OnMacOSX()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "macosx")
 		test.isequal([[../bin/libMyProject.dylib]], result.fullpath)
 	end
 
 	function T.targets.SharedLib_Link_PosixNames_OnMacOSX()
 		cfg.kind = "SharedLib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "macosx")
 		test.isequal([[../bin/libMyProject.dylib]], result.fullpath)
 	end
 
@@ -162,49 +162,49 @@
 
 	function T.targets.Bundle_Build_WindowsNames()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.dll]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Link_WindowsNames()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "link", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.lib]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Build_PosixNames_OnWindows()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "windows")
 		test.isequal([[../bin/MyProject.dll]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Link_PosixNames_OnWindows()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "windows")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Build_PosixNames_OnLinux()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "linux")
 		test.isequal([[../bin/libMyProject.so]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Link_PosixNames_OnLinux()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "linux")
 		test.isequal([[../bin/libMyProject.so]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Build_PosixNames_OnMacOSX()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "macosx")
 		test.isequal([[../bin/MyProject.bundle]], result.fullpath)
 	end
 
 	function T.targets.Bundle_Link_PosixNames_OnMacOSX()
 		cfg.kind = "Bundle"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "macosx")
 		test.isequal([[../bin/MyProject.bundle]], result.fullpath)
 	end
 
@@ -215,68 +215,68 @@
 
 	function T.targets.StaticLib_Build_WindowsNames()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "build", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.lib]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Link_WindowsNames()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "link", "posix", "windows", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "windows", "macosx")
 		test.isequal([[../bin/MyProject.lib]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Build_PosixNames_OnWindows()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "windows")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Link_PosixNames_OnWindows()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "windows")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "windows")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Build_PosixNames_OnLinux()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "linux")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Link_PosixNames_OnLinux()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "linux")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "linux")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Build_PosixNames_OnMacOSX()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "build", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "posix", "macosx")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Link_PosixNames_OnMacOSX()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "macosx")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Build_PosixNames_OnPS3()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "build", "posix", "PS3", "macosx")
+		result = genie.gettarget(cfg, "build", "posix", "PS3", "macosx")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Link_PosixNames_OnPS3()
 		cfg.kind = "StaticLib"
-		result = premake.gettarget(cfg, "link", "posix", "PS3", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "PS3", "macosx")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
 	function T.targets.StaticLib_Link_IgnoresImpLib()
 		cfg.kind = "StaticLib"
 		cfg.implibdir = "../lib"
-		result = premake.gettarget(cfg, "link", "posix", "posix", "macosx")
+		result = genie.gettarget(cfg, "link", "posix", "posix", "macosx")
 		test.isequal([[../bin/libMyProject.a]], result.fullpath)
 	end
 
@@ -288,7 +288,7 @@
 
 	function T.targets.WindowsPaths()
 		cfg.kind = "ConsoleApp"
-		result = premake.gettarget(cfg, "build", "windows", "windows", "linux")
+		result = genie.gettarget(cfg, "build", "windows", "windows", "linux")
 		test.isequal([[..\bin]], result.directory)
 		test.isequal([[..\bin\MyProject.exe]], result.fullpath)
 	end

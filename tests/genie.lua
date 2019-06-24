@@ -1,6 +1,6 @@
 --
--- tests/premake4.lua
--- Automated test suite for Premake 4.x
+-- tests/genie.lua
+-- Automated test suite for GENie 4.x
 -- Copyright (c) 2008-2011 Jason Perkins and the Premake project
 --
 
@@ -39,7 +39,7 @@
 
 	dofile("test_dofile.lua")
 	dofile("test_string.lua")
-	dofile("test_premake.lua")
+	dofile("test_genie.lua")
 	dofile("test_platforms.lua")
 	dofile("test_targets.lua")
 	dofile("test_keywords.lua")
@@ -51,7 +51,7 @@
 	dofile("base/test_location.lua")
 	dofile("base/test_os.lua")
 	dofile("base/test_path.lua")
-	dofile("base/test_premake_command.lua")
+	dofile("base/test_genie_command.lua")
 	dofile("base/test_table.lua")
 	dofile("base/test_tree.lua")
 	dofile("tools/test_gcc.lua")

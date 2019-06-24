@@ -6,7 +6,7 @@
 
 	T.vstudio_sln2005_header = { }
 	local suite = T.vstudio_sln2005_header
-	local sln2005 = premake.vstudio.sln2005
+	local sln2005 = genie.vstudio.sln2005
 
 
 --
@@ -20,7 +20,7 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
+		genie.bake.buildconfigs()
 		sln2005.header()
 	end
 

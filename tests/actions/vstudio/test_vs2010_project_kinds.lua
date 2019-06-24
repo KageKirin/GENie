@@ -14,10 +14,10 @@
 	end
 
 	local function get_buffer(platform)
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		prj = premake.solution.getproject(sln, 1)
-		premake.vs2010_vcxproj(prj)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+		prj = genie.solution.getproject(sln, 1)
+		genie.vs2010_vcxproj(prj)
 		buffer = io.endcapture()
 		return buffer
 	end
@@ -86,7 +86,7 @@
 
 	function vs10_project_kinds.configType_configIsWindowedApp_resultComparesEqualToApplication()
 		local t = { kind = "WindowedApp"}
-		local result = premake.vstudio.vc2010.config_type(t)
+		local result = genie.vstudio.vc2010.config_type(t)
 		test.isequal('Application',result)
 	end
 

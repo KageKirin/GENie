@@ -1,6 +1,6 @@
 --
 -- tests/testfx.lua
--- Automated test framework for Premake.
+-- Automated test framework for GENie.
 -- Copyright (c) 2008-2009 Jason Perkins and the Premake project
 --
 
@@ -198,7 +198,7 @@
 		_ARGS = { }
 		_OPTIONS = { }
 		_OS = _OS_host
-		premake.solution.list = { }
+		genie.solution.list = { }
 		io.indent = nil
 		io.eol = "\n"
 

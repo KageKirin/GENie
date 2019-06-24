@@ -6,7 +6,7 @@
 
 	T.vs200x_vcproj_linker = { }
 	local suite = T.vs200x_vcproj_linker
-	local vc200x = premake.vstudio.vc200x
+	local vc200x = genie.vstudio.vc200x
 
 
 --
@@ -20,7 +20,7 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
+		genie.bake.buildconfigs()
 	end
 
 
@@ -32,7 +32,7 @@
 	function suite.DefaultLinkerBlock_OnConsoleApp()
 		kind "ConsoleApp"
 		prepare()
-		vc200x.VCLinkerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCLinkerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCLinkerTool"
@@ -50,7 +50,7 @@
 	function suite.DefaultLinkerBlock_OnWindowedApp()
 		kind "WindowedApp"
 		prepare()
-		vc200x.VCLinkerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCLinkerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCLinkerTool"
@@ -68,7 +68,7 @@
 	function suite.DefaultLinkerBlock_OnSharedLib()
 		kind "SharedLib"
 		prepare()
-		vc200x.VCLinkerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCLinkerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCLinkerTool"
@@ -86,7 +86,7 @@
 	function suite.DefaultLinkerBlock_OnStaticLib()
 		kind "StaticLib"
 		prepare()
-		vc200x.VCLinkerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCLinkerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCLibrarianTool"
@@ -104,7 +104,7 @@
 		kind "StaticLib"
 		linkoptions { "/ltcg", "/lZ" }
 		prepare()
-		vc200x.VCLinkerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCLinkerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCLibrarianTool"

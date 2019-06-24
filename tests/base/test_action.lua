@@ -17,15 +17,15 @@
 	}
 	
 	function T.action.setup()
-		premake.action.list["fake"] = fake
+		genie.action.list["fake"] = fake
 		solution "MySolution"
 		configurations "Debug"
 		project "MyProject"
-		premake.bake.buildconfigs()
+		genie.bake.buildconfigs()
 	end
 
 	function T.action.teardown()
-		premake.action.list["fake"] = nil
+		genie.action.list["fake"] = nil
 	end
 
 
@@ -37,26 +37,26 @@
 	function T.action.CallCallsExecuteIfPresent()
 		local called = false
 		fake.execute = function () called = true end
-		premake.action.call("fake")
+		genie.action.call("fake")
 		test.istrue(called)
 	end
 
 	function T.action.CallCallsOnSolutionIfPresent()
 		local called = false
 		fake.onsolution = function () called = true end
-		premake.action.call("fake")
+		genie.action.call("fake")
 		test.istrue(called)
 	end
 
 	function T.action.CallCallsOnProjectIfPresent()
 		local called = false
 		fake.onproject = function () called = true end
-		premake.action.call("fake")
+		genie.action.call("fake")
 		test.istrue(called)
 	end
 	
 	function T.action.CallSkipsCallbacksIfNotPresent()
-		test.success(premake.action.call, "fake")
+		test.success(genie.action.call, "fake")
 	end
 
 
@@ -67,7 +67,7 @@
 	function T.action.set_SetsActionOS()
 		local oldos = _OS
 		_OS = "linux"
-		premake.action.set("vs2008")
+		genie.action.set("vs2008")
 		test.isequal(_OS, "windows")
 		_OS = oldos
 	end

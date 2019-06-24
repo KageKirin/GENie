@@ -6,7 +6,7 @@
 
 	T.project_vpaths = { }
 	local suite = T.project_vpaths
-	local project = premake.project
+	local project = genie.project
 
 
 --
@@ -20,9 +20,9 @@
 	end
 
 	local function run()
-		premake.bake.buildconfigs()
-		local prj = premake.solution.getproject(sln, 1)
-		local cfg = premake.getconfig(prj, "Debug")
+		genie.bake.buildconfigs()
+		local prj = genie.solution.getproject(sln, 1)
+		local cfg = genie.getconfig(prj, "Debug")
 		return project.getvpath(prj, cfg.files[1])
 	end
 

@@ -17,42 +17,42 @@
 
 
 	function T.platforms.filter_OnNoSolutionPlatforms()
-		premake.bake.buildconfigs()
-		r = premake.filterplatforms(sln, testmap)
+		genie.bake.buildconfigs()
+		r = genie.filterplatforms(sln, testmap)
 		test.isequal("", table.concat(r, ":"))
 	end
 	
 	function T.platforms.filter_OnNoSolutionPlatformsAndDefault()
-		premake.bake.buildconfigs()
-		r = premake.filterplatforms(sln, testmap, "x32")
+		genie.bake.buildconfigs()
+		r = genie.filterplatforms(sln, testmap, "x32")
 		test.isequal("x32", table.concat(r, ":"))
 	end
 	
 	function T.platforms.filter_OnIntersection()
 		platforms { "x32", "x64", "Xbox360" }
-		premake.bake.buildconfigs()
-		r = premake.filterplatforms(sln, testmap, "x32")
+		genie.bake.buildconfigs()
+		r = genie.filterplatforms(sln, testmap, "x32")
 		test.isequal("x32:x64", table.concat(r, ":"))
 	end
 	
 	function T.platforms.filter_OnNoIntersection()
 		platforms { "Universal", "Xbox360" }
-		premake.bake.buildconfigs()
-		r = premake.filterplatforms(sln, testmap)
+		genie.bake.buildconfigs()
+		r = genie.filterplatforms(sln, testmap)
 		test.isequal("", table.concat(r, ":"))
 	end
 	
 	function T.platforms.filter_OnNoIntersectionAndDefault()
 		platforms { "Universal", "Xbox360" }
-		premake.bake.buildconfigs()
-		r = premake.filterplatforms(sln, testmap, "x32")
+		genie.bake.buildconfigs()
+		r = genie.filterplatforms(sln, testmap, "x32")
 		test.isequal("x32", table.concat(r, ":"))
 	end
 	
 	function T.platforms.filter_OnDuplicateKeys()
 		platforms { "Native", "x32" }
-		premake.bake.buildconfigs()
-		r = premake.filterplatforms(sln, testmap, "x32")
+		genie.bake.buildconfigs()
+		r = genie.filterplatforms(sln, testmap, "x32")
 		test.isequal("Native", table.concat(r, ":"))
 	end
 		

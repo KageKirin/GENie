@@ -3,7 +3,7 @@
 	local include_directory = "bar/foo"
 	local include_directory2 = "baz/foo"
 	local debug_define = "I_AM_ALIVE_NUMBER_FIVE"
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 	local sln, prj
 	function vs10_vcxproj.teardown()
@@ -47,10 +47,10 @@
 	end
 
 	local function get_buffer()
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		prj = premake.solution.getproject(sln, 1)
-		premake.vs2010_vcxproj(prj)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+		prj = genie.solution.getproject(sln, 1)
+		genie.vs2010_vcxproj(prj)
 		local buffer = io.endcapture()
 		return buffer
 	end

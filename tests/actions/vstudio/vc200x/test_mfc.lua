@@ -6,7 +6,7 @@
 
 	T.vstudio_vs200x_mfc = { }
 	local suite = T.vstudio_vs200x_mfc
-	local vc200x = premake.vstudio.vc200x
+	local vc200x = genie.vstudio.vc200x
 
 
 --
@@ -21,9 +21,9 @@
 	end
 
 	local function prepare(platform)
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
-		cfg = premake.getconfig(prj, "Debug", platform)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
+		cfg = genie.getconfig(prj, "Debug", platform)
 		vc200x.Configuration("Debug|Win32", cfg)
 	end
 

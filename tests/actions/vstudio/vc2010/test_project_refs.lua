@@ -6,7 +6,7 @@
 
 	T.vstudio_vs2010_project_refs = { }
 	local suite = T.vstudio_vs2010_project_refs
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 
 --
@@ -23,8 +23,8 @@
 	end
 
 	local function prepare(platform)
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 2)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 2)
 		vc2010.projectReferences(prj)
 	end
 

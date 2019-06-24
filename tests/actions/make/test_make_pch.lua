@@ -6,7 +6,7 @@
 
 	T.make_pch = { }
 	local suite = T.make_pch
-	local _ = premake.make.cpp
+	local _ = genie.make.cpp
 
 
 --
@@ -19,9 +19,9 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.getconfig(prj)
-		cfg = premake.getconfig(prj, "Debug")
+		genie.bake.buildconfigs()
+		prj = genie.getconfig(prj)
+		cfg = genie.getconfig(prj, "Debug")
 	end
 
 
@@ -110,11 +110,11 @@ $(OBJDIR)/main.o: main.cpp
 
 	function suite.findsPCH_onIncludeDirs()
 		location "MyProject"
-		pchheader "premake.h"
+		pchheader "genie.h"
 		includedirs { "../src/host" }
 		prepare()
 		_.pchconfig(cfg)
 		test.capture [[
-  PCH        = ../../src/host/premake.h
+  PCH        = ../../src/host/genie.h
 		]]
 	end

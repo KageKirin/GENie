@@ -6,7 +6,7 @@
 
 	T.vs200x_vcproj = { }
 	local suite = T.vs200x_vcproj
-	local vc200x = premake.vstudio.vc200x
+	local vc200x = genie.vstudio.vc200x
 	
 
 --
@@ -32,10 +32,10 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 
-		local cfg = premake.getconfig(sln.projects[2])
+		local cfg = genie.getconfig(sln.projects[2])
 		cfg.name = prj.name
 		cfg.blocks = prj.blocks
 		prj = cfg
@@ -298,7 +298,7 @@
 	function suite.CompilerBlock_OnXbox360()
 		platforms { "Xbox360" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug", "Xbox360"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug", "Xbox360"))
 		test.capture [[
 			<Tool
 				Name="VCCLX360CompilerTool"
@@ -339,7 +339,7 @@
 		includedirs { "include/pkg1", "include/pkg2" }
 		defines { "DEFINE1", "DEFINE2" }
 		prepare()
-		vc200x.VCCLCompilerTool_PS3(premake.getconfig(prj, "Debug", "PS3"))
+		vc200x.VCCLCompilerTool_PS3(genie.getconfig(prj, "Debug", "PS3"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -357,7 +357,7 @@
 	function suite.LinkerBlock_OnPS3ConsoleApp()
 		platforms { "PS3" }
 		prepare()
-		vc200x.VCLinkerTool_PS3(premake.getconfig(prj, "Debug", "PS3"))
+		vc200x.VCLinkerTool_PS3(genie.getconfig(prj, "Debug", "PS3"))
 		test.capture [[
 			<Tool
 				Name="VCLinkerTool"
@@ -377,7 +377,7 @@
 		platforms { "PS3" }
 		kind "StaticLib"
 		prepare()
-		vc200x.VCLinkerTool_PS3(premake.getconfig(prj, "Debug", "PS3"))
+		vc200x.VCLinkerTool_PS3(genie.getconfig(prj, "Debug", "PS3"))
 		test.capture [[
 			<Tool
 				Name="VCLibrarianTool"
@@ -394,7 +394,7 @@
 		language "C++"
 		kind "SharedLib"
 		prepare()
-		vc200x.VCLinkerTool_PS3(premake.getconfig(prj, "Debug", "PS3"))
+		vc200x.VCLinkerTool_PS3(genie.getconfig(prj, "Debug", "PS3"))
 
 		test.capture [[
 			<Tool
@@ -420,7 +420,7 @@
 	function suite.VCManifestTool_OnNoManifests()
 		files { "hello.c", "goodbye.c" }
 		prepare()
-		vc200x.VCManifestTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCManifestTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCManifestTool"
@@ -432,7 +432,7 @@
 	function suite.VCManifestTool_OnNoManifests()
 		files { "hello.c", "project1.manifest", "goodbye.c", "project2.manifest" }
 		prepare()
-		vc200x.VCManifestTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCManifestTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCManifestTool"
@@ -454,7 +454,7 @@
 		pchheader "include/common.h"
 		pchsource "source/common.cpp"
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -480,7 +480,7 @@
 	function suite.CompilerBlock_OnFpFast()
 		flags { "FloatFast" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -501,7 +501,7 @@
 	function suite.CompilerBlock_OnFpStrict()
 		flags { "FloatStrict" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -527,7 +527,7 @@
 	function suite.CompilerBlock_OnTargetName()
 		targetname "foob"
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -552,7 +552,7 @@
 	function suite.CompilerBlock_OnMinimalRebuild()
 		flags { "Symbols", "EnableMinimalRebuild" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -577,7 +577,7 @@
 	function suite.CompilerBlock_RuntimeLibrary_IsDebug_OnSymbolsNoOptimize()
 		flags { "Symbols" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -598,7 +598,7 @@
 	function suite.CompilerBlock_RuntimeLibrary_IsRelease_OnOptimize()
 		flags { "Symbols", "Optimize" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -624,7 +624,7 @@
 		language "C"
 		flags { "Symbols" }
 		prepare()
-		vc200x.VCCLCompilerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCCLCompilerTool(genie.getconfig(prj, "Debug"))
 		test.capture [[
 			<Tool
 				Name="VCCLCompilerTool"
@@ -647,7 +647,7 @@
 	function suite.noLinkIncrementalFlag_valueEqualsOne()
 		flags { "NoIncrementalLink" }
 		prepare()
-		vc200x.VCLinkerTool(premake.getconfig(prj, "Debug"))
+		vc200x.VCLinkerTool(genie.getconfig(prj, "Debug"))
 		local result = io.endcapture()		
 		test.string_contains(result,'LinkIncremental="1"')
 	end
@@ -661,9 +661,9 @@
 		language 'C++'
 		kind 'StaticLib'
 
-		premake.bake.buildconfigs()
-		sln1.vstudio_configs = premake.vstudio.buildconfigs(sln1)
-		prj1= premake.getconfig(sln1.projects[1])
+		genie.bake.buildconfigs()
+		sln1.vstudio_configs = genie.vstudio.buildconfigs(sln1)
+		prj1= genie.getconfig(sln1.projects[1])
 		vc200x.generate(prj1)
 		local result = io.endcapture()		
 		test.string_contains(result,'AdditionalOptions="/MACHINE:X64"')
@@ -678,9 +678,9 @@
 		language 'C++'
 		kind 'StaticLib'
 
-		premake.bake.buildconfigs()
-		sln1.vstudio_configs = premake.vstudio.buildconfigs(sln1)
-		prj1= premake.getconfig(sln1.projects[1])
+		genie.bake.buildconfigs()
+		sln1.vstudio_configs = genie.vstudio.buildconfigs(sln1)
+		prj1= genie.getconfig(sln1.projects[1])
 		vc200x.generate(prj1)
 		local result = io.endcapture()		
 		test.string_contains(result,'AdditionalOptions="/MACHINE:X86"')

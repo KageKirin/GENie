@@ -31,7 +31,7 @@
 --
 
 	function suite.isfile_ReturnsTrue_OnExistingFile()
-		test.istrue(os.isfile("premake4.lua"))
+		test.istrue(os.isfile("genie.lua"))
 	end
 
 	function suite.isfile_ReturnsFalse_OnNonexistantFile()
@@ -63,7 +63,7 @@
 	function suite.matchfiles_OnSubfolderMatch()
 		local result = os.matchfiles("**/xcode/*")
 		test.istrue(table.contains(result, "actions/xcode/test_xcode_project.lua"))
-		test.isfalse(table.contains(result, "premake4.lua"))
+		test.isfalse(table.contains(result, "genie.lua"))
 	end
 	
 	function suite.matchfiles_OnDotSlashPrefix()
@@ -93,15 +93,15 @@
 	end
 	
 	function suite.pathsearch_ReturnsPath_OnFound()
-		test.isequal(os.getcwd(), os.pathsearch("premake4.lua", os.getcwd()))
+		test.isequal(os.getcwd(), os.pathsearch("genie.lua", os.getcwd()))
 	end
 	
 	function suite.pathsearch_FindsFile_OnComplexPath()
-		test.isequal(os.getcwd(), os.pathsearch("premake4.lua", "aaa;"..os.getcwd()..";bbb"))
+		test.isequal(os.getcwd(), os.pathsearch("genie.lua", "aaa;"..os.getcwd()..";bbb"))
 	end
 	
 	function suite.pathsearch_NilPathsAllowed()
-		test.isequal(os.getcwd(), os.pathsearch("premake4.lua", nil, os.getcwd(), nil))
+		test.isequal(os.getcwd(), os.pathsearch("genie.lua", nil, os.getcwd(), nil))
 	end
 
 	

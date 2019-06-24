@@ -6,7 +6,7 @@
 
 	T.vstudio_sln2005_dependencies = { }
 	local suite = T.vstudio_sln2005_dependencies
-	local sln2005 = premake.vstudio.sln2005
+	local sln2005 = genie.vstudio.sln2005
 
 
 --
@@ -27,9 +27,9 @@
 	local function prepare(language)
 		prj1.language = language
 		prj2.language = language
-		premake.bake.buildconfigs()
-		prj1 = premake.solution.getproject(sln, 1)
-		prj2 = premake.solution.getproject(sln, 2)
+		genie.bake.buildconfigs()
+		prj1 = genie.solution.getproject(sln, 1)
+		prj2 = genie.solution.getproject(sln, 2)
 		sln2005.projectdependencies(prj2)
 	end
 

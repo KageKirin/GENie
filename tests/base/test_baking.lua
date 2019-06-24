@@ -47,9 +47,9 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.getconfig(prj)
-		cfg = premake.getconfig(prj, "Debug")
+		genie.bake.buildconfigs()
+		prj = genie.getconfig(prj)
+		cfg = genie.getconfig(prj, "Debug")
 	end
 	
 
@@ -71,21 +71,21 @@
 
 	function suite.PlatformSettings()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "x32")
+		local cfg = genie.getconfig(prj, "Debug", "x32")
 		test.isequal("SOLUTION:SOLUTION_DEBUG:PROJECT:DEBUG:X86_32", table.concat(cfg.defines,":"))
 	end
 
 			
 	function suite.SetsConfigName()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "x32")
+		local cfg = genie.getconfig(prj, "Debug", "x32")
 		test.isequal("Debug", cfg.name)
 	end
 
 	
 	function suite.SetsPlatformName()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "x32")
+		local cfg = genie.getconfig(prj, "Debug", "x32")
 		test.isequal("x32", cfg.platform)
 	end
 
@@ -97,7 +97,7 @@
 	
 	function suite.SetsShortName()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "x32")
+		local cfg = genie.getconfig(prj, "Debug", "x32")
 		test.isequal("debug32", cfg.shortname)
 	end
 
@@ -110,7 +110,7 @@
 	
 	function suite.SetsLongName()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "x32")
+		local cfg = genie.getconfig(prj, "Debug", "x32")
 		test.isequal("Debug|x32", cfg.longname)
 	end
 
@@ -123,7 +123,7 @@
 	
 	function suite.SetsProject()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "x32")
+		local cfg = genie.getconfig(prj, "Debug", "x32")
 		test.istrue(prj.project == cfg.project)
 	end
 
@@ -140,7 +140,7 @@
 
 	function suite.SetTargetSystem_OnCrossCompiler()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "PS3")
+		local cfg = genie.getconfig(prj, "Debug", "PS3")
 		test.isequal("PS3", cfg.system)
 	end
 
@@ -169,6 +169,6 @@
 
 	function suite.SetsTargetKind_OnUnsupportedKind()
 		prepare()
-		local cfg = premake.getconfig(prj, "Debug", "PS3")
+		local cfg = genie.getconfig(prj, "Debug", "PS3")
 		test.isequal("StaticLib", cfg.kind)
 	end

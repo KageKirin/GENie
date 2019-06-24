@@ -6,7 +6,7 @@
 
 	T.vstudio_vs2010_header = { }
 	local suite = T.vstudio_vs2010_header
-	local vc2010 = premake.vstudio.vc2010
+	local vc2010 = genie.vstudio.vc2010
 
 
 --
@@ -18,9 +18,9 @@
 	function suite.setup()
 		_ACTION = 'vs2010'
 		sln = test.createsolution()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
-		sln.vstudio_configs = premake.vstudio.buildconfigs(sln)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
+		sln.vstudio_configs = genie.vstudio.buildconfigs(sln)
 	end
 
 

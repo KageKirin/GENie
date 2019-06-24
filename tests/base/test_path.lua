@@ -140,15 +140,15 @@
 	end
 
 	function suite.getrelative_ReturnsChildPath_OnWindowsAbsolute()
-		test.isequal("obj/debug", path.getrelative("C:/Code/Premake4", "C:/Code/Premake4/obj/debug"))
+		test.isequal("obj/debug", path.getrelative("C:/Code/GENie4", "C:/Code/GENie4/obj/debug"))
 	end
 	
 	function suite.getrelative_ReturnsAbsPath_OnDifferentDriveLetters()
-		test.isequal("D:/Files", path.getrelative("C:/Code/Premake4", "D:/Files"))
+		test.isequal("D:/Files", path.getrelative("C:/Code/GENie4", "D:/Files"))
 	end
 	
 	function suite.getrelative_ReturnsAbsPath_OnDollarMacro()
-		test.isequal("$(SDK_HOME)/include", path.getrelative("C:/Code/Premake4", "$(SDK_HOME)/include"))
+		test.isequal("$(SDK_HOME)/include", path.getrelative("C:/Code/GENie4", "$(SDK_HOME)/include"))
 	end
 	
 	function suite.getrelative_ReturnsAbsPath_OnRootedPath()

@@ -19,8 +19,8 @@
 	end
 
 	local function prepare()
-		premake.bake.buildconfigs()
-		prj = premake.solution.getproject(sln, 1)
+		genie.bake.buildconfigs()
+		prj = genie.solution.getproject(sln, 1)
 	end
 
 
