@@ -6,8 +6,8 @@
     * [_ACTION](#_action)
     * [_ARGS](#_args)
     * [_OPTIONS](#_options)
-    * [_PREMAKE_COMMAND](#_premake_command)
-    * [_PREMAKE_VERSION](#_premake_version)
+    * [_GENIE_COMMAND](#_genie_command)
+    * [_GENIE_VERSION](#_genie_version)
     * [_SCRIPT](#_script)
     * [_WORKING_DIR](#_working_dir)
 * Build script functions
@@ -173,16 +173,16 @@ produces
 [Back to top](#table-of-contents)
 
 ---
-### _PREMAKE_COMMAND
+### _GENIE_COMMAND
 
-Full path to the GENie (Premake) executable.
+Full path to the GENie (GENie) executable.
 
 [Back to top](#table-of-contents)
 
 ---
-### _PREMAKE_VERSION
+### _GENIE_VERSION
 
-GENie (Premake) version.
+GENie (GENie) version.
 
 [Back to top](#table-of-contents)
 
@@ -848,7 +848,7 @@ configuration "Debug"
 
 ---
 ### include(_directory_)
-Includes a file named `premake4.lua` from the specified directory. This allows you to specify each project in its own file, and easily include them into a solution.
+Includes a file named `genie.lua` from the specified directory. This allows you to specify each project in its own file, and easily include them into a solution.
 
 #### Arguments
 _directory_ - path to the included directory, relative to the currently-executing script file.
@@ -859,10 +859,10 @@ Any values returned by the script are passed through to the caller
 #### Examples
 
 ```lua
--- runs "src/MyApplication/premake4.lua"
+-- runs "src/MyApplication/genie.lua"
 include "src/MyApplication"
 
--- runs "src/MyLibrary/premake4.lua"
+-- runs "src/MyLibrary/genie.lua"
 include "src/MyLibrary"
 ```
 

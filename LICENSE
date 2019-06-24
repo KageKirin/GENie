@@ -36,7 +36,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Premake 4.4b5
+# GENie 1.0
 
 Copyright (c) 2003-2013 Jason Perkins and individual contributors.
 All rights reserved.
@@ -51,7 +51,7 @@ are permitted provided that the following conditions are met:
      this list of conditions and the following disclaimer in the documentation
      and/or other materials provided with the distribution.
 
-  3. Neither the name of the Premake nor the names of its contributors may be
+  3. Neither the name of Premake, GENie nor the names of its contributors may be
      used to endorse or promote products derived from this software without
      specific prior written permission.
 

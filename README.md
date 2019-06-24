@@ -56,7 +56,7 @@ of Premake 4.4 beta 5, and there is no intention to keep it compatible with it.
  - Added vs2013 support.
  - Added hash UUID support. `os.uuid(<string>)` should produce consistent UUID.
  - Added search for default script. Default script name is changed to genie.lua
-   (solution.lua and premake4.lua are also allowed), and it can be located in
+   (solution.lua and genie.lua are also allowed), and it can be located in
    `scripts` directory.
  - Updated Lua from 5.1.4 to 5.3.0.
  - Disabled `SmallerTypeCheck` VS option when `ExtraWarnings` is set (need to
