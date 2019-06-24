@@ -4,7 +4,7 @@
  */
 
 #include <stdlib.h>
-#include "premake.h"
+#include "genie.h"
 
 // Epochs used by Windows and Unix time APIs.  These adjustments,
 // when added to the time value returned by the OS, will yield

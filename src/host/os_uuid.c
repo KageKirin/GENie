@@ -4,7 +4,7 @@
  * \author Copyright (c) 2002-2012 Jason Perkins and the Premake project
  */
 
-#include "premake.h"
+#include "genie.h"
 
 #if PLATFORM_WINDOWS
 #include <objbase.h>

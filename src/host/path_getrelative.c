@@ -3,7 +3,7 @@
  * \brief  Calculate the relative path from src to dest
  */
 
-#include "premake.h"
+#include "genie.h"
 
 int path_getrelative(lua_State *L)
 {

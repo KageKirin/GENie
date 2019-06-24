@@ -4,7 +4,7 @@
  * \author Copyright (c) 2011 Jason Perkins and the Premake project
  */
 
-#include "premake.h"
+#include "genie.h"
 #include <sys/stat.h>
 #include <errno.h>
 

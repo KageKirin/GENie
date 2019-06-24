@@ -8,7 +8,7 @@
  */
 
 #include <string.h>
-#include "premake.h"
+#include "genie.h"
 
 
 int os_pathsearch(lua_State* L)

@@ -5,7 +5,7 @@
  */
 
 #include <stdlib.h>
-#include "premake.h"
+#include "genie.h"
 
 int os_copyfile(lua_State* L)
 {

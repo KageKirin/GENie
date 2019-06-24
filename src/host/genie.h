@@ -1,5 +1,5 @@
 /**
- * \file   premake.h
+ * \file   genie.h
  * \brief  Program-wide constants and definitions.
  * \author Copyright (c) 2002-2011 Jason Perkins and the Premake project
  */
@@ -85,7 +85,7 @@ int string_endswith(lua_State* L);
 
 
 /* Engine interface */
-int premake_init(lua_State* L);
-int premake_locate(lua_State* L, const char* argv0);
-int premake_execute(lua_State* L, int argc, const char** argv);
+int genie_init(lua_State* L);
+int genie_locate(lua_State* L, const char* argv0);
+int genie_execute(lua_State* L, int argc, const char** argv);
 

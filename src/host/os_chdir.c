@@ -4,7 +4,7 @@
  * \author Copyright (c) 2002-2008 Jason Perkins and the Premake project
  */
 
-#include "premake.h"
+#include "genie.h"
 
 
 int os_chdir(lua_State* L)

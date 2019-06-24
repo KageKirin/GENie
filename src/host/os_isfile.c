@@ -5,7 +5,7 @@
  */
 
 #include <sys/stat.h>
-#include "premake.h"
+#include "genie.h"
 
 
 int os_isfile(lua_State* L)

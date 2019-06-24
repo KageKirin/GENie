@@ -3,7 +3,7 @@
  * \brief  Calculate the absolute path from a relative path
  */
 
-#include "premake.h"
+#include "genie.h"
 
 int path_getabsolute(lua_State *L)
 {

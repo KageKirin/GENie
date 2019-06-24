@@ -6,7 +6,7 @@
 
 #include <string.h>
 #include <sys/stat.h>
-#include "premake.h"
+#include "genie.h"
 
 
 int os_isdir(lua_State* L)

@@ -6,7 +6,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "premake.h"
+#include "genie.h"
 
 
 #if PLATFORM_WINDOWS

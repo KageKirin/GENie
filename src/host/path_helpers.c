@@ -3,7 +3,7 @@
  * \brief  Helper functions for path_getrelative.c and path_getabsolute.c
  */
 
-#include "premake.h"
+#include "genie.h"
 #include <string.h>
 
 #define USE_DRIVE_LETTERS PLATFORM_WINDOWS

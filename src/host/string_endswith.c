@@ -4,7 +4,7 @@
  * \author Copyright (c) 2002-2009 Jason Perkins and the Premake project
  */
 
-#include "premake.h"
+#include "genie.h"
 #include <string.h>
 
 

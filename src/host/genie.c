@@ -1,12 +1,12 @@
 /**
- * \file   premake.c
+ * \file   genie.c
  * \brief  Program entry point.
  * \author Copyright (c) 2002-2013 Jason Perkins and the Premake project
  */
 
 #include <stdlib.h>
 #include <string.h>
-#include "premake.h"
+#include "genie.h"
 #include "version.h"
 
 #if PLATFORM_MACOSX
@@ -18,7 +18,7 @@
 			"Copyright (c) 2014-2018 Branimir Karadžić, Neil Richardson,\n" \
 			"Mike Popoloski, Drew Solomon, Ted de Munnik, Miodrag Milanović\n" \
 			"Brett Vickers, Terry Hendrix II, Johan Skoeld.\n" \
-			"Copyright (C) 2002-2013 Jason Perkins and the Premake Project"
+			"Copyright (C) 2002-2013 Jason Perkins and the GENie Project"
 #define ERROR_MESSAGE  "%s\n"
 
 
@@ -26,7 +26,7 @@ static int process_arguments(lua_State* L, int argc, const char** argv);
 static int process_option(lua_State* L, const char* arg);
 static int load_builtin_scripts(lua_State* L);
 
-int premake_locate(lua_State* L, const char* argv0);
+int genie_locate(lua_State* L, const char* argv0);
 
 
 /* A search path for script files */
@@ -73,9 +73,9 @@ static const luaL_Reg string_functions[] = {
 
 
 /**
- * Initialize the Premake Lua environment.
+ * Initialize the GENie Lua environment.
  */
-int premake_init(lua_State* L)
+int genie_init(lua_State* L)
 {
 	luaL_register(L, "path",   path_functions);
 	luaL_register(L, "os",     os_functions);
@@ -92,7 +92,7 @@ int premake_init(lua_State* L)
 	lua_setglobal(L, "_GENIE_VERSION_STR");
 
 	lua_pushstring(L, COPYRIGHT);
-	lua_setglobal(L, "_PREMAKE_COPYRIGHT");
+	lua_setglobal(L, "_GENIE_COPYRIGHT");
 
 	/* set the OS platform variable */
 	lua_pushstring(L, PLATFORM_STRING);
@@ -102,12 +102,12 @@ int premake_init(lua_State* L)
 }
 
 
-int premake_execute(lua_State* L, int argc, const char** argv)
+int genie_execute(lua_State* L, int argc, const char** argv)
 {
 	/* Parse the command line arguments */
 	int z = process_arguments(L, argc, argv);
 
-	/* Run the built-in Premake scripts */
+	/* Run the built-in GENie scripts */
 	if (z == OKAY)  z = load_builtin_scripts(L);
 
 	return z;
@@ -115,13 +115,13 @@ int premake_execute(lua_State* L, int argc, const char** argv)
 
 
 /**
- * Locate the Premake executable, and push its full path to the Lua stack.
+ * Locate the GENie executable, and push its full path to the Lua stack.
  * Based on:
  * http://sourceforge.net/tracker/index.php?func=detail&aid=3351583&group_id=71616&atid=531880
  * http://stackoverflow.com/questions/933850/how-to-find-the-location-of-the-executable-in-c
  * http://stackoverflow.com/questions/1023306/finding-current-executables-path-without-proc-self-exe
  */
-int premake_locate(lua_State* L, const char* argv0)
+int genie_locate(lua_State* L, const char* argv0)
 {
 #if !defined(PATH_MAX)
 #define PATH_MAX  (4096)
@@ -296,23 +296,23 @@ int process_option(lua_State* L, const char* arg)
 /**
  * When running in debug mode, the scripts are loaded from the disk. The path to
  * the scripts must be provided via either the /scripts command line option or
- * the PREMAKE_PATH environment variable.
+ * the GENIE_PATH environment variable.
  */
 int load_builtin_scripts(lua_State* L)
 {
 	const char* filename;
 
-	/* call os.pathsearch() to locate _premake_main.lua */
+	/* call os.pathsearch() to locate _genie_main.lua */
 	lua_pushcfunction(L, os_pathsearch);
-	lua_pushstring(L, "_premake_main.lua");
+	lua_pushstring(L, "_genie_main.lua");
 	lua_pushstring(L, scripts_path);
-	lua_pushstring(L, getenv("PREMAKE_PATH"));
+	lua_pushstring(L, getenv("GENIE_PATH"));
 	lua_call(L, 3, 1);
 
 	if (lua_isnil(L, -1))
 	{
 		printf(ERROR_MESSAGE,
-			"Unable to find _premake_main.lua; use /scripts option when in debug mode!\n"
+			"Unable to find _genie_main.lua; use /scripts option when in debug mode!\n"
 			"Please refer to the documentation (or build in release mode instead)."
 		);
 		return !OKAY;
@@ -320,7 +320,7 @@ int load_builtin_scripts(lua_State* L)
 
 	/* run the bootstrapping script */
 	scripts_path = lua_tostring(L, -1);
-	filename = lua_pushfstring(L, "%s/_premake_main.lua", scripts_path);
+	filename = lua_pushfstring(L, "%s/_genie_main.lua", scripts_path);
 	if (luaL_dofile(L, filename))
 	{
 		printf(ERROR_MESSAGE, lua_tostring(L, -1));
@@ -332,7 +332,7 @@ int load_builtin_scripts(lua_State* L)
 	lua_getfield(L, -1, "traceback");
 
 	/* hand off control to the scripts */
-	lua_getglobal(L, "_premake_main");
+	lua_getglobal(L, "_genie_main");
 	lua_pushstring(L, scripts_path);
 	if (lua_pcall(L, 1, 1, -3) != OKAY)
 	{
@@ -351,7 +351,7 @@ int load_builtin_scripts(lua_State* L)
 /**
  * When running in release mode, the scripts are loaded from a static data
  * buffer, where they were stored by a preprocess. To update these embedded
- * scripts, run `premake4 embed` then rebuild.
+ * scripts, run `genie embed` then rebuild.
  */
 int load_builtin_scripts(lua_State* L)
 {
@@ -372,7 +372,7 @@ int load_builtin_scripts(lua_State* L)
 	int ehpos = lua_gettop(L);
 
 	/* hand off control to the scripts */
-	lua_getglobal(L, "_premake_main");
+	lua_getglobal(L, "_genie_main");
 	if (lua_pcall(L, 0, 1, ehpos) != OKAY)
 	{
 		printf(ERROR_MESSAGE, lua_tostring(L, -1));
