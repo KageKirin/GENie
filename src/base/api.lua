@@ -6,6 +6,17 @@
 
 
 --
+-- Define a new API field.
+--
+-- @param a
+--    The new action object.
+--
+
+function newapifield(field, attr)
+	premake.fields[field] = attr
+end
+
+--
 -- Here I define all of the getter/setter functions as metadata. The actual
 -- functions are built programmatically below.
 --
