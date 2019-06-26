@@ -21,22 +21,19 @@ end
 -- functions are built programmatically below.
 --
 
-	premake.fields =
-	{
-		archivesplit_size =
-		{
+	premake.fields = {}
+
+	newapifield ("archivesplit_size", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		basedir =
-		{
+	newapifield ("basedir", {
 			kind  = "path",
 			scope = "container",
-		},
+	})
 
-		buildaction =
-		{
+	newapifield ("buildaction", {
 			kind  = "string",
 			scope = "config",
 			allowed = {
@@ -45,149 +42,125 @@ end
 				"Embed",
 				"None"
 			}
-		},
+	})
 
-		buildoptions =
-		{
+	newapifield ("buildoptions", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		buildoptions_asm =
-		{
+	newapifield ("buildoptions_asm", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		buildoptions_c =
-		{
+	newapifield ("buildoptions_c", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		buildoptions_cpp =
-		{
+	newapifield ("buildoptions_cpp", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		buildoptions_objc =
-		{
+	newapifield ("buildoptions_objc", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		buildoptions_objcpp =
-		{
+	newapifield ("buildoptions_objcpp", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		buildoptions_vala =
-		{
+	newapifield ("buildoptions_vala", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		clrreferences =
-		{
+	newapifield ("clrreferences", {
 			kind = "list",
 			scope = "container",
-		},
+	})
 
-		configurations =
-		{
+	newapifield ("configurations", {
 			kind  = "list",
 			scope = "solution",
-		},
+	})
 
-		custombuildtask =
-		{
+	newapifield ("custombuildtask", {
 			kind  = "table",
 			scope = "config",
-		},
+	})
 
-		debugcmd =
-		{
+	newapifield ("debugcmd", {
 			kind = "string",
 			scope = "config",
-		},
+	})
 
-		debugargs =
-		{
+	newapifield ("debugargs", {
 			kind = "list",
 			scope = "config",
-		},
+	})
 
-		debugdir =
-		{
+	newapifield ("debugdir", {
 			kind = "path",
 			scope = "config",
-		},
+	})
 
-		debugenvs  =
-		{
+	newapifield ("debugenvs" , {
 			kind = "list",
 			scope = "config",
-		},
+	})
 
-		defines =
-		{
+	newapifield ("defines", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		deploymentoptions =
-		{
+	newapifield ("deploymentoptions", {
 			kind  = "list",
 			scope = "config",
 			usagecopy = true,
-		},
+	})
 
-		dependency =
-		{
+	newapifield ("dependency", {
 			kind  = "table",
 			scope = "config",
-		},
+	})
 
-		deploymode =
-		{
+	newapifield ("deploymode", {
 			kind = "string",
 			scope = "config",
-		},
+	})
 
-		excludes =
-		{
+	newapifield ("excludes", {
 			kind  = "filelist",
 			scope = "config",
-		},
+	})
 
-		forcenative =
-		{
+	newapifield ("forcenative", {
 			kind = "filelist",
 			scope = "config",
-		},
+	})
 
-		nopch =
-		{
+	newapifield ("nopch", {
 			kind  = "filelist",
 			scope = "config",
-		},
+	})
 
-		files =
-		{
+	newapifield ("files", {
 			kind  = "filelist",
 			scope = "config",
-		},
+	})
 
-		removefiles =
-		{
+	newapifield ("removefiles", {
 			kind  = "filelist",
 			scope = "config",
-		},
+	})
 
-		flags =
-		{
+	newapifield ("flags", {
 			kind  = "list",
 			scope = "config",
 			isflags = true,
@@ -279,10 +252,9 @@ end
 				end
 				return nil, "invalid flag"
 			end,
-		},
+	})
 
-		framework =
-		{
+	newapifield ("framework", {
 			kind = "string",
 			scope = "container",
 			allowed = {
@@ -299,116 +271,98 @@ end
 				"4.6.1",
 				"4.6.2",
 			}
-		},
+	})
 
-		iostargetplatformversion =
-		{
+	newapifield ("iostargetplatformversion", {
 			kind  = "string",
 			scope = "project",
-		},
+	})
 
-		macostargetplatformversion =
-		{
+	newapifield ("macostargetplatformversion", {
 			kind  = "string",
 			scope = "project",
-		},
+	})
 
-		tvostargetplatformversion =
-		{
+	newapifield ("tvostargetplatformversion", {
 			kind  = "string",
 			scope = "project",
-		},
+	})
 
-		windowstargetplatformversion =
-		{
+	newapifield ("windowstargetplatformversion", {
 			kind  = "string",
 			scope = "project",
-		},
+	})
 
-		windowstargetplatformminversion =
-		{
+	newapifield ("windowstargetplatformminversion", {
 			kind = "string",
 			scope = "project",
-		},
+	})
 
-		forcedincludes =
-		{
+	newapifield ("forcedincludes", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		imagepath =
-		{
+	newapifield ("imagepath", {
 			kind = "path",
 			scope = "config",
-		},
+	})
 
-		imageoptions =
-		{
+	newapifield ("imageoptions", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		implibdir =
-		{
+	newapifield ("implibdir", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		implibextension =
-		{
+	newapifield ("implibextension", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		implibname =
-		{
+	newapifield ("implibname", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		implibprefix =
-		{
+	newapifield ("implibprefix", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		implibsuffix =
-		{
+	newapifield ("implibsuffix", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		includedirs =
-		{
+	newapifield ("includedirs", {
 			kind  = "dirlist",
 			scope = "config",
 			usagecopy = true,
-		},
+	})
 
-		systemincludedirs =
-		{
+	newapifield ("systemincludedirs", {
 			kind  = "dirlist",
 			scope = "config",
 			usagecopy = true,
-		},
+	})
 
-		userincludedirs =
-		{
+	newapifield ("userincludedirs", {
 			kind  = "dirlist",
 			scope = "config",
 			usagecopy = true,
-		},
+	})
 
-		usingdirs =
-		{
+	newapifield ("usingdirs", {
 			kind  = "dirlist",
 			scope = "config",
 			usagecopy = true,
-		},
+	})
 
-		kind =
-		{
+	newapifield ("kind", {
 			kind  = "string",
 			scope = "config",
 			allowed = {
@@ -418,10 +372,9 @@ end
 				"SharedLib",
 				"Bundle",
 			}
-		},
+	})
 
-		language =
-		{
+	newapifield ("language", {
 			kind  = "string",
 			scope = "container",
 			allowed = {
@@ -431,23 +384,20 @@ end
 				"Vala",
 				"Swift",
 			}
-		},
+	})
 
-		libdirs =
-		{
+	newapifield ("libdirs", {
 			kind  = "dirlist",
 			scope = "config",
 			linkagecopy = true,
-		},
+	})
 
-		linkoptions =
-		{
+	newapifield ("linkoptions", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		links =
-		{
+	newapifield ("links", {
 			kind  = "list",
 			scope = "config",
 			allowed = function(value)
@@ -459,23 +409,20 @@ end
 			end,
 			linkagecopy = true,
 			mergecopiestotail = true,
-		},
+	})
 
-		location =
-		{
+	newapifield ("location", {
 			kind  = "path",
 			scope = "container",
-		},
+	})
 
-		makesettings =
-		{
+	newapifield ("makesettings", {
 			kind = "list",
 			scope = "config",
-		},
+	})
 
 
-		messageskip =
-		{
+	newapifield ("messageskip", {
 			kind  = "list",
 			scope = "solution",
 			isflags = true,
@@ -496,52 +443,44 @@ end
 				end
 				return nil, "invalid message to skip"
 			end,
-		},
+	})
 
-		msgarchiving =
-		{
+	newapifield ("msgarchiving", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		msgcompile =
-		{
+	newapifield ("msgcompile", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		msgprecompile =
-		{
+	newapifield ("msgprecompile", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		msgcompile_objc =
-		{
+	newapifield ("msgcompile_objc", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		msgresource =
-		{
+	newapifield ("msgresource", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		msglinking =
-		{
+	newapifield ("msglinking", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		objdir =
-		{
+	newapifield ("objdir", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		options =
-		{
+	newapifield ("options", {
 			kind  = "list",
 			scope = "container",
 			isflags = true,
@@ -564,149 +503,125 @@ end
 				end
 				return nil, "invalid option"
 			end,
-		},
+	})
 
-		pchheader =
-		{
+	newapifield ("pchheader", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		pchsource =
-		{
+	newapifield ("pchsource", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		platforms =
-		{
+	newapifield ("platforms", {
 			kind  = "list",
 			scope = "solution",
 			allowed = table.keys(premake.platforms),
-		},
+	})
 
-		postbuildcommands =
-		{
+	newapifield ("postbuildcommands", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		prebuildcommands =
-		{
+	newapifield ("prebuildcommands", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		postcompiletasks =
-		{
+	newapifield ("postcompiletasks", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		prelinkcommands =
-		{
+	newapifield ("prelinkcommands", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		propertysheets =
-		{
+	newapifield ("propertysheets", {
 			kind  = "dirlist",
 			scope = "config",
-		},
+	})
 
-		pullmappingfile =
-		{
+	newapifield ("pullmappingfile", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		applicationdatadir =
-		{
+	newapifield ("applicationdatadir", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		finalizemetasource =
-		{
+	newapifield ("finalizemetasource", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		resdefines =
-		{
+	newapifield ("resdefines", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		resincludedirs =
-		{
+	newapifield ("resincludedirs", {
 			kind  = "dirlist",
 			scope = "config",
-		},
+	})
 
-		resoptions =
-		{
+	newapifield ("resoptions", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		sdkreferences =
-		{
+	newapifield ("sdkreferences", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		startproject =
-		{
+	newapifield ("startproject", {
 			kind  = "string",
 			scope = "solution",
-		},
+	})
 
-		targetdir =
-		{
+	newapifield ("targetdir", {
 			kind  = "path",
 			scope = "config",
-		},
+	})
 
-		targetsubdir =
-		{
+	newapifield ("targetsubdir", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		targetextension =
-		{
+	newapifield ("targetextension", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		targetname =
-		{
+	newapifield ("targetname", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		targetprefix =
-		{
+	newapifield ("targetprefix", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		targetsuffix =
-		{
+	newapifield ("targetsuffix", {
 			kind  = "string",
 			scope = "config",
-		},
+	})
 
-		trimpaths =
-		{
+	newapifield ("trimpaths", {
 			kind = "dirlist",
 			scope = "config",
-		},
+	})
 
-		uuid =
-		{
+	newapifield ("uuid", {
 			kind  = "string",
 			scope = "container",
 			allowed = function(value)
@@ -725,34 +640,29 @@ end
 				end
 				return value:upper()
 			end
-		},
+	})
 
-		uses =
-		{
+	newapifield ("uses", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		vapidirs =
-		{
+	newapifield ("vapidirs", {
 			kind  = "dirlist",
 			scope = "config",
-		},
+	})
 
-		vpaths =
-		{
+	newapifield ("vpaths", {
 			kind = "keypath",
 			scope = "container",
-		},
+	})
 
-		vsimportreferences =
-		{
+	newapifield ("vsimportreferences", {
 			kind = "filelist",
 			scope = "container",
-		},
+	})
 
-		dpiawareness =
-		{
+	newapifield ("dpiawareness", {
 			kind = "string",
 			scope = "config",
 			allowed = {
@@ -760,78 +670,66 @@ end
 				"High",
 				"HighPerMonitor",
 			}
-		},
+	})
 
-		xcodeprojectopts =
-		{
+	newapifield ("xcodeprojectopts", {
 			kind = "table",
 			scope = "config",
-		},
+	})
 
-		xcodetargetopts =
-		{
+	newapifield ("xcodetargetopts", {
 			kind = "table",
 			scope = "config",
-		},
+	})
 
-		xcodescriptphases =
-		{
+	newapifield ("xcodescriptphases", {
 			kind  = "table",
 			scope = "config",
-		},
+	})
 
-		xcodecopyresources =
-		{
+	newapifield ("xcodecopyresources", {
 			kind  = "table",
 			scope = "project",
-		},
+	})
 
-		xcodecopyframeworks =
-		{
+	newapifield ("xcodecopyframeworks", {
 			kind  = "filelist",
 			scope = "project",
-		},
+	})
 
-		wholearchive =
-		{
+	newapifield ("wholearchive", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
 		-- swift options
-		swiftmodulemaps =
-		{
+	newapifield ("swiftmodulemaps", {
 			kind  = "filelist",
 			scope = "config",
-		},
+	})
 
-		buildoptions_swift =
-		{
+	newapifield ("buildoptions_swift", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
-		linkoptions_swift =
-		{
+	newapifield ("linkoptions_swift", {
 			kind  = "list",
 			scope = "config",
-		},
+	})
 
 		-- Tegra Android options
-		androidtargetapi =
-		{
+	newapifield ("androidtargetapi", {
 			kind = "string",
 			scope = "config",
-		},
+	})
 
-		androidminapi =
-		{
+	newapifield ("androidminapi", {
 			kind = "string",
 			scope = "config",
-		},
+	})
 
-		androidarch =
-		{
+	newapifield ("androidarch", {
 			kind = "string",
 			scope = "config",
 			allowed = {
@@ -841,22 +739,19 @@ end
 				"x86",
 				"x86_64",
 			}
-		},
+	})
 
-		androidndktoolchainversion =
-		{
+	newapifield ("androidndktoolchainversion", {
 			kind = "string",
 			scope = "config",
-		},
+	})
 
-		androidstltype =
-		{
+	newapifield ("androidstltype", {
 			kind = "string",
 			scope = "config",
-		},
+	})
 
-		androidcppstandard =
-		{
+	newapifield ("androidcppstandard", {
 			kind = "string",
 			scope = "config",
 			allowed = {
@@ -867,66 +762,55 @@ end
 				"gnu++11",
 				"gnu++1y",
 			}
-		},
+	})
 
-		androidlinker =
-		{
+	newapifield ("androidlinker", {
 			kind = "string",
 			scope = "config",
 			allowed = {
 				"bfd",
 				"gold",
 			}
-		},
+	})
 
-		androiddebugintentparams =
-		{
+	newapifield ("androiddebugintentparams", {
 			kind = "list",
 			scope = "config",
-		},
+	})
 
-		antbuildjavasourcedirs =
-		{
+	newapifield ("antbuildjavasourcedirs", {
 			kind = "dirlist",
 			scope = "config",
-		},
+	})
 
-		antbuildjardirs =
-		{
+	newapifield ("antbuildjardirs", {
 			kind = "dirlist",
 			scope = "config",
-		},
+	})
 
-		antbuildjardependencies =
-		{
+	newapifield ("antbuildjardependencies", {
 			kind = "list",
 			scope = "config",
-		},
+	})
 
-		antbuildnativelibdirs =
-		{
+	newapifield ("antbuildnativelibdirs", {
 			kind = "dirlist",
 			scope = "config",
-		},
+	})
 
-		antbuildnativelibdependencies =
-		{
+	newapifield ("antbuildnativelibdependencies", {
 			kind = "list",
 			scope = "config",
-		},
+	})
 
-		antbuildassetsdirs =
-		{
+	newapifield ("antbuildassetsdirs", {
 			kind = "dirlist",
 			scope = "config",
-		},
-	}
-
+	})
 
 --
 -- End of metadata
 --
-
 
 	premake.check_paths = false
 
@@ -1525,7 +1409,6 @@ end
 
 		table.insert(sln.importedprojects, project)
     end
-
 
 --
 -- Define a new action.
