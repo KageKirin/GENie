@@ -4,24 +4,41 @@
 -- Copyright (c) 2002-2011 Jason Perkins and the Premake project
 --
 
+premake.fields = {}
 
 --
 -- Define a new API field.
+-- Build the getter/setter functions from its metadata.
 --
 -- @param a
---    The new action object.
+--    The new field/API object.
 --
 
-function newapifield(field, attr)
-	premake.fields[field] = attr
+function newapifield(name, info)
+	premake.fields[name] = info
+
+	_G[name] = function(value)
+		return accessor(name, value)
+	end
+
+	-- list value types get a remove() call too
+	if info.kind == "list"
+	or info.kind == "dirlist"
+	or info.kind == "filelist"
+	or info.kind == "absolutefilelist"
+	then
+		if  name ~= "removefiles"
+		and name ~= "files" then
+			_G["remove"..name] = function(value)
+				premake.remove(name, value)
+			end
+		end
+	end
 end
 
 --
--- Here I define all of the getter/setter functions as metadata. The actual
--- functions are built programmatically below.
+-- This builds the API functions from their metadata.
 --
-
-	premake.fields = {}
 
 	newapifield ("archivesplit_size", {
 			kind  = "string",
@@ -1105,34 +1122,6 @@ end
 			return premake.setkeyvalue(scope, name, value)
 		end
 	end
-
-
-
---
--- Build all of the getter/setter functions from the metadata above.
---
-
-	for name, info in pairs(premake.fields) do
-		_G[name] = function(value)
-			return accessor(name, value)
-		end
-
-		-- list value types get a remove() call too
-		if info.kind == "list"
-		or info.kind == "dirlist"
-		or info.kind == "filelist"
-		or info.kind == "absolutefilelist"
-		then
-			if  name ~= "removefiles"
-			and name ~= "files" then
-				_G["remove"..name] = function(value)
-					premake.remove(name, value)
-				end
-			end
-		end
-	end
-
-
 
 --
 -- Project object constructors.
