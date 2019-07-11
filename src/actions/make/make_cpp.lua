@@ -482,17 +482,28 @@
 		if cfg.flags.UseLDResponseFile then
 			_p('  LDRESP              = $(OBJDIR)/%s_libs', prj.name)
 			_p('  LDWARESP            = $(OBJDIR)/%s_wholearchives', prj.name)
-			_p('  LIBS               += @$(LDWARESP) @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
+			if ldwadeps and ldwadeps ~= "" then
+				if premake.gcc.llvm then
+					_p('  LIBS               += @$(LDWARESP) @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
+				else
+					_p('  LIBS               += -Wl,--whole-archive @$(LDWARESP) -Wl,--no-whole-archive @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
+				end
+			else
+				_p('  LIBS               += @$(LDRESP)%s', make.list(cc.getlinkflags(cfg)))
+			end
 		else
 			_p('  LDRESP              =')
 			_p('  LDWARESP            =')
-			if ldwadeps then
-				ldwadeps = "$(foreach v,$(LDWADEPS),-Wl,--whole-archive $(v) -Wl,--no-whole-archive)"
+			if ldwadeps and ldwadeps ~= "" then
 				if premake.gcc.llvm then
-					ldwadeps = "$(foreach v,$(LDWADEPS),-force_load $(v))"
+					_p('  LIBS               += $(foreach v,$(LDWADEPS),-force_load $(v)) $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
+				else
+					_p('  LIBS               += -Wl,--whole-archive $(LDWADEPS) -Wl,--no-whole-archive $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
 				end
+			else
+				_p('  LIBS               += $(LDDEPS)%s', make.list(cc.getlinkflags(cfg)))
 			end
-			_p('  LIBS               += %s $(LDDEPS)%s', ldwadeps or "", make.list(cc.getlinkflags(cfg)))
+
 		end
 
 		_p('  EXTERNAL_LIBS      +=%s', make.list(cc.getlibfiles(cfg)))
@@ -612,14 +623,14 @@
 		_p('\t$(call CAT,$@)')
 		_p('endif')
 		_p('')
-		
+
 		_p('ifneq (,$(LDWARESP))')
 		_p('$(LDWARESP): $(LDWADEPS) | $(TARGETDIR) $(OBJDIRS)')
 		_p('\t$(call FPRINT,,>,$@)')
 		if premake.gcc.llvm then
-			_p('\t$(foreach v,$^,$(call FPRINT, "-force_load $(v)",>>,$@))')
+			_p('\t$(foreach v,$^,$(call FPRINT,-force_load $(v),>>,$@))')
 		else
-			_p('\t$(foreach v,$^,$(call FPRINT, "-Wl,--whole-archive $(v) -Wl,--no-whole-archive",>>,$@))')
+			_p('\t$(foreach v,$^,$(call FPRINT,$(v),>>,$@))')
 		end
 		_p('\t$(call CAT,$@)')
 		_p('endif')
