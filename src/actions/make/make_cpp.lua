@@ -252,6 +252,7 @@
 		_p('  FPRINT = $(shell echo. $(1)$(2) "$(subst /,\\\\,$(3))")')
 		_p('  CAT    = $(SILENT) type "$(subst /,\\\\,$(1))"')
 		_p('endif')
+		_p('comma = ,')
 		_p('')
 
 		_p('CC  = %s', cc.cc)
@@ -487,7 +488,7 @@
 			_p('  LDRESP              =')
 			_p('  LDWARESP            =')
 			if ldwadeps then
-				ldwadeps = "$(foreach v,$(LDWADEPS),-Wl,--whole-archive $(v) -Wl,--no-whole-archive)"
+				ldwadeps = "$(foreach v,$(LDWADEPS),-Wl$(comma)--whole-archive $(v) -Wl$(comma)--no-whole-archive)"
 				if premake.gcc.llvm then
 					ldwadeps = "$(foreach v,$(LDWADEPS),-force_load $(v))"
 				end
@@ -617,9 +618,9 @@
 		_p('$(LDWARESP): $(LDWADEPS) | $(TARGETDIR) $(OBJDIRS)')
 		_p('\t$(call FPRINT,,>,$@)')
 		if premake.gcc.llvm then
-			_p('\t$(foreach v,$^,$(call FPRINT, "-force_load $(v)",>>,$@))')
+			_p('\t$(foreach v,$^,$(call FPRINT,-force_load $(v),>>,$@))')
 		else
-			_p('\t$(foreach v,$^,$(call FPRINT, "-Wl,--whole-archive $(v) -Wl,--no-whole-archive",>>,$@))')
+			_p('\t$(foreach v,$^,$(call FPRINT,-Wl$(comma)--whole-archive $(v) -Wl$(comma)--no-whole-archive,>>,$@))')
 		end
 		_p('\t$(call CAT,$@)')
 		_p('endif')
