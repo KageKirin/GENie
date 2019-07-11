@@ -249,7 +249,7 @@
 		_p('  MKDIR  = $(SILENT) mkdir "$(subst /,\\\\,$(1))" 2> nul || exit 0')
 		_p('  COPY   = $(SILENT) copy /Y "$(subst /,\\\\,$(1))" "$(subst /,\\\\,$(2))"')
 		_p('  RM     = $(SILENT) del /F "$(subst /,\\\\,$(1))" 2> nul || exit 0')
-		_p('  FPRINT = $(shell echo.$(1)$(2) "$(subst /,\\\\,$(3))")')
+		_p('  FPRINT = $(shell echo. $(1)$(2) "$(subst /,\\\\,$(3))")')
 		_p('  CAT    = $(SILENT) type "$(subst /,\\\\,$(1))"')
 		_p('endif')
 		_p('')
